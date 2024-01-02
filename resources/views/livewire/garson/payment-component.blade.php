@@ -28,18 +28,6 @@
                 </div>
                 <div class="card-body">
                     <form wire:submit='sendReceipt'>
-                        {{-- <div class="form-group">
-                          <label for="selectchannel">Selecionar Opção</label>
-                          <select wire:model.live='selectchannel' name="selectchannel" id="selectchannel" class="form-control">
-                            <option value="">--Selecionar--</option>
-                            <option value="E-mail">E-mail & Download</option>
-                            <option value="download">Apenas Download</option>
-                          </select>
-                         @error('selectchannel') <span class="text-danger">{{$message}}</span>@enderror
-                             
-                         
-                        </div> --}}
-
                       
                         <div class="form-group">
                           <label for="">E-mail</label>

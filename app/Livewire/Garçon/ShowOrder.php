@@ -3,6 +3,7 @@
 namespace App\Livewire\Garçon;
 
 use App\Models\CartLocal;
+use App\Models\GarsonTable;
 use App\Models\Table;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -15,7 +16,7 @@ class ShowOrder extends Component
     {
         return view('livewire.garson.show-order',[
             'allOrders'=>$this->getOrders($this->tableNumber),
-            'allTables'=>Table::get()
+            'allTables'=>$this->getTables()
         ])->layout('layouts.garson.app');
     }
 
@@ -70,6 +71,25 @@ class ShowOrder extends Component
                 'confirmButtonText' => 'OK',
                 'text'=>'Falha ao realizar operação'
             ]);
+        }
+    }
+
+    public function getTables()
+    {
+        try {
+
+       
+            return Table::where('company_id','=',auth()->user()->company_id)
+            ->get();
+
+        } catch (\Throwable $th) {
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
 }

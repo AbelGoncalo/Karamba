@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\GarsonTable;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,6 +16,7 @@ return new class extends Migration
         Schema::create('garson_table_management', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(GarsonTable::class);
+            $table->foreignIdFor(Company::class);
             $table->string('table');
             $table->timestamps();
         });

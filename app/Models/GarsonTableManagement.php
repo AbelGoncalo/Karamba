@@ -13,6 +13,7 @@ class GarsonTableManagement extends Model
     protected $fillable = [
         'garson_table_id',
         'table',
+        'company_id'
     ];
 
   

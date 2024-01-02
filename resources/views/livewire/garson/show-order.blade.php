@@ -7,11 +7,11 @@
                 <option value="" select>
                   --Selecionar Mesa--
                 </option>
-                {{-- @if (isset($allTables) and $allTables->count() > 0)
+                 @if (isset($allTables) and $allTables->count() > 0)
                     @foreach ($allTables as $item)
                     <option value="{{$item->number}}">{{$item->number}}</option>
                     @endforeach
-                @endif --}}
+                @endif 
               </select>
             </div>
         </div> 

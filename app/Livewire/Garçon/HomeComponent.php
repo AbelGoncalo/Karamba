@@ -137,19 +137,19 @@ class HomeComponent extends Component
                     ]);
                 }else{
 
-                    $cartLocal = CartLocal::where('user_id','=',auth()->user()->id)
-                    ->where('company_id','=',auth()->user()->company_id)
-                    ->first();
+                    // $cartLocal = CartLocal::where('user_id','=',auth()->user()->id)
+                    // ->where('company_id','=',auth()->user()->company_id)
+                    // ->first();
                     $category = Category::find($this->category_id);
+                    $itemExist =   CartLocalDetail::where('name','=',$item->description)
+                    ->where('company_id','=',auth()->user()->company_id)
+                    ->where('table','=',$this->tableNumber)
+                    ->first();
 
-                if ($cartLocal) {
+                if ($itemExist) {
 
-                   $itemExist =   CartLocalDetail::where('name','=',$item->description)
-                   ->where('company_id','=',auth()->user()->company_id)
-                   ->first();
 
-                  if ($itemExist) {
-                      
+                
                         $itemExist->quantity += $this->qtd[$id];
                         $itemExist->save();
 
@@ -161,40 +161,17 @@ class HomeComponent extends Component
                             'text'=>'Seu Pedido de '.$this->qtd[$id].' '.$item->description.', foi enviado.'
                         ]);
 
-                    }else{
-
-                        CartLocalDetail::create([
-                            'cart_local_id'=>$cartLocal->id,
-                            'name'=>$item->description,
-                            'price'=>$item->price,
-                            'quantity'=>$this->qtd[$id],
-                            'category'=>$category->description,
-                            'company_id'=>auth()->user()->company_id
-
-                        ]);
-
-                        $this->alert('success', 'SUCESSO', [
-                            'toast'=>false,
-                            'position'=>'center',
-                            'showConfirmButton' => true,
-                            'confirmButtonText' => 'OK',
-                            'text'=>'Seu Pedido de '.$this->qtd[$id].' '.$item->description.', foi enviado.'
-                        ]);
-                    }
+                   
 
                 }else{
                     
                     
-                    $cartLocalFirst =  CartLocal::create([
-                        'table'=>$this->tableNumber,
-                        'user_id'=>auth()->user()->id,
-                        'company_id'=>auth()->user()->company_id
-                    ]);
-
+               
+                  
 
                         CartLocalDetail::create([
-                            'cart_local_id'=>$cartLocalFirst->id,
                             'name'=>$item->description,
+                            'table'=>$this->tableNumber,
                             'price'=>$item->price,
                             'quantity'=>$this->qtd[$id],
                             'category'=>$category->description,

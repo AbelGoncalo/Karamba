@@ -170,7 +170,8 @@ class GarsonComponent extends Component
                         foreach ($this->table as $item) {
                           GarsonTableManagement::create([
                               'garson_table_id'=>$garson->id,
-                              'table'=>$item
+                              'table'=>$item,
+                              'company_id'=>auth()->user()->company_id,
                           ]);
                         }
                     }
@@ -192,7 +193,8 @@ class GarsonComponent extends Component
                       foreach ($this->table as $item) {
                         GarsonTableManagement::create([
                             'garson_table_id'=>$garson->id,
-                            'table'=>$item
+                            'table'=>$item,
+                            'company_id'=>auth()->user()->company_id,
                         ]);
                       }
                      

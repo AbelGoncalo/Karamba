@@ -18,6 +18,7 @@ class CartLocalDetail extends Model
         'status',
         'category',
         'company_id',
+        'table',
 
 
     ];

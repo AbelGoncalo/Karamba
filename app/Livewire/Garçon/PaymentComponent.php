@@ -65,45 +65,25 @@ class PaymentComponent extends Component
     {
         try {
             $this->total = 0;
-            $this->totalOtherItems = 0;
-            $this->totalDrinks = 0;
 
-            $listDrinksTotal = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('cart_locals.table','=',$this->tableNumber)
-            ->where('cart_local_details.category','=','Bebidas')
-            //->where('cart_local_details.status','<','RECEBIDO')
-            ->where('cart_locals.company_id','=',auth()->user()->company_id)
+            $listTotal = CartLocalDetail::where('table','=',$this->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
             ->get();
 
-            $listOtherItemsTotal = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('cart_locals.table','=',$this->tableNumber)
-            ->where('cart_local_details.category','<>','Bebidas')
-            //->where('cart_local_details.status','=','RECEBIDO')
-            ->where('cart_locals.company_id','=',auth()->user()->company_id)
-            ->get();
-
-            if ($listOtherItemsTotal) {
-                foreach ($listDrinksTotal as  $value) {
-               
-                    $this->totalOtherItems += ($value->price * $value->quantity);
-                }
-            }else{
-                $this->totalOtherItems = 0;
-            }
+             
+ 
             
-            if ($listDrinksTotal) {
-            foreach ($listOtherItemsTotal as  $value) {
+            if ($listTotal) {
+            foreach ($listTotal as  $value) {
            
-                $this->totalDrinks += ($value->price * $value->quantity);
+                $this->total += ($value->price * $value->quantity);
             }
 
             }else{
-                $this->totalDrinks = 0;
+                $this->total = 0;
             }
 
-            $this->total =  $this->totalOtherItems + $this->totalDrinks;
+             
 
         } catch (\Throwable $th) {
            
@@ -241,18 +221,16 @@ class PaymentComponent extends Component
 
               //Pegar todos os dados necessarios para finalizar pagamento
               
-            $cartLocal =  CartLocal::where('user_id','=',auth()->user()->id)
+           
+            $cartLocalDetail =  CartLocalDetail::where('table','=',$this->tableNumber)
             ->where('company_id','=',auth()->user()->company_id)
-            ->first(); 
-            if ($cartLocal) {
+            ->get();
+            if ($cartLocalDetail) {
                 # code...
-                $cartLocalDetail =  CartLocalDetail::where('cart_local_id','=',$cartLocal->id)
-                ->where('company_id','=',auth()->user()->company_id)
-                ->get();
 
         
             $order = Order::create([
-             'table'=>$cartLocal->table,
+             'table'=>$this->tableNumber,
              'identify'=>auth()->user()->id,
              'user_id'=>auth()->user()->id,
              'paymenttype'=>$this->paymenttype,
@@ -296,9 +274,14 @@ class PaymentComponent extends Component
                 
             }
 
-                //$reference = \App\Api\FactPlus::create($this->orderid);
-                //session()->put('finallyOrder',$reference);
-                session()->put('finallyOrder','actual');
+                $reference = \App\Api\FactPlus::create($this->orderid);
+                if($reference)
+                {
+                     \App\Api\FactPlus::changeStatu($reference);
+                    session()->put('finallyOrder',$reference);
+                    session()->put('table',$this->tableNumber);
+
+                }
                 
          
           
@@ -317,7 +300,7 @@ class PaymentComponent extends Component
         }
         }
           } catch (\Throwable $th) {
-              
+              dd($th->getMessage());
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,
@@ -339,19 +322,15 @@ class PaymentComponent extends Component
         
          try {
             
-            
-            //  $company = Company::find(auth()->user()->company_id);
-              //FactPlus::changeStatu(session('finallyOrder'));
-              //if($this->email != null)
-             // {
-                //$this->validate(['email'=>'email'],['email.email'=>'E-mail Inválido']);  
-               // FactPlus::sendInvoice(session('finallyOrder'),$this->email);
-             // }
-             // FactPlus::sendInvoice(session('finallyOrder'),$company->companyemail);
-              
-              $this->clearFields();
-              session()->forget('finallyOrder');
-              return redirect()->route('garson.home');
+  
+              \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+
+ 
+                $this->clearFields();
+                session()->forget('finallyOrder');
+                session()->forget('table');
+                return redirect()->route('garson.home');
+          
                 
 
             
@@ -373,13 +352,11 @@ class PaymentComponent extends Component
     {
         try {
            
-            $cartLocalFinded =  CartLocal::where('user_id','=',auth()->user()->id)
+             CartLocalDetail::where('table','=',$this->tableNumber)
             ->where('company_id','=',auth()->user()->company_id)
-            ->first(); 
-            $detail =  CartLocalDetail::where('cart_local_id','=',$cartLocalFinded->id)
-            ->where('company_id','=',auth()->user()->company_id)
+            ->where('table','=',session('table'))
             ->delete(); 
-            $cartLocalFinded->delete();
+            
 
             $this->paymenttype = 'Transferência';
             $this->payallaccount = 'Pagar Toda Conta';

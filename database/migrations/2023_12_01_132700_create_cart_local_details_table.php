@@ -17,12 +17,13 @@ return new class extends Migration
         Schema::create('cart_local_details', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Company::class)->nullable();
-            $table->foreignIdFor(CartLocal::class);
+            $table->foreignIdFor(CartLocal::class)->nullable();
             $table->string('name');
             $table->decimal('price');
             $table->integer('quantity');
             $table->string('category');
             $table->enum('status',['PENDENTE','ACEITE','EM PREPARAÇÃO','PRONTO','A CAMINHO','ENTREGUE'])->default('PENDENTE');
+            $table->string('table')->nullable();
             $table->timestamps();
         });
     }

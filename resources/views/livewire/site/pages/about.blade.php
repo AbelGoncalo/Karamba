@@ -13,8 +13,7 @@
                 <p class="mb-4">
                     O Espaço Karamba oferece uma variedade de opções para atender às
                     suas necessidades de entrega de comida com conveniência e qualidade
-                    O Espaço Karamba oferece uma variedade de opções para atender às
-                    suas necessidades de entrega de comida com conveniência e qualidade
+           
                 </p>
             </div>
             <div class="col-lg-12">

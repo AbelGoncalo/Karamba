@@ -9,7 +9,7 @@
                     <div class="p-4">
                         <i class="fa fa-3x fa-user-tie mb-4" style="color: var(--primary);"></i>
                         <h5>Master Chefs</h5>
-                        <p>Os Melhores chefes de cuzinha encontras cá na nice food</p>
+                        <p>Os Melhores chefes de cozinha encontras cá</p>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                     <div class="p-4">
                         <i class="fa fa-3x fa-headset mb-4" style="color: var(--primary);"></i>
                         <h5> Atendimento 24 por dia / 7  dias por semana </h5>
-                        <p>Ó nosso horario é flexivel para facilitar os nossos clientes</p>
+                        <p>Ó nosso horário é flexivel para facilitar os nossos clientes</p>
                     </div>
                 </div>
             </div>

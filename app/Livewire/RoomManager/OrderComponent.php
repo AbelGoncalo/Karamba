@@ -16,12 +16,22 @@ class OrderComponent extends Component
 {
     use LivewireAlert;
     public $startdate = null,$enddate = null,$details = [];
+
+    public function mount()
+    {
+        $this->startdate =  Carbon::parse($this->startdate)->format('Y-m-d');
+        $this->enddate   = Carbon::parse($this->enddate )->format('Y-m-d');
+ 
+    }
+    
     public function render()
     {
         return view('livewire.room-manager.order-component',[
             'data'=>$this->getData($this->startdate,$this->enddate),
         ])->layout('layouts.room_manager.app');
     }
+
+ 
 
     public function getData($startdate = null,$enddate = null,$table = null,$garson = null)
     {
@@ -36,16 +46,9 @@ class OrderComponent extends Component
                 ->get();
 
 
-                        return $data;
+                 return $data;
                 
-            } else {
-
-                $data = Order::where('company_id','=',auth()->user()->company_id)
-                        ->get();
-
-                return $data;
-
-           } 
+            } 
             
 
             

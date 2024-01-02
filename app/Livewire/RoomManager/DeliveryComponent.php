@@ -15,6 +15,13 @@ class DeliveryComponent extends Component
     use LivewireAlert;
     public $startdate = null,$enddate = null,$statusvalue = [],$items = [];
     protected $listeners = ['close'=>'close','delete'=>'delete'];
+
+    public function mount()
+    {
+        $this->startdate =  Carbon::parse($this->startdate)->format('Y-m-d');
+        $this->enddate   = Carbon::parse($this->enddate )->format('Y-m-d');
+ 
+    }
     public function render()
     {
        
@@ -160,7 +167,7 @@ class DeliveryComponent extends Component
            
             
         } catch (\Throwable $th) {
-              dd($th->getMessage());
+         
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

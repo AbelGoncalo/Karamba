@@ -9,8 +9,8 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class ViewOrderComponent extends Component
 {
     use LivewireAlert;
-    public $tableNumber,$itemsOrder = [],$drinksOrder = [], $quantity = 1,$itemId,$edit;
-    protected $listeners = ['cancel'=>'cancel','change'=>'change'];
+    public $tableNumber,$itemsOrder = [],$drinksOrder = [], $quantity = 1, $itemId = null ,$edit = null;
+    protected $listeners = ['cancel'=>'cancel','change'=>'change','close'=>'close'];
     public function render()
     {
         return view('livewire.garson.view-order-component',[
@@ -44,13 +44,13 @@ class ViewOrderComponent extends Component
 
             }
         } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
 
@@ -65,13 +65,13 @@ class ViewOrderComponent extends Component
             ->where('status','=','Turno Aberto')
             ->get();
         } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
 
@@ -98,6 +98,7 @@ class ViewOrderComponent extends Component
            ]);
            
        } catch (\Throwable $th) {
+       
            $this->alert('error', 'ERRO', [
                'toast'=>false,
                'position'=>'center',
@@ -141,13 +142,15 @@ class ViewOrderComponent extends Component
            }
          
        } catch (\Throwable $th) {
-           $this->alert('error', 'ERRO', [
-               'toast'=>false,
-               'position'=>'center',
-               'showConfirmButton' => true,
-               'confirmButtonText' => 'OK',
-               'text'=>'Falha ao realizar operação'
-           ]);
+       
+
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
        }
    }
 
@@ -159,13 +162,14 @@ class ViewOrderComponent extends Component
             $this->getOrders();
           
         } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
+           
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
     //Actualizar a quantidade
@@ -175,40 +179,45 @@ class ViewOrderComponent extends Component
             $cartDetail = CartLocalDetail::find($this->itemId);
             $itemFinded = Item::where('description','=',$cartDetail->name)
             ->first();
-            if ($this->quantity > $itemFinded->quantity) {
-                $this->alert('warning', 'AVISO', [
-                    'toast'=>false,
-                    'position'=>'center',
-                    'showConfirmButton' => true,
-                    'confirmButtonText' => 'OK',
-                    'text'=>'Quantidade superior a disponível.'
-                ]);
-                $this->getOrders();
-            } else {
-            $cartDetail->quantity = $this->quantity;
-            $cartDetail->save();
 
-            $this->alert('success', 'SUCESSO', [
-                'toast'=>false,
-                'position'=>'center',
-                'timer'=>500,
-                'text'=>'Quantidade Alterada.'
-            ]);
+            if ($this->quantity > $itemFinded->quantity) {
+
+                 $this->alert('warning', 'AVISO', [
+                     'toast'=>false,
+                     'position'=>'center',
+                     'showConfirmButton' => true,
+                     'confirmButtonText' => 'OK',
+                     'text'=>'Quantidade superior a disponível.'
+                 ]);
+
+                 $this->getOrders();
+
+
+             } else {
+
+
+             $cartDetail->quantity = $this->quantity;
+             $cartDetail->save();
+
+             $this->quantity = 1;
+             $this->itemId = '';
+             $this->dispatch('close');
+             
             
-            $this->getOrders();
-            }
+
+             }
             
-          
+             
 
 
         } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
     public function confirmChangeStatus($id)
@@ -216,7 +225,7 @@ class ViewOrderComponent extends Component
         try {
             $this->edit = $id;
             $this->getOrders();
-           $this->alert('warning', 'CONFIRMAR', [
+            $this->alert('warning', 'CONFIRMAR', [
                'icon' => 'warning',
                'position' => 'center',
                'toast' => false,
@@ -234,40 +243,45 @@ class ViewOrderComponent extends Component
 
 
         } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
+           
+
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
     public function change()
     {
         try {
-            $order = CartLocalDetail::find($this->edit);
-            $order->status = 'ENTREGUE';
-            $order->save();
-            
-            $this->alert('success', 'SUCESSO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Operação Realizada Com Sucesso.'
-            ]);
-                $this->getOrders();
+            if ($this->edit != null) {
+                
+                $order = CartLocalDetail::find($this->edit);
+                $order->status = 'ENTREGUE';
+                $order->save();
+                
+                $this->alert('success', 'SUCESSO', [
+                    'toast'=>false,
+                    'position'=>'center',
+                    'showConfirmButton' => true,
+                    'confirmButtonText' => 'OK',
+                    'text'=>'Operação Realizada Com Sucesso.'
+                ]);
+                    $this->getOrders();
+            }  
         
         } catch (\Throwable $th) {
-            
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
+           
+             $this->alert('error', 'ERRO', [
+                 'toast'=>false,
+                 'position'=>'center',
+                 'showConfirmButton' => true,
+                 'confirmButtonText' => 'OK',
+                 'text'=>'Falha ao realizar operação'
+             ]);
         }
     }
 

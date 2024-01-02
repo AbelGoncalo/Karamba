@@ -60,7 +60,7 @@ class FactPlus{
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"65847d93edbb6d77bea624101ff616ea\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"$date\",\r\n        \"duedate\": \"$duedate\",\r\n        \"vref\": \"$vref\",\r\n        \"serie\":\"$serie\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Factura de Pagamento\",\r\n        \"retention\":\"\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"Consumidor Final\",\r\n        \"nif\": \"999999999\",\r\n        \"email\": \"consumidor@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Luanda,Angola\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": $col\r\n    }",
+            CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"65899c23c9b6e95943468c44c9ecd952\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"$date\",\r\n        \"duedate\": \"$duedate\",\r\n        \"vref\": \"$vref\",\r\n        \"serie\":\"$serie\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Factura de Pagamento\",\r\n        \"retention\":\"\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"Consumidor Final\",\r\n        \"nif\": \"999999999\",\r\n        \"email\": \"consumidor@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Luanda,Angola\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": $col\r\n    }",
             CURLOPT_HTTPHEADER => array(
               "Content-Type: application/json"
             ),
@@ -130,7 +130,7 @@ class FactPlus{
               CURLOPT_FOLLOWLOCATION => true,
               CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
               CURLOPT_CUSTOMREQUEST => "POST",
-              CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"SEND\",\r\n      \"apikey\": \"65847d93edbb6d77bea624101ff616ea\",\r\n      \"document\": {\r\n        \"reference\": \"$reference\",\r\n        \"type\": \"factura\"\r\n  }, \"recipient\": {\r\n        \"address\": \"$email\",\r\n        \"subject\": \"Pagamento da Factura\",\r\n \"message\": \"caríssimo(s), Em anexo a sua factura ( RESTAURANTE KARAMBA)\",\r\n \"copy\": \"0\"\r\n  }   }",
+              CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"SEND\",\r\n      \"apikey\": \"65899c23c9b6e95943468c44c9ecd952\",\r\n      \"document\": {\r\n        \"reference\": \"$reference\",\r\n        \"type\": \"factura\"\r\n  }, \"recipient\": {\r\n        \"address\": \"$email\",\r\n        \"subject\": \"Pagamento da Factura\",\r\n \"message\": \"caríssimo(s), Em anexo a sua factura ( RESTAURANTE KARAMBA)\",\r\n \"copy\": \"0\"\r\n  }   }",
               CURLOPT_HTTPHEADER => array(
                 "Content-Type: application/json"
               ),
@@ -161,7 +161,7 @@ class FactPlus{
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"ALTER\",\r\n      \"apikey\": \"65847d93edbb6d77bea624101ff616ea\",\r\n      \"document\": {\r\n        \"reference\": \"$reference\",\r\n        \"type\": \"factura\",\r\n \"status\": \"sent\",\r\n \"reason\": \"\"\r\n   }   }",
+                CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"ALTER\",\r\n      \"apikey\": \"65899c23c9b6e95943468c44c9ecd952\",\r\n      \"document\": {\r\n        \"reference\": \"$reference\",\r\n        \"type\": \"factura\",\r\n \"status\": \"sent\",\r\n \"reason\": \"\"\r\n   }   }",
                 CURLOPT_HTTPHEADER => array(
                 "Content-Type: application/json"
                 ),

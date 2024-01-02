@@ -191,4 +191,13 @@
         });
         });
 </script>
+
+
+<script>
+    document.addEventListener('close',function(){
+       $("#changequantity").modal('hide');
+       @this.getOrders();
+    })
+    
+</script>
 @endpush

@@ -1,0 +1,142 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;400&display=swap');
+
+#neubar {
+    background: #222831;
+    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .nav-item:hover {
+    border-radius: 6px;
+    background: linear-gradient(145deg, #cdb81a, #cdb81a);
+  
+  }
+  .nav-item .active {
+    border-radius: 6px;
+    background: linear-gradient(145deg, #cdb81a, #cdb81a);
+   
+  }
+ 
+  #neubar .nav-item {
+    margin : auto 4px;
+  }
+  #neubar a {
+  
+    padding-left:12px;
+    padding-right:12px;
+    color:#fff !important;
+
+  }
+ 
+  a.navbar-brand {
+    color:#fff !important;
+
+  }
+
+
+  /* MENSAGEM DE BOAS VINDAS NA VIEW DE CLIENTE */
+  .welcome-page{
+    font-family: "Roboto";
+    text-align: center;
+    font-weight:800;
+    margin-top: 10%;
+  }
+  .card-header-custom{
+    background-color: #222831;
+    color:#fff;
+  }
+  .btn-primary-welcome-client{
+    background-color: #222831;
+    color:#fff;
+  }
+  .btn-primary-welcome-client:hover{
+    background-color: #4e4c66;
+    color:#fff;
+  }
+
+  /*ESTILO DOS CARDS DAS CATEGORIAS*/
+.card-review{
+  background-color: #222831;
+    color:#fff;
+}
+
+
+.category-items:hover {
+    /* animation: shaking .2s  infinite; */
+     cursor: pointer;
+ }
+  
+@keyframes shaking {
+     
+    0% {transform: rotate(0deg);}
+    20% {transform: rotate(-4deg);}
+    50% {transform: rotate(0deg);}
+    70% {transform: rotate(4deg);}
+    100% {transform: rotate(0deg);} 
+    
+
+}
+
+.button-order{
+  background-color: #222831;
+  color:#fff;
+}
+.button-custom{
+  background-color: #222831;
+  color:#fff;
+}
+.button-custom:hover{
+  background-color: #222831e5;
+  color:#fff;
+}
+.button-order:hover{
+  background-color: #cdb81a;
+  color:#fff;
+  animation: shaking .2s  infinite;
+}
+
+
+/* rating */
+.rating-css div {
+  color: #ffe400;
+  font-size: 30px;
+  font-family: sans-serif;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 20px 0;
+}
+ .rating-css input {
+  display: none;
+} 
+.rating-css input + label {
+  font-size: 60px;
+  text-shadow: 1px 1px 0 #8f8420;
+  cursor: pointer ;
+}
+.rating-css input:checked + label ~ label {
+  color: #b4afaf;
+  
+}
+.rating-css label:active {
+  transform: scale(0.8);
+  transition: 0.3s ease;
+}
+
+/* End of Star Rating */
+
+
+#cancel-client-local{
+ 
+   color:#fff
+}
+#cancel-client-local:hover{
+  background-color: #cdb81a;
+   color:#fff;
+   border-radius: 5%;
+}
+
+
+
+
+

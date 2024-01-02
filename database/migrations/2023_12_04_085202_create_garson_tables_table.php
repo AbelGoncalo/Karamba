@@ -24,7 +24,6 @@ return new class extends Migration
             $table->date('end')->nullable();
             $table->time('endtime')->nullable();
             $table->enum('status',['Turno Aberto','Turno Fechado'])->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

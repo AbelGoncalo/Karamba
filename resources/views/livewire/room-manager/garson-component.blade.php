@@ -41,13 +41,13 @@
                                     @foreach ($garsons as $item)
                                     <tr>
                                        <td>{{$item->user->name}} {{$item->user->lastname}}</td>
-                                       <td>
+                                        <td>
                                         <ul class="list-group">
-                                            @foreach ($item->table as $table)
-                                                <li>{{$table}}</li>
+                                            @foreach ($item->garsontablemanagement as $table)
+                                                <li>{{$table->table ?? 'N/D'}}</li>
                                             @endforeach
                                         </ul>
-                                       </td>
+                                       </td> 
 
                                        <td>{{\Carbon\Carbon::parse($item->start)->format('d-m-Y')}} {{\Carbon\Carbon::parse($item->starttime)->format('H:i')}}</td>
                                        @if ($item->end != null and $item->endtime)
@@ -59,8 +59,8 @@
                                        <td><span class="badge  {{($item->status === 'Turno Aberto') ? 'badge-success' : 'badge-danger'}}">{{$item->status}}</span></td>
                                        <td>
                                     
-                                        <button class="btn btn-sm btn-primary" wire:click='editGarsonTable({{$item->id}})' data-bs-toggle="modal" data-bs-target="#garsons">
-                                            <i  class="fa fa-edit"></i>
+                                        <button class="btn btn-sm btn-danger"  wire:click='confirmDelete({{$item->id}})' >
+                                            <i  class="fa fa-trash"></i>
                                         </button>
                                        </td>
                                     </tr>
@@ -130,3 +130,11 @@
     });
     </script>
 @endpush
+
+
+<script>
+    document.addEventListener('clear',function(){
+        location.reload();
+    })
+    
+</script>

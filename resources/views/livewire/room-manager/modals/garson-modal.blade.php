@@ -2,12 +2,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> {{($edit != '')? 'ACTUALIZAR DADOS':'ATRIBUIR MESA'}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="exampleModalLabel"> ATRIBUIR MESA</h5>
+        <button wire:click='clearFields' type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
       </div>
       <div class="modal-body">
-        <form enctype="multipart/form-data" wire:submit.prevent='{{($edit != null)? 'update':'store'}} ' class="row">
+        <form enctype="multipart/form-data" wire:submit.prevent='store' class="row">
               
           <div class="col-md-12">
            

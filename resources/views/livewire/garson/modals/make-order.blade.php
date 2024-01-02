@@ -24,9 +24,9 @@
                     </option>
                     @if (isset($allTables) and $allTables->count() > 0)
                         @foreach ($allTables as $item)
-                            @foreach ($item->table as $i)
-                                <option value="{{$i}}">{{$i}}</option>
-                            @endforeach
+                          @foreach ($item->garsontablemanagement as $i)
+                            <option value="{{$i->table}}">{{$i->table}}</option>
+                          @endforeach
                         @endforeach
                     @endif
                   </select>

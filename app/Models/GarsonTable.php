@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\{Model,SoftDeletes};
+use Illuminate\Database\Eloquent\{Model};
 
 class GarsonTable extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
     protected $table = 'garson_tables';
     protected $primaryKey = 'id';
     protected $fillable = [
         'user_id',
-        'table',
         'start',
         'end',
         'starttime',
@@ -29,7 +28,10 @@ class GarsonTable extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    protected $casts = [
-        'table'=>'array'
-    ];
+ 
+
+    public function garsontablemanagement()
+    {
+        return $this->hasMany(GarsonTableManagement::class, 'garson_table_id', 'id');
+    }
 }

@@ -25,8 +25,12 @@
                                                 <td style="width: 50%">
                                                     <select wire:change='changeStatus({{$item->id}})' wire:model='statusvalue.{{$item->id}}' name="statusvalue" id="statusvalue" class="form-select form-select">
                                                        <option value="">--SELECIONAR--</option>
-                                                        <option {{($item->status == 'EM PREPARAÇÃO') ? 'selected':''}} value="EM PREPARAÇÃO">EM PREPARAÇÃO</option>
-                                                        <option {{($item->status == 'PRONTO') ? 'selected':''}} value="PRONTO">PRONTO</option>
+                                                       @if ($item->status == 'ACEITE')
+                                                        <option  value="EM PREPARAÇÃO">EM PREPARAÇÃO</option>
+                                                        
+                                                       @elseif($item->status == 'EM PREPARAÇÃO')
+                                                            <option  value="PRONTO">PRONTO</option>
+                                                       @endif
                                                     </select>
                                                 </td>
                                                 <td style="width: 30%">

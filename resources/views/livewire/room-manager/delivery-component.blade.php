@@ -99,10 +99,16 @@
                                            </td>
                                            <td>
                                             <select wire:change='changeStatus({{$item->id}})' wire:model='statusvalue.{{$item->id}}' name="statusvalue" id="statusvalue" class="form-select form-select-sm">
-                                                <option {{($item->status == 'PENDENTE') ? 'selected':''}} value="PENDENTE">{{($item->status == 'PENDENTE') ? 'selected':''}}PENDENTE</option>
-                                                <option {{($item->status == 'ACEITE') ? 'selected':''}} value="ACEITE">ACEITE</option>
-                                                <option {{($item->status == 'A CAMINHO') ? 'selected':''}} value="A CAMINHO">A CAMINHO</option>
-                                                <option {{($item->status == 'ENTREGUE') ? 'selected':''}} value="ENTREGUE">ENTREGUE</option>
+                                                <option value="">SELECIONAR</option>
+                                                @if ($item->status == 'PENDENTE')
+                                                    <option  value="ACEITE">ACEITE</option>
+                                                @elseif($item->status == 'PRONTO')
+                                                     <option  value="A CAMINHO">A CAMINHO</option>
+                                                @elseif($item->status == 'A CAMINHO')
+                                                    <option value="ENTREGUE">ENTREGUE</option>
+                                                @endif
+                                         
+                                                
                                             </select>
                                            </td>
                                         <td>

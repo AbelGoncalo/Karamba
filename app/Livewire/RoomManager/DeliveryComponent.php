@@ -61,11 +61,12 @@ class DeliveryComponent extends Component
     public function changeStatus($id)
     {
         try {
+            $delivery =  Delivery::find($id);
             
-           $delivery =  Delivery::find($id);
          
            if ($delivery->status == 'PENDENTE') {
                
+              
             if ($this->statusvalue[$id] == 'ACEITE') {
                 $delivery->status = $this->statusvalue[$id];
                 $delivery->save();

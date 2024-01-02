@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('receipt');
             $table->string('finddetail')->nullable();
             $table->string('customerotheraddress',255)->nullable();
-            $table->enum('status',['Pendente','Em Transito','Entregue'])->default('Pendente');
+            $table->enum('status',['PENDENTE','A CAMINHO','ENTREGUE','ACEITE','EM PREPARAÇÃO','PRONTO'])->default('Pendente');
             $table->softDeletes();
             $table->timestamps();
         });

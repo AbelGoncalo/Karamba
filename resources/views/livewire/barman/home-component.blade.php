@@ -1,4 +1,4 @@
-@section('title','PAINEL DE CHEFE DE COZINHA')
+@section('title','PAINEL DE BARMAN')
 <div>
     <div class="container">
       

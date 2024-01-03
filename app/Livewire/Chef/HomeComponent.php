@@ -5,7 +5,7 @@ namespace App\Livewire\Chef;
 use App\Events\NotificationEvent;
 use App\Jobs\NotificatioJob;
 use Livewire\Component;
-use App\Models\{CartLocal, CartLocalDetail, GarsonTable, NotificationGarson, table, User};
+use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, NotificationGarson, table, User};
 use App\Notifications\GarsonNotification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -48,28 +48,27 @@ class HomeComponent extends Component
         try {
             if(isset($tableSearch) and $tableSearch  != null)
             {
-               return CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','<>','Bebidas')
-                ->where('cart_locals.table','=',$tableSearch)
-                ->where('cart_local_details.status','=','PENDENTE')
-                ->orWhere('cart_local_details.status','=','EM PREPARAÇÃO')
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
+                
 
+                return  CartLocalDetail::where('table','=',$this->tableNumber)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','<>','Bebidas')
+                ->where('status','<>','PRONTO')
+                ->get();
+    
+    
+             
+      
             }else{
 
-              return  CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','<>','Bebidas')
-                ->where('cart_local_details.status','=','PENDENTE')
-                ->orWhere('cart_local_details.status','=','EM PREPARAÇÃO')
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
-            }
+              return CartLocalDetail::where('company_id','=',auth()->user()->company_id)
+              ->where('category','<>','Bebidas')
+              ->where('status','<>','PRONTO')
+              ->get();
              
-        
+            }
         } catch (\Throwable $th) {
+      
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -127,14 +126,17 @@ class HomeComponent extends Component
             
 
             if ($this->status == 'PRONTO') {
-                # code...
-                $cartlocal = CartLocal::find($cartdetail->cart_local_id);
-                
-                $garsontable = GarsonTable::whereJsonContains('table',$cartlocal->table)
-                ->where('status','=','Turno Aberto')
+               
+
+                $garsontable = GarsonTableManagement::where('table',$cartdetail->table)
                 ->first(); 
+
+                if($garsontable->garsontable->status == 'Turno Aberto'){
+
+                        
+                    NotificatioJob::dispatch($garsontable->garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO PRONTO,DEVE SE DIRIGIR A COZINHA PARA BUSCAR");
+                }
                  
-                    NotificatioJob::dispatch($cartlocal->user_id,$cartlocal->table,"ALERTA DE PEDIDO PRONTO,DEVE SE DIRIGIR A COZINHA PARA BUSCAR");
             }
             
 
@@ -142,6 +144,7 @@ class HomeComponent extends Component
         
 
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

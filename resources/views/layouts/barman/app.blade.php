@@ -23,7 +23,7 @@
 <body>
   <nav class="navbar navbar-expand-sm navbar-light" id="neubar">
     <div class="container">
-      <a class="navbar-brand" href="{{route('chefs.home')}}">
+      <a class="navbar-brand" href="{{route('barman.home')}}">
         KARAMBA
       </a>
       <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
       <div class=" collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto ">
           <li class="nav-item">
-            <a  class="nav-link mx-2 {{(Route::Current()->getName() == 'chefs.home') ? 'active':''}}" href="{{route('barman.home')}}">Pedidos</a>
+            <a  class="nav-link mx-2 {{(Route::Current()->getName() == 'barman.home') ? 'active':''}}" href="{{route('barman.home')}}">Pedidos</a>
           </li>
          
           <li class="nav-item dropdown">

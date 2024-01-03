@@ -137,9 +137,7 @@ class HomeComponent extends Component
                     ]);
                 }else{
 
-                    // $cartLocal = CartLocal::where('user_id','=',auth()->user()->id)
-                    // ->where('company_id','=',auth()->user()->company_id)
-                    // ->first();
+             
                     $category = Category::find($this->category_id);
                     $itemExist =   CartLocalDetail::where('name','=',$item->description)
                     ->where('company_id','=',auth()->user()->company_id)

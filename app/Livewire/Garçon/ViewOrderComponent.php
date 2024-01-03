@@ -3,7 +3,9 @@
 namespace App\Livewire\Garçon;
 
 use Livewire\Component;
-use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, Item};
+use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, Item, ServiceControl};
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ViewOrderComponent extends Component
@@ -252,13 +254,22 @@ class ViewOrderComponent extends Component
     }
     public function change()
     {
+        DB::beginTransaction();
         try {
             if ($this->edit != null) {
                 
                 $order = CartLocalDetail::find($this->edit);
                 $order->status = 'ENTREGUE';
                 $order->save();
-                
+
+
+               //Registrar tempo de entrega do pedido
+               ServiceControl::create([
+                'item'=>$order->name,
+                'time'=>Carbon::parse($order->created_at)->format('s'),
+                'company_id'=>auth()->user()->company_id,
+               ]);
+
                 $this->alert('success', 'SUCESSO', [
                     'toast'=>false,
                     'position'=>'center',
@@ -266,11 +277,13 @@ class ViewOrderComponent extends Component
                     'confirmButtonText' => 'OK',
                     'text'=>'Operação Realizada Com Sucesso.'
                 ]);
-                    $this->getOrders();
+                $this->getOrders();
             }  
+
+            DB::commit();
         
         } catch (\Throwable $th) {
-           
+           DB::rollBack();
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',

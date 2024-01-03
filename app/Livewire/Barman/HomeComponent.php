@@ -6,8 +6,9 @@ use App\Jobs\NotificatioJob;
 use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
 use App\Models\GarsonTable;
-use App\Models\NotificationGarson;
+use App\Models\GarsonTableManagement;
 use App\Models\Table;
+use Carbon\Carbon;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -20,7 +21,7 @@ class HomeComponent extends Component
     {
         return view('livewire.barman.home-component',[
             'allOrders'=>$this->getOrders($this->tableNumber),
-            'allTables'=>Table::where('company_id','=',auth()->user()->company_id)->get()
+            'allTables'=>$this->getTable()
         ])->layout('layouts.barman.app');
     }
 
@@ -29,24 +30,19 @@ class HomeComponent extends Component
         try {
             if(isset($tableSearch) and $tableSearch  != null)
             {
-               return CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','=','Bebidas')
-                ->where('cart_locals.table','=',$tableSearch)
-                ->where('cart_local_details.status','=','PENDENTE')
-                ->orWhere('cart_local_details.status','=','EM PREPARAÇÃO')
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
-
+               return CartLocalDetail::where('category','=','Bebidas')
+               ->where('table','=',$this->tableNumber)
+               ->where('status','=','PENDENTE')
+               ->orWhere('status','=','EM PREPARAÇÂO')
+               ->where('company_id','=',auth()->user()->company_id)
+               ->get();
             }else{
 
-              return  CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','=','Bebidas')
-                ->where('cart_local_details.status','=','PENDENTE')
-                ->orWhere('cart_local_details.status','=','EM PREPARAÇÃO')
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
+              return  CartLocalDetail::where('category','=','Bebidas')
+              ->where('status','=','PENDENTE')
+              ->Orwhere('status','=','EM PREPARAÇÂO')
+              ->where('company_id','=',auth()->user()->company_id)
+              ->get();
             }
              
         
@@ -100,28 +96,52 @@ class HomeComponent extends Component
      public function changeStatus()
      {
         try {
+          
+            
+            
             $cartdetail =  CartLocalDetail::find($this->preparid);
             $cartdetail->status = $this->status;
             $cartdetail->save();
-            $this->getOrders($this->tableNumber);
+
           
+            $this->getOrders($this->tableNumber);
+            
 
             if ($this->status == 'PRONTO') {
-                
-                $cartlocal = CartLocal::find($cartdetail->cart_local_id);
-                $garsontable = GarsonTable::whereJsonContains('table',$cartlocal->table)
-                ->where('status','=','Turno Aberto')
-                ->first(); 
-    
-                NotificatioJob::dispatch($cartlocal->user_id,$cartlocal->table,"ALERTA DE PEDIDO DE BEBIDA PRONTA,DEVE SE DIRIGIR AO BAR PARA BUSCAR");
+               
+               
 
-          
+                $garsontable = GarsonTableManagement::where('table',$cartdetail->table)
+                ->first(); 
+
+                if($garsontable->garsontable->status == 'Turno Aberto'){
+                    
+                    
+                    NotificatioJob::dispatch($garsontable->garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO DE BEBIDA PRONTA,DEVE SE DIRIGIR AO BAR PARA BUSCAR");
+                }
+                
+                $this->getOrders($this->tableNumber);
             }
-            
 
             
         
 
+        } catch (\Throwable $th) {
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
+     }
+
+
+     public function getTable()
+     {
+        try {
+          return   Table::where('company_id','=',auth()->user()->company_id)->get();
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [
                 'toast'=>false,

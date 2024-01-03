@@ -10,8 +10,10 @@ use App\Livewire\RoomManager\{
     MyAccount,
     ShowReviewComponent,
     OrderComponent,
-    ShowBookComponent
+    ShowBookComponent,
+    ServiceControl
 };
+
 
 Route::get('/painel/chef-sala',HomeComponent::class)->name('room.manager.home')->middleware(['auth','room_manager']);
 Route::get('/painel/chef-sala/garçons',GarsonComponent::class)->name('room.manager.garson')->middleware(['auth','room_manager']);
@@ -21,5 +23,6 @@ Route::get('/chef-sala/avaliações',ShowReviewComponent::class)->name('room.man
 Route::get('/painel/chef-sala/pedidos',OrderComponent::class)->name('panel.room.manager.order')->middleware(['auth','room_manager']);
 Route::get('/painel/chef-sala/encomendas',DeliveryComponent::class)->name('panel.room.manager.delivery')->middleware(['auth','room_manager']);
 Route::get('/painel/chef-sala/reservas',ShowBookComponent::class)->name('panel.room.manager.reserves')->middleware(['auth','room_manager']);
+Route::get('/painel/tempo-entrega',ServiceControl::class)->name('panel.room.manager.service.control')->middleware(['auth','room_manager']);
 
 

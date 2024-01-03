@@ -38,7 +38,11 @@
                        
                         @foreach ($itemsOrder as $item)
                         <tr>
-                            <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @if ($item->status != 'ENTREGUE')
+                                <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @else
+                                <td>...</td>
+                            @endif
                             <td class="fw-bold">{{ $item->table ?? ''}}</td>
                             @if ($item->status == 'PENDENTE')
                             <td class="fw-bold text-danger">{{$item->status}}</td>
@@ -88,7 +92,11 @@
                     @if(count($drinksOrder) > 0)
                         @foreach ($drinksOrder as $item)
                         <tr>
-                            <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @if ($item->status != 'ENTREGUE')
+                                 <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @else
+                                 <td>...</td>
+                            @endif
                             <td class="fw-bold">{{ $item->table ?? ''}}</td>
                             @if ($item->status == 'PENDENTE')
                             <td class="fw-bold text-danger">{{$item->status}}</td>

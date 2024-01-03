@@ -39,9 +39,12 @@
         <thead>
             <tr>
                 <th>Data</th>
-                <th>Forma de Pagamento</th>
-                <th>Total </th>
-                <th>Estado de Pagamento</th>
+                <th>Item</th>
+                <th>Preço</th>
+                <th>Qtd.</th>
+                <th>Tx(%)</th>
+                <th>Desconto</th>
+                <th>Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -50,9 +53,12 @@
                 <tr>
                     <tr>
                         <td>{{\Carbon\Carbon::parse($item->created_at)->format("d-m-Y")}}</td>
-                        <td>{{$item->paymenttype}}</td>
-                        <td>{{number_format($item->total)}} Kz</td>
-                        <td>{{$item->status }}</td>
+                        <td>{{$item->item}} Kz</td>
+                        <td>{{number_format($item->price,2,',','.')}} Kz</td>
+                        <td>{{$item->quantity}}</td>
+                        <td>{{$item->tax }}</td>
+                        <td>{{number_format($item->discount,2,',','.') }} Kz</td>
+                        <td>{{number_format($item->subtotal,2,',','.')}} Kz</td>
                     </tr>
                 </tr>
             @endforeach

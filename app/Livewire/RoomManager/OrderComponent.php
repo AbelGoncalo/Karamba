@@ -115,12 +115,32 @@ class OrderComponent extends Component
         try {
                
                 $total = 0;
-                $data = $this->getData($this->startdate,$this->enddate);
+           
+                if ($this->startdate != null || $this->enddate != null) {
 
+                    $start = Carbon::parse($this->startdate)->format('Y-m-d') .' 00:00:00';
+                    $end   = Carbon::parse($this->enddate)->format('Y-m-d') .' 23:59:59';
+            
+                    $data = Order::join('detail_orders','orders.id','detail_orders.order_id')
+                    ->join('companies','companies.id','orders.company_id')
+                    ->select('detail_orders.item','detail_orders.price','detail_orders.quantity','detail_orders.tax','detail_orders.discount','detail_orders.subtotal')
+                    ->where('orders.company_id','=',auth()->user()->company_id)
+                     ->whereBetween('orders.created_at',[$start,$end])->get();
+                     
+         
+                 } else {
+                   
+                    $data = Order::join('detail_orders','orders.id','detail_orders.order_id')
+                     ->join('companies','companies.id','orders.company_id')
+                     ->select('detail_orders.item','detail_orders.price','detail_orders.quantity','detail_orders.tax','detail_orders.discount','detail_orders.subtotal')
+                     ->where('orders.company_id','=',auth()->user()->company_id)->get();
+          
+                 }
+                
                 if($data->count() > 0){
                     foreach ($data as  $value) {
-                       $total +=$value->total;
-                    }
+                       $total += $value->price;
+                }
       
                   $company = Company::find(auth()->user()->company_id);
                   $pdfContent = new Dompdf();

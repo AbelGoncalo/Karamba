@@ -27,6 +27,7 @@
             <table class="table table-striped table-hover table-sm text-center">
                 <thead class="card-header-custom card-header">
                     <tr>
+                        
                         <th>TEMPO</th>
                         <th>ESTADO</th>
                         <th>ITEM</th>
@@ -41,7 +42,11 @@
                        
                         @foreach ($itemsOrder as $item)
                         <tr>
-                            <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @if ($item->status != 'ENTREGUE')
+                                <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @else
+                             <td>...</td>
+                            @endif
                             @if ($item->status == 'PENDENTE')
                             <td class="fw-bold text-danger">{{$item->status}}</td>
                             @elseif($item->status == 'ENTREGUE')
@@ -57,24 +62,26 @@
                             <td>{{number_format($item->price,2,',','.')}} Kz</td>
                             <td>{{$item->quantity}}</td>
                             <td>{{number_format(($item->price * $item->quantity),2,',','.')}} Kz</td>
+                            @if ($item->status != 'ENTREGUE')
                             <td>
-                               
-                                      @if ($item->status == 'PENDENTE')
-                                        <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1">
-                                            <i class="fa fa-times"></i>
-                                            
-                                        </button>
-                                        <button wire:click='findItem({{$item->id}})' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-order mt-1">
-                                            <i class="fa fa-list"></i>
-                                        </button>
-                                        @endif
-                                        @if ($item->status == 'PRONTO')
-                                        <button wire:click='confirmChangeStatus({{$item->id}})' class="btn btn-sm btn-success mt-1" title="Marcar como entregue">
-                                            <i class="fa fa-check"></i>
-                                        </button>
-                                        @endif
- 
+                                @if ($item->status == 'PENDENTE')
+                                <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button wire:click='findItem({{$item->id}})' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-order mt-1">
+                                    <i class="fa fa-list"></i>
+                                </button>
+                                @endif
+                                @if ($item->status == 'PRONTO')
+                                <button wire:click='confirmChangeStatus({{$item->id}})' class="btn btn-sm btn-success mt-1" title="Marcar como entregue">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                                @endif
                             </td>
+                                
+                            @else
+                                <td>...</td>
+                            @endif
                         </tr>
                         @endforeach
                              
@@ -109,7 +116,11 @@
                     @if(count($drinksOrder) > 0)
                         @foreach ($drinksOrder as $item)
                         <tr>
-                            <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @if ($item->status != 'ENTREGUE')
+                                <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
+                            @else
+                            <td>...</td>
+                            @endif
                             @if ($item->status == 'PENDENTE')
                             <td class="fw-bold text-danger">{{$item->status}}</td>
                             @elseif($item->status == 'ENTREGUE')
@@ -125,6 +136,7 @@
                             <td>{{number_format($item->price,2,',','.')}} Kz</td>
                             <td>{{$item->quantity}}</td>
                             <td>{{number_format(($item->price * $item->quantity),2,',','.')}} Kz</td>
+                            @if ($item->status != 'ENTREGUE')
                             <td>
                                 @if ($item->status == 'PENDENTE')
                                 <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1">
@@ -141,6 +153,10 @@
                                 </button>
                                 @endif
                             </td>
+                            @else
+                                 <td>...</td>
+                             @endif
+                            
                         </tr>
                         @endforeach
                              

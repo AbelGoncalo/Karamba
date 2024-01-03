@@ -33,6 +33,7 @@
                     <tbody>
                         @foreach ($reviews as $item)
                         <tr>
+                          
                             <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y H:i')}}</td>
                             <td>{{$item->comment ?? 'N/D'}}</td>
                             <td> 

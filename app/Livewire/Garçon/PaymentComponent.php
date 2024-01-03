@@ -45,6 +45,7 @@ class PaymentComponent extends Component
     public function getBankAccount()
     {
         try {
+             
            return BankAccount::where('company_id','=',auth()->user()->company_id)
             ->where('status','=','1')
             ->limit(3)

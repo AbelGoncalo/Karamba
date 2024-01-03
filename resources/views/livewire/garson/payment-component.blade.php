@@ -6,9 +6,9 @@
         <div class="container mt-5">
             <div class="row col-md-12 d-flex justify-content-center align-items-center flex-wrap">
                 <ul class="list-group list-group-flush col-md-8 rounded text-center">
-                    @if (isset($bankAccounts))
+                    @if (isset($bankAccounts) and $bankAccounts->count() > 0)
                         @foreach ($bankAccounts as $item)
-                        <li style="margin-bottom: -1.4rem" class="list-group-item text-uppercase"><span class="fw-bold">BANCO:</span> <span class="text-muted">{{$item->bank}}</span> | <span class="fw-bold">IBAM:</span> <span class="text-muted">{{$item->ibam}}</span> | <span class="fw-bold">Nº CONTA:</span> <span class="text-muted">{{$item->number}}</span></li>
+                             <li style="margin-bottom: -1.4rem" class="list-group-item text-uppercase"><span class="fw-bold">BANCO:</span> <span class="text-muted">{{$item->bank}}</span> | <span class="fw-bold">IBAM:</span> <span class="text-muted">{{$item->ibam}}</span> | <span class="fw-bold">Nº CONTA:</span> <span class="text-muted">{{$item->number}}</span></li>
                         @endforeach
                     @else
                         <li class="list-group-item text-uppercase">NENHUMA COORDENADA BANCARIA DISPONÍVEL</li>

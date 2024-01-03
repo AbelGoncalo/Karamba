@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Company::class)->nullable();
             $table->foreignIdFor(User::class)->nullable();
             $table->string('table');
+            $table->string('reference')->nullable();
             $table->string('client')->nullable();
             $table->integer('identify')->nullable();
             $table->string('paymenttype');

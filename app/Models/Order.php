@@ -28,6 +28,7 @@ class Order extends Model
         'totaldiscount',
         'file_receipt',
         'company_id',
+        'reference',
 
     ];
 

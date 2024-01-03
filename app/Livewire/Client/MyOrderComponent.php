@@ -17,20 +17,16 @@ class MyOrderComponent extends Component
         try {
             $clientelocal = ClientLocal::where('user_id','=',auth()->user()->id)->first();
 
-            $listDrinksTotal = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('client_local_id','=',$clientelocal->id)
-            ->where('cart_local_details.category','=','Bebidas')
-            ->where('cart_locals.user_id','=',auth()->user()->id)
-            ->where('cart_locals.company_id','=',auth()->user()->company_id)
+            $listDrinksTotal =  CartLocalDetail::where('category','=','Bebidas')
+            ->where('table','=',$clientelocal->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
             ->get();
+           
 
-            $listOtherItemsTotal = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('client_local_id','=',$clientelocal->id)
-            ->where('cart_locals.user_id','=',auth()->user()->id)
-            ->where('cart_local_details.category','<>','Bebidas')
-            ->where('cart_locals.company_id','=',auth()->user()->company_id)
+
+            $listOtherItemsTotal =  CartLocalDetail::where('category','<>','Bebidas')
+            ->where('table','=',$clientelocal->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
             ->get();
             
             foreach ($listDrinksTotal as  $value) {
@@ -59,11 +55,28 @@ class MyOrderComponent extends Component
         return view('livewire.client.my-order-component',[
             'itemsOrder'=>$this->listOtherItems(),
             'drinksOrder'=>$this->listDrinks(),
-            'client'=>ClientLocal::where('user_id','=',auth()->user()->id)->first()->client,
-            'clientCount'=>ClientLocal::where('user_id','=',auth()->user()->id)->first()->clientCount,
-            'tableNumber'=>ClientLocal::where('user_id','=',auth()->user()->id)->first()->tableNumber,
+            'client'=>$this->getCurrentClient(),
+
         ])->layout('layouts.client.app');
     }
+
+
+    public function getCurrentClient()
+    {
+        try {
+         
+          return  ClientLocal::where('user_id','=',auth()->user()->id)->first();
+        } catch (\Throwable $th) {
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
+    }
+
 
     //Listar pedidos
     public function listDrinks()
@@ -71,12 +84,9 @@ class MyOrderComponent extends Component
         try {
             $clientelocal = ClientLocal::where('user_id','=',auth()->user()->id)->first();
 
-            return CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('client_local_id','=',$clientelocal->id)
-            ->where('cart_local_details.category','=','Bebidas')
-            // ->where('cart_local_details.status','=','RECEBIDO')
-            ->where('cart_locals.company_id','=',auth()->user()->company_id)
+            return CartLocalDetail::where('category','=','Bebidas')
+            ->where('table','=',$clientelocal->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
             ->get();
 
               
@@ -97,12 +107,9 @@ class MyOrderComponent extends Component
         try {
             $clientelocal = ClientLocal::where('user_id','=',auth()->user()->id)->first();
 
-            return CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('client_local_id','=',$clientelocal->id)
-            ->where('cart_local_details.category','<>','Bebidas')
-            // ->where('cart_local_details.status','=','RECEBIDO')
-            ->where('cart_locals.company_id','=',auth()->user()->company_id)
+            return CartLocalDetail::where('category','<>','Bebidas')
+            ->where('table','=',$clientelocal->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
             ->get();
               
         } catch (\Throwable $th) {

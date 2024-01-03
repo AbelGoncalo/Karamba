@@ -65,25 +65,17 @@ class NotificationComponent extends Component
             ->where('user_id','=',auth()->user()->id)
             ->first();
             
-           
+            
+          
           
             if($garsontable)
             {
-                if($this->tableNumber)
-                {
-                    
-                    return  NotificationGarson::where('garson_table_id','=',$garsontable->id)
-                    ->where('status','=','0')
-                    ->where('tableNumber','=',$this->tableNumber)
-                    ->get();
-
-                }else{
+               
                    
                     return NotificationGarson::where('garson_table_id','=',$garsontable->id)
                             ->where('status','=','0')
                             ->get();
-
-                }
+ 
             }
 
         } catch (\Throwable $th) {
@@ -106,10 +98,10 @@ class NotificationComponent extends Component
         try {
            $notification =  NotificationGarson::find($this->edit);
            $order = Order::find($notification->paymentid);
-           $orderdetail = DetailOrder::where('order_id','=',$order->id)->get();
-           $company = Company::find(auth()->user()->company_id);
+      
          
            $order->status = 1;
+           $order->reference = $notification->reference;
            $order->save();
            $notification->status = 1;
            $notification->save();
@@ -117,25 +109,9 @@ class NotificationComponent extends Component
            $table = Table::where('number','=',$notification->tableNumber)->first();
            $table->status = 0;
            $table->save();
-
-           if ($order) {
-                 $pdfContent = PDF::loadView('livewire.invoices.invoice',[
-                     'order'=>$order,
-                     'orderdetails'=>$orderdetail,
-                     'companie'=>$company,
-                ])->setPaper(array(0, 0, 323.15, 900.21),'portrait');
-                $date = date('H');
-                    Storage::put("/public/receipts/".$date."fatura.pdf",$pdfContent->output()) ;
-                    session()->forget('download_confirmed');
-           $this->alert('success', 'SUCESSO', [
-            'toast'=>false,
-            'position'=>'center',
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'OK',
-            'text'=>'Pagamento Confirmado.'
-        ]);
-        DB::commit();
-        } 
+            //Mudar o estado da factura
+            \App\Api\FactPlus::changeStatu($notification->reference);
+          DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->alert('error', 'ERRO', [
@@ -191,7 +167,7 @@ class NotificationComponent extends Component
             $order = Order::find($notification->paymentid);
             if ($order->file_receipt != null) {
 
-                session()->put('download_confirmed',1);
+                session()->put('download_confirmed'.$notification->id,1);
                 return  response()->download(storage_path().'/app/public/comprovativos_pagamentos_trans/'.$order->file_receipt);
                  
             }else{
@@ -204,7 +180,7 @@ class NotificationComponent extends Component
                     'text'=>'O pagamento não foi realizado por outra via... Deve verificar por a via no qual foi paga.'
                 ]);
 
-                session()->put('download_confirmed',1);
+                 
             }
             
          } catch (\Throwable $th) {

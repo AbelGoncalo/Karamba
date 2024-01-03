@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row  mt-5">
         <div class="col-m-12 d-flex justify-content-between align-items-center flex-wrap">
-            <p class="mb-3" style="font-size: 20px"> <span class="fw-bold">Senhor(a) </span> <span>{{$client ?? ''}}</span> <br> <span class="fw-bold">Número de Pessoas na Mesa:</span><span>{{$clientCount ?? ''}}</span></span><br> <span class="fw-bold">{{$tableNumber ?? ''}}</span> <br> <span><a class="text-uppercase nav-link  btn btn-sm button-order" href="{{route('client.orders')}}">Fazer Pedido <i class="fa fa-arrow-right"></i></a></span></p>
+            <p class="mb-3" style="font-size: 20px"> <span class="fw-bold">Senhor(a) </span> <span>{{$client->client ?? ''}}</span> <br> <span class="fw-bold">Número de Pessoas na Mesa:</span><span>{{$client->clientCount ?? ''}}</span></span><br> <span class="fw-bold">{{$client->tableNumber ?? ''}}</span> <br> <span><a class="text-uppercase nav-link  btn btn-sm button-order" href="{{route('client.orders')}}">Fazer Pedido <i class="fa fa-arrow-right"></i></a></span></p>
             <p class="fw-bold text-success" style="font-size: 1.5rem">POR PAGAR: {{number_format($totalOtherItems + $totalDrinks,2,',','.')}} Kz</p>
         </div>
        
@@ -48,8 +48,7 @@
                             <td>
                                 @if ($item->status == 'PENDENTE')
                                         <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger">
-                                            <i class="fa fa-ban"></i>
-                                            Cancelar
+                                            <i class="fa fa-times"></i>
                                         </button>
                                         <button wire:click='findItem({{$item->id}})' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-order">
                                             <i class="fa fa-list"></i>
@@ -110,8 +109,7 @@
                             <td>
                                 @if ($item->status == 'RECEBIDO')
                                 <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger">
-                                    <i class="fa fa-ban"></i>
-                                    Cancelar
+                                    <i class="fa fa-times"></i>
                                 </button>
                                 <button wire:click='findItem({{$item->id}})' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-order">
                                     <i class="fa fa-list"></i>

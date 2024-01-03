@@ -126,18 +126,5 @@ class HomeComponent extends Component
     }
 
 
-    public function logout()
-    {
-        try {
-            //code...
-        } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
-        }
-    }
+   
 }

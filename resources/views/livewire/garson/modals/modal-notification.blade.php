@@ -36,6 +36,38 @@
                       @endif
                     </tbody>
                   </table>
+                  @if (isset($listNotifications) and $listNotifications->count() > 0)
+                  <hr>
+                  <h4>NOTIFICAÇÃO DE PAGAMENTOS</h4>
+                  <table class="table table-bordered table-hover text-center ">
+                    <tbody>
+                      @foreach ($listNotifications as $item)
+                        <tr>
+                              <td>{{$item->title}}</td>
+                              <td>{{$item->tableNumber}}</td>
+                              <td>{{$item->message}}</td>
+                              <td>
+                                @if (session('download_confirmed'.$item->id) == 0)
+                                  <button wire:click='download({{$item->id}})' class="btn btn-sm btn-warning fw-bold">
+                                    <i class="fa fa-download"></i>
+                                    Comprovativo
+                                  </button>
+                                @endif
+                                @if (session('download_confirmed'.$item->id) == 1)
+                             
+                                <button wire:click='confirmAction({{$item->id}})' class="btn btn-sm btn-success fw-bold">
+                                  <i class="fa fa-check"></i>
+                                  CONFIRMAR
+                                </button>
+                                @endif 
+                                   
+                          
+                              </td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                  @endif
                 </div>
               </div>
             </div>

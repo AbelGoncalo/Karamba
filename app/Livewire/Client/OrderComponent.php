@@ -3,7 +3,7 @@
 namespace App\Livewire\Client;
 
 use Livewire\Component;
-use App\Models\{Category,Item,CartLocal,ClientLocal,Table,CartLocalDetail, GarsonTable};
+use App\Models\{Category,Item,CartLocal,ClientLocal,Table,CartLocalDetail, GarsonTable, GarsonTableManagement};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class OrderComponent extends Component
@@ -155,14 +155,22 @@ class OrderComponent extends Component
                         ]);
 
                     }else{
-
+                        $garsontable = GarsonTable::where('status','=','Turno Aberto')
+                        ->first();
+                        $client = ClientLocal::where('user_id','=',auth()->user()->id)->first();
+                        $garsontablemanagement = GarsonTableManagement::where('garson_table_id','=',$garsontable->id)
+                        ->where('table','=',$client->tableNumber)
+                        ->first();
+                        $cartLocalFirst = CartLocal::where('client_local_id','=',$client->id)->first();
+                       
                         CartLocalDetail::create([
-                            'cart_local_id'=>$cartLocal->id,
+                            'cart_local_id'=>$cartLocalFirst->id,
                             'name'=>$item->description,
+                            'table'=>$client->tableNumber,
                             'price'=>$item->price,
                             'quantity'=>$this->qtd[$id],
                             'category'=>$category->description,
-                            'company_id'=>auth()->user()->company_id,
+                            'company_id'=>auth()->user()->company_id
 
                         ]);
 
@@ -177,21 +185,28 @@ class OrderComponent extends Component
 
                 }else{
 
-                    $garsontable = GarsonTable::whereJsonContains('table',$clientLocal->tableNumber)
-                    ->where('status','=','Turno Aberto')
+                    $garsontable = GarsonTable::where('status','=','Turno Aberto')
+                    ->first();
+                    $client = ClientLocal::where('user_id','=',auth()->user()->id)->first();
+                    $garsontablemanagement = GarsonTableManagement::where('garson_table_id','=',$garsontable->id)
+                    ->where('table','=',$client->tableNumber)
                     ->first();
 
+
+                
+
                        $cartLocalFirst =  CartLocal::create([
-                            'table'=>$clientLocal->tableNumber,
+                            'table'=>$garsontablemanagement->table,
                             'client_local_id'=>$clientLocal->id,
                             'company_id'=>auth()->user()->company_id,
-                            'user_id'=>$garsontable->user_id
+                            'user_id'=>$garsontablemanagement->garsontable->user_id
                         ]);
 
 
                         CartLocalDetail::create([
                             'cart_local_id'=>$cartLocalFirst->id,
                             'name'=>$item->description,
+                            'table'=>$client->tableNumber,
                             'price'=>$item->price,
                             'quantity'=>$this->qtd[$id],
                             'category'=>$category->description,
@@ -219,6 +234,7 @@ class OrderComponent extends Component
        
            
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

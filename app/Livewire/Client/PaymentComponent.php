@@ -3,7 +3,7 @@
 namespace App\Livewire\Client;
 
 use Livewire\Component;
-use App\Models\{BankAccount, CartLocal,CartLocalDetail,ClientLocal, DetailOrder, GarsonTable, Item, NotificationGarson, Order,OrderDetail, Table, User};
+use App\Models\{BankAccount, CartLocal,CartLocalDetail,ClientLocal, DetailOrder, GarsonTable, GarsonTableManagement, Item, NotificationGarson, Order,OrderDetail, Table, User};
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\DB;
@@ -33,17 +33,18 @@ class PaymentComponent extends Component
     public function mount()
     {   
         try {
-            $cartlocal = ClientLocal::where('user_id','=',auth()->user()->id)->first();
-            $listDrinksTotal = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('client_local_id','=',$cartlocal->id)
-            ->where('cart_local_details.category','=','Bebidas')
-            ->get();
+            $clientelocal = ClientLocal::where('user_id','=',auth()->user()->id)->first();
 
-            $listOtherItemsTotal = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-            ->select('cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-            ->where('client_local_id','=',$cartlocal->id)
-            ->where('cart_local_details.category','<>','Bebidas')
+            $listDrinksTotal =  CartLocalDetail::where('category','=','Bebidas')
+            ->where('table','=',$clientelocal->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
+            ->get();
+           
+
+
+            $listOtherItemsTotal =  CartLocalDetail::where('category','<>','Bebidas')
+            ->where('table','=',$clientelocal->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
             ->get();
             
             foreach ($listDrinksTotal as  $value) {
@@ -118,7 +119,7 @@ class PaymentComponent extends Component
     public function finallyPayment()
     {
 
-        
+        DB::beginTransaction();
        
         //Validação de campos
         if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
@@ -184,6 +185,7 @@ class PaymentComponent extends Component
            $client =  ClientLocal::where('user_id','=',auth()->user()->id)->first(); 
            $cartLocal =  CartLocal::where('client_local_id','=',$client->id)->first(); 
            $cartLocalDetail =  CartLocalDetail::where('cart_local_id','=',$cartLocal->id)->get(); 
+        
 
            $receiptString = '';
            if($this->file_receipt)
@@ -192,7 +194,7 @@ class PaymentComponent extends Component
                         $this->file_receipt->getClientOriginalExtension();
 
 
-                        $this->file_receipt->storeAs('public/comprovativos_pagamentos_trans/',$receiptString);
+                        $this->file_receipt->storeAs('/public/comprovativos_pagamentos_trans/',$receiptString);
 
 
            }
@@ -218,6 +220,7 @@ class PaymentComponent extends Component
                 foreach ($cartLocalDetail as $item) {
                     DetailOrder::create([
                         'order_id'=>$order->id,
+                        'table'=>$cartLocal->table,
                         'item'=>$item->name,
                         'price'=>$item->price,
                         'quantity'=>$item->quantity,
@@ -235,47 +238,39 @@ class PaymentComponent extends Component
            $tableupdate  =  Table::where('number','=',$client->tableNumber)->first();
            $tableupdate->status = 0;
            $tableupdate->save();
-           //Notificar Garson
-          $garsontable =  GarsonTable::where('company_id','=',auth()->user()->company_id)->get();
-            if ($garsontable) {
-               foreach ($garsontable as $key =>  $value) {
-              
-                    foreach ($value->table as $k =>  $item) {
-                        if($value->table[$k] == $item)
-                        {
-                          
-                            NotificationGarson::create([
-                                'garson_table_id'=>$value->id,
-                                'title'=>'PAGAMENTO',
-                                'tableNumber'=>$client->tableNumber,
-                                'message'=>'UM PAGAMENTO FOI  REALIZADO. AGUARDANDO A CONFIRMAÇÃO....' ,
-                                'status'=>'0',
-                                'paymentid'=>$order->id,
-                                'company_id'=>auth()->user()->company_id,
-                            ]);
 
-                           session()->put('finallyOrder',$order->id);
-                            $this->order_veriry = $order->id;
-                            $this->orderfinded = Order::find($order->id);
-
-                            
-                            $orderfinded = Order::find($order->id);
-                            $orderfinded->user_id = $value->user_id;
-                            $orderfinded->save();
-
-                            
-
-                            return;
-                        }
-                        
-                    }
-               }
-        }
-             
-        
-        }
-         } catch (\Throwable $th) {
+           //criar factura no factplus
+          $reference = \App\Api\FactPlus::create($order->id);
+       
+          $tablegarsonmanagement = GarsonTableManagement::where('table','=',$client->tableNumber)->first();
+            if ($tablegarsonmanagement) {
            
+                
+                NotificationGarson::create([
+                    'garson_table_id'=>$tablegarsonmanagement->garsontable->id,
+                    'title'=>'PAGAMENTO',
+                    'tableNumber'=>$client->tableNumber,
+                    'message'=>'UM PAGAMENTO FOI  REALIZADO. AGUARDANDO A CONFIRMAÇÃO....' ,
+                    'status'=>'0',
+                    'paymentid'=>$order->id,
+                    'company_id'=>auth()->user()->company_id,
+                ]);
+
+                session()->put('finallyOrder',$order->id);
+                $this->order_veriry = $order->id;
+                $this->orderfinded = Order::find($order->id);
+
+                
+                $orderfinded = Order::find($order->id);
+                $orderfinded->user_id = $tablegarsonmanagement->garsontable->user_id;
+                $orderfinded->save();
+ 
+            }
+            
+        }
+        DB::commit();
+         } catch (\Throwable $th) {
+           DB::rollBack();
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',
@@ -314,15 +309,23 @@ class PaymentComponent extends Component
     }
 
        
-    public function download()
+    public function sendReceipt()
     {
+
+        $this->validate(['email'=>'required'],['email.required'=>'Obrigatório']);
         
 
          try {
 
+            //Enviar factura para o email do cliente
+            $order = Order::find(session('finallyOrder'));
+            if($order){
 
-            $this->clearFields();
-            return redirect()->route('client.review.services');
+                \App\Api\FactPlus::sendInvoice($order->reference,$this->email);
+                $this->clearFields();
+                return redirect()->route('client.review.services');
+
+            }
 
 
          } catch (\Throwable $th) {

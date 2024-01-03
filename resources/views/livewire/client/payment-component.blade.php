@@ -33,9 +33,18 @@
                     </div>
                     @else
                     <p class="text-center fw-bold h5">SEU PAGAMENTO FOI VERIFICADO COM SUCESSO!!</p>
-                    <div class="form-group mt-2">
-                    <button type="button" wire:click='download' class="w-100 btn btn-md btn-primary-welcome-client">FAZER DOWNLOAD FACTURA</button>
-                    </div> 
+                    <p class="text-center fw-bold h5">INFORME SEU EMAIL, PARA RECEBER PO COMPROVATIVO DE PAGAMENTO</p>
+                    <form wire:submit='sendReceipt'>
+                      
+                        <div class="form-group">
+                          <label for="">E-mail</label>
+                          <input type="email" placeholder="Informe o email do Cliente" wire:model='email' class="form-control" type="mail">
+                          @error('email') <span class="text-danger">{{$message}}</span>@enderror
+                        </div>
+                        <div class="form-group mt-2">
+                          <button type="submit" class="w-100 btn btn-md btn-primary-welcome-client">CONCLUIR</button>
+                      </div>
+                      </form>
                     {{ Session()->forget('ID')}}
                     @endif
                 </div>

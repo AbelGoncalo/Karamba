@@ -161,7 +161,7 @@ class FactPlus{
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"ALTER\",\r\n      \"apikey\": \"65899c23c9b6e95943468c44c9ecd952\",\r\n      \"document\": {\r\n        \"reference\": \"$reference\",\r\n        \"type\": \"factura\",\r\n \"status\": \"sent\",\r\n \"reason\": \"\"\r\n   }   }",
+                CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"ALTER\",\r\n      \"apikey\": \"65899c23c9b6e95943468c44c9ecd952\",\r\n      \"document\": {\r\n        \"reference\": \"$reference\",\r\n        \"type\": \"factura\",\r\n \"status\": \"settled\",\r\n \"reason\": \"\"\r\n   }   }",
                 CURLOPT_HTTPHEADER => array(
                 "Content-Type: application/json"
                 ),

@@ -19,6 +19,7 @@ class NotificationGarson extends Model
         'paymentid',
         'tableNumber',
         'company_id',
+        'reference',
 
     ];
 }

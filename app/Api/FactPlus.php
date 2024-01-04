@@ -13,7 +13,7 @@ class FactPlus{
     public static function create($orderid)
     {
          $key = '65847d93edbb6d77bea624101ff616ea';
-        // $key = '65899c23c9b6e95943468c44c9ecd952';
+         //$key = '65899c23c9b6e95943468c44c9ecd952';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)->get();
@@ -89,10 +89,6 @@ class FactPlus{
         }
     }
 
-
-   
-
-
     public static function sendInvoice($reference,$email)
     {
         $key = '65847d93edbb6d77bea624101ff616ea';
@@ -118,6 +114,8 @@ class FactPlus{
             return redirect()->back()->with('error','Falha ao realizar Operação');
         }
     }
+
+
     public static function changeStatu($reference)
     {
         $key = '65847d93edbb6d77bea624101ff616ea';

@@ -3,6 +3,7 @@
 namespace App\Livewire\Garçon;
 
 use App\Api\FactPlus;
+use App\Jobs\FactPlusJob;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\{
@@ -275,17 +276,11 @@ class PaymentComponent extends Component
                 
             }
 
-                $reference = \App\Api\FactPlus::create($this->orderid);
-                if($reference)
-                {
-                     \App\Api\FactPlus::changeStatu($reference);
-                    session()->put('finallyOrder',$reference);
-                    session()->put('table',$this->tableNumber);
-
-                }
-                
-         
-          
+            $reference = \App\Api\FactPlus::create($order->id);
+            \App\Api\FactPlus::changeStatu($reference);
+            session()->put('finallyOrder','t');
+            session()->put('table',$this->tableNumber);
+     
             DB::commit();
         }else{
             $this->alert('warning', 'AVISO', [

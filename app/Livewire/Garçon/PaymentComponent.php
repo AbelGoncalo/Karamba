@@ -17,7 +17,7 @@ use App\Models\{
      GarsonTable,
     Item,
     Order,
-    OrderDetail
+    OrderDetail,
 };
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\DB;
@@ -281,7 +281,7 @@ class PaymentComponent extends Component
            
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
-     
+            
         }else{
             $this->alert('warning', 'AVISO', [
                 'toast'=>false,
@@ -320,14 +320,21 @@ class PaymentComponent extends Component
         
          try {
             
-  
+              
+             
+              $this->clearFields();
               \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+              session()->forget('finallyOrder');
+              session()->forget('table');
 
- 
-                $this->clearFields();
-                session()->forget('finallyOrder');
-                session()->forget('table');
-                return redirect()->route('garson.home');
+              $this->alert('success', 'SUCESSO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Pagamento finalizado com sucesso'
+            ]);
+           
           
                 
 
@@ -349,12 +356,14 @@ class PaymentComponent extends Component
     public function clearFields()
     {
         try {
+
+         
+            $cart =  CartLocalDetail::where('table','=',session('table'))
+            ->where('company_id','=',1)
+            ->delete();
+
+
            
-             CartLocalDetail::where('table','=',$this->tableNumber)
-            ->where('company_id','=',auth()->user()->company_id)
-            ->where('table','=',session('table'))
-            ->delete(); 
-            
 
             $this->paymenttype = 'Transferência';
             $this->payallaccount = 'Pagar Toda Conta';
@@ -369,7 +378,7 @@ class PaymentComponent extends Component
            
             
         } catch (\Throwable $th) {
-           
+           dd($th->getMessage());
 
             $this->alert('error', 'ERRO', [
                 'toast'=>false,

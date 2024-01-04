@@ -94,7 +94,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/hash',function(){
 
-    dd(Hash::make('123456789'));
+    \App\Models\CartLocalDetail::where('id','=',1)->delete();
 });
 
 require __DIR__ .'/admin/routes.php';

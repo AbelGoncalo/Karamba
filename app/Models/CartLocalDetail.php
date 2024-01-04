@@ -20,7 +20,6 @@ class CartLocalDetail extends Model
         'company_id',
         'table',
 
-
     ];
 
     public function cartlocal()

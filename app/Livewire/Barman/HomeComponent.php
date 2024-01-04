@@ -114,7 +114,7 @@ class HomeComponent extends Component
                 $garsontable = GarsonTable::where('table',$cartdetail->table)
                 ->first(); 
 
-                if($garsontable->garsontable->status == 'Turno Aberto'){
+                if($garsontable->status == 'Turno Aberto'){
                     
                     
                     NotificatioJob::dispatch($garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO DE BEBIDA PRONTA,DEVE SE DIRIGIR AO BAR PARA BUSCAR");
@@ -127,6 +127,7 @@ class HomeComponent extends Component
         
 
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

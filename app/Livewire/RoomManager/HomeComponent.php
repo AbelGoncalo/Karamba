@@ -28,37 +28,35 @@ class HomeComponent extends Component
          
             if($table !=null)
             {
-                $this->itemsOrder =  CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','<>','Bebidas')
-                ->where('cart_locals.table','=',$table)
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
+                $this->itemsOrder =  CartLocalDetail::where('table','=',$this->tableNumber)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','<>','Bebidas')
+                ->where('status','<>','PRONTO')
                 ->get();
                
-                $this->drinksOrder = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','=','Bebidas')
-                ->where('cart_locals.table','=',$table)
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
+                $this->drinksOrder = CartLocalDetail::where('table','=',$this->tableNumber)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','<>','PRONTO')
+                ->get();;
 
             
                 
             }else{
                 
-                $this->itemsOrder =  CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','<>','Bebidas')
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
+                $this->itemsOrder =  CartLocalDetail::
+                where('company_id','=',auth()->user()->company_id)
+                ->where('category','<>','Bebidas')
+                ->where('status','<>','PRONTO')
+                ->get();;
 
                
                
-                $this->drinksOrder = CartLocal::join('cart_local_details','cart_locals.id','cart_local_details.cart_local_id')
-                ->select('cart_locals.table','cart_locals.id as cartlocalid','cart_local_details.id','cart_local_details.created_at','cart_local_details.name','cart_local_details.price','cart_local_details.quantity','cart_local_details.status')
-                ->where('cart_local_details.category','=','Bebidas')
-                ->where('cart_locals.company_id','=',auth()->user()->company_id)
-                ->get();
+                $this->drinksOrder = CartLocalDetail::
+                where('company_id','=',auth()->user()->company_id)
+                ->where('category','<>','Bebidas')
+                ->where('status','<>','PRONTO')
+                ->get();;
 
             }
             

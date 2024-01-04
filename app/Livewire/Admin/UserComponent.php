@@ -43,7 +43,7 @@ class UserComponent extends Component
     public function save()
     {
         try {
-            //$this->validate($this->rules,$this->messages);
+            $this->validate($this->rules,$this->messages);
             $photoString = '';
             if($this->photo)
             {

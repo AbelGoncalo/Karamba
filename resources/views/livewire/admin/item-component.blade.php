@@ -64,7 +64,7 @@
                                         <td style="width:10%">
                                             <img class="img-fluid rounded-full" style="width: 5rem;height:5rem; border-radius: 100%" src="{{($item->image != null) ? asset('/storage/'.$item->image): asset('/not-found.png')}}" alt="Imagem da categoria {{$item->description}}">
                                         </td>
-                                        <td>{{$item->category->description}}</td>
+                                        <td>{{$item->category->description ?? ''}}</td>
                                         <td>{{$item->description}}</td>
                                         <td>{{number_format($item->price,2,',','.')}} AOA</td>
                                         <td>{{$item->quantity}}</td>

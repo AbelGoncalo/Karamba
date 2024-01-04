@@ -9,12 +9,7 @@
       </div>
       <div class="modal-body">
         <form wire:submit='{{($edit != '')? 'update':'save'}}' id="basicform">
-          {{-- <div class="form-group">
-              <label for="barcode">Código de Barra</label>
-              <input id="barcode" type="text" wire:model='barcode'  placeholder="Descreve o item" autocomplete="on" class="form-control">
-              @error('barcode') <span class="text-danger">{{$message}}</span> @enderror
-
-          </div> --}}
+         
           <div class="form-group">
               <label for="description">Descrição</label>
               <input id="description" type="text" wire:model='description'  placeholder="Descreve o item" autocomplete="on" class="form-control">
@@ -30,18 +25,8 @@
               <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="quantity" type="number" wire:model='quantity' description="quantity" class="form-control">
               @error('quantity') <span class="text-danger">{{$message}}</span> @enderror
           </div>
-          {{--
-          <div class="form-group">
-              <label for="iva">Imposto(%)</label>
-              <select name="iva"  wire:model='iva' id="iva" class="form-control">
-                <option value="">--Selecionar Iva %--</option>
-                <option value="14">14%</option>
-                <option value="7">7%</option>
-                <option value="0">0%</option>
-              </select>
-              @error('iva') <span class="text-danger">{{$message}}</span> @enderror
-          </div> --}}
-          <div class="form-group">
+          
+          <div class="form-group" wire:ignore>
               <label for="category_id">Categoria</label>
               <select name="category_id"  wire:model='category_id' id="category_id" class="form-control">
                 <option value="">--Selecionar Categoria--</option>

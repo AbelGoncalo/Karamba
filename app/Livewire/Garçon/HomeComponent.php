@@ -116,7 +116,7 @@ class HomeComponent extends Component
 
             }else{
 
-                if ($this->qtd[$id]  > $item->quantity) {
+                if ($this->qtd[$id]  > $item->quantity || $item->quantity <= 0) {
                     $this->alert('warning', 'AVISO', [
                         'toast'=>false,
                         'position'=>'center',

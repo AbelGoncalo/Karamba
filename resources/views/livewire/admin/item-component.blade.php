@@ -134,5 +134,24 @@ $(document).ready(function() {
 });
 </script>
 @endpush
+@push('select2-categories-modal')
+<script>
+$(document).ready(function() {
+    $('#category_id').select2({
+      theme: "bootstrap",
+      width:"100%",
+      dropdownParent: $('#item')
+
+    });
+  
+    $('#category_id').change(function (e) { 
+      e.preventDefault();
+     
+      @this.set('category_id', $('#category_id').val());
+     
+    });
+});
+</script>
+@endpush
 
 

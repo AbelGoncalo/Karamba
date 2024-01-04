@@ -156,6 +156,7 @@
     @stack('select2-users')
     @stack('chart')
     @stack('select2-categories')
+    @stack('select2-categories-modal')
 
   
   

@@ -6,8 +6,14 @@ use App\Models\DetailOrder;
 use Illuminate\Support\Facades\Http;
 
 class FactPlus{
+
+ 
+
+ 
     public static function create($orderid)
     {
+         $key = '65847d93edbb6d77bea624101ff616ea';
+        // $key = '65899c23c9b6e95943468c44c9ecd952';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)->get();
@@ -50,7 +56,7 @@ class FactPlus{
 
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'CREATE',
-                'apikey' => '65899c23c9b6e95943468c44c9ecd952',
+                'apikey' => $key,
                 'document'=>[
                     'type'=>'factura',
                     'date'=>$date,
@@ -84,46 +90,17 @@ class FactPlus{
     }
 
 
-    public static function Show($reference)
-    {
-        try {
-                    $curl = curl_init();
-
-                    curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.factplus.co.ao",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS =>"{\r\n    \"apicall\" : \"VIEW\",\r\n    \"apikey\" : \"65847d93edbb6d77bea624101ff616ea\",\r\n    \"document\" : {\r\n        \"reference\" : \"$reference\",\r\n        \"type\" : \"factura\"\r\n    }\r\n}   \r\n",
-                    CURLOPT_HTTPHEADER => array(
-                    "Content-Type: application/json"
-                    ),
-                    ));
-
-                    $response = curl_exec($curl);
-
-                    curl_close($curl);
-
-                    $collection = collect(json_decode($response));
-                    //  dd($collection['data']);
-
-                    return $collection['data'];
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error','Falha ao realizar Operação');
-        }
-    }
+   
 
 
     public static function sendInvoice($reference,$email)
     {
+        $key = '65847d93edbb6d77bea624101ff616ea';
+        // $key = '65899c23c9b6e95943468c44c9ecd952';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
-                'apikey' => '65899c23c9b6e95943468c44c9ecd952',
+                'apikey' => $key,
                 'document'=>[
                     'reference'=>$reference,
                     'type'=>'factura',
@@ -143,13 +120,15 @@ class FactPlus{
     }
     public static function changeStatu($reference)
     {
+        $key = '65847d93edbb6d77bea624101ff616ea';
+        // $key = '65899c23c9b6e95943468c44c9ecd952';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',
-                'apikey' => '65899c23c9b6e95943468c44c9ecd952',
+                'apikey' =>  $key,
                 'document'=>[
                     'type'=>'factura',
-                    'reference'=>'1704357099',
+                    'reference'=>$reference,
                     'status'=>'sent',
                     'reason'=>'',
                 ]

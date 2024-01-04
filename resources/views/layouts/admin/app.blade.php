@@ -155,7 +155,7 @@
     @stack('select2')
     @stack('select2-users')
     @stack('chart')
-
+    @stack('select2-categories')
 
   
   

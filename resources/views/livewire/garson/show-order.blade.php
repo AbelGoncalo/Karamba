@@ -105,7 +105,7 @@
                             <td class="fw-bold text-success }}">{{$item->status}} <br> (Aguardando Pagamento)</td>
 
                             @else
-                            <td class="fw-bold text-warning }}">{{$item->status}}</td>
+                            <td class="fw-bold text-primary }}">{{$item->status}}</td>
 
                             @endif
 

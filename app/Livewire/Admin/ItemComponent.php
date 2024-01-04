@@ -16,7 +16,7 @@ use Livewire\WithPagination;
 class ItemComponent extends Component
 {
     use LivewireAlert,WithFileUploads,WithPagination;
-    public $description, $price,$edit,$search,$category_id,$cost = 0,$iva = 0,$barcode,$image,$quantity; 
+    public $description, $price,$edit,$search,$category_id,$cost = 0,$iva = 0,$barcode,$image,$quantity,$searchCategory; 
     protected $rules = ['description'=>'required|unique:items,description','price'=>'required','category_id'=>'required','quantity'=>'required'];
     protected $messages = ['description.required'=>'Obrigatório','description.unique'=>'Já Existe','price.required'=>'Obrigatório','category_id.required'=>'Obrigatório','quantity.required'=>'Obrigatório'];
     protected $listeners = ['close'=>'close','delete'=>'delete','changeStatus'=>'changeStatus'];
@@ -28,15 +28,27 @@ class ItemComponent extends Component
     public function render()
     {
         return view('livewire.admin.item-component',[
-            'categories'=>Category::where('company_id','=',auth()->user()->company_id)->get(),
-            'items'=>$this->searchItem($this->search),
+            'items'=>$this->searchItem($this->search,$this->searchCategory),
+            'categories'=>$this->getCategories()
         ])->layout('layouts.admin.app');
     }
 
 
-    public function updatedSearch()
+ 
+
+    public function getCategories()
     {
-        $this->resetPage(1);
+        try {
+           return Category::where('company_id','=',auth()->user()->company_id)->get();
+        } catch (\Throwable $th) {
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
     }
      //Salvar Item
      public function save()
@@ -244,7 +256,7 @@ class ItemComponent extends Component
          }
      }
      //Pesquisar Categoria
-     public function searchItem($search)
+     public function searchItem($search,$category)
      {
          try {
  
@@ -252,10 +264,16 @@ class ItemComponent extends Component
              {
                  return Item::where('description','like','%'.$search.'%')->latest()
                  ->where('company_id','=',auth()->user()->company_id)
-                 ->paginate(10);
+                 ->get();
+             }elseif($category != null){
+
+                return Item::where('category_id','=',$category)->latest()
+                ->where('company_id','=',auth()->user()->company_id)
+                ->get();
+
              }else{
                  return Item::where('company_id','=',auth()->user()->company_id)
-                 ->paginate(10);
+                 ->get();
              }
              
          } catch (\Throwable $th) {

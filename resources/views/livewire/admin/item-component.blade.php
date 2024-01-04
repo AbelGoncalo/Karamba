@@ -20,14 +20,24 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-header">
-                        <div class="col-md-12 d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="form-group col-md-4 mt-1">
+                        <div class="col-md-12 d-flex justify-content-between align-items-start flex-wrap">
+                            <div class="form-group col-md-5 ">
                                 <input type="search" wire:model.live='search' name="search" id="search" class="form-control rounded" placeholder="Pesquisar Item">
                             </div>
+                            <div class="form-group col-md-5" wire:ignore>
+                                <select name="searchCategory" wire:model.live='searchCategory' id="searchCategory" class="form-control">
+                                    <option value="">Categorias</option>
+                                    @if (isset($categories) and $categories->count() > 0)
+                                        @foreach ($categories as $item)
+                                            <option value="{{$item->id}}">{{$item->description}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
                             <div class="">
-                                <button class="btn btn-sm btn-success mt-1" title="Exportar Excel" wire:click='export'><i class="fas fa-file-excel"></i></button>
-                                <button class="btn btn-sm mt-1" style=" background-color: #222831e5;color:#fff;" title="Exportar PDF" wire:click='exportPdf'><i class="fas fa-file-pdf"></i></button>
-                                <button class="btn btn-sm mt-1" style=" background-color: #222831e5;color:#fff;" data-toggle="modal" data-target="#item"><i class="fa fa-plus"></i> Adicionar</button>
+                                <button class="btn btn-sm btn-success" title="Exportar Excel" wire:click='export'><i class="fas fa-file-excel"></i></button>
+                                <button class="btn btn-sm" style=" background-color: #222831e5;color:#fff;" title="Exportar PDF" wire:click='exportPdf'><i class="fas fa-file-pdf"></i></button>
+                                <button class="btn btn-sm" style=" background-color: #222831e5;color:#fff;" data-toggle="modal" data-target="#item"><i class="fa fa-plus"></i> Adicionar</button>
                              </div>
                         </div>
                 </div>
@@ -87,11 +97,11 @@
                             </tbody>
                          
                         </table>
-                        <div class="container">
+                        {{-- <div class="container">
                             <div class="row">
                                 {{$items->links('pagination::bootstrap-4')}}
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -105,5 +115,24 @@
        $("#item").modal('hide');
     })
 </script>
+
+@push('select2-categories')
+<script>
+$(document).ready(function() {
+    $('#searchCategory').select2({
+      theme: "bootstrap",
+      width:"100%",
+   
+    });
+  
+    $('#searchCategory').change(function (e) { 
+      e.preventDefault();
+     
+      @this.set('searchCategory', $('#searchCategory').val());
+     
+    });
+});
+</script>
+@endpush
 
 

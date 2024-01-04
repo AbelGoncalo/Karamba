@@ -35,7 +35,7 @@
                                     <th>Imagem</th>
                                     <th>Descrição</th>
                                     <th>Categoria</th>
-                                    <th>Custo</th>
+                                    <th>Unidade</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
@@ -48,7 +48,7 @@
                                         </td>
                                         <td>{{$item->description}}</td>
                                         <td>{{$item->category_economato->description ?? ''}}</td>
-                                        <td>{{$item->unit}}</td>
+                                        <td>{{$item->unit ?? 'N/D'}}</td>
                                         <td>
                                             <button wire:click='editProduct({{$item->id}})' data-toggle="modal" data-target="#product-economate" class="btn btn-sm btn-primary mt-1"><i class="fa fa-edit"></i></button>
                                             <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1"><i class="fa fa-trash"></i></button>

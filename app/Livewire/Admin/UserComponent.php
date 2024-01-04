@@ -62,6 +62,7 @@ class UserComponent extends Component
                 'phone' =>$this->phone,
                 'profile' =>$this->profile,
                 'email' =>$this->email,
+                'company_id' =>auth()->user()->company_id,
                 'password' =>Hash::make($this->email),
             ]);
 

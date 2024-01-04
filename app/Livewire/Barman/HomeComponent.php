@@ -111,13 +111,13 @@ class HomeComponent extends Component
                
                
 
-                $garsontable = GarsonTableManagement::where('table',$cartdetail->table)
+                $garsontable = GarsonTable::where('table',$cartdetail->table)
                 ->first(); 
 
                 if($garsontable->garsontable->status == 'Turno Aberto'){
                     
                     
-                    NotificatioJob::dispatch($garsontable->garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO DE BEBIDA PRONTA,DEVE SE DIRIGIR AO BAR PARA BUSCAR");
+                    NotificatioJob::dispatch($garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO DE BEBIDA PRONTA,DEVE SE DIRIGIR AO BAR PARA BUSCAR");
                 }
                 
                 $this->getOrders($this->tableNumber);

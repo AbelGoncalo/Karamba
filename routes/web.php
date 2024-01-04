@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\ChannelPublic;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,13 @@ use Illuminate\Support\Facades\Route;
 
 //     dd($response['message']);
 // });
+
+
+
+Route::get('/hash',function(){
+
+    dd(Hash::make('123456789'));
+});
 
 require __DIR__ .'/admin/routes.php';
 require __DIR__ .'/chef/routes.php';

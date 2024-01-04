@@ -46,6 +46,7 @@ class HomeComponent extends Component
     public function getOrders($tableSearch)
     {
         try {
+          
             if(isset($tableSearch) and $tableSearch  != null)
             {
                 
@@ -68,7 +69,7 @@ class HomeComponent extends Component
              
             }
         } catch (\Throwable $th) {
-      
+            
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

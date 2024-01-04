@@ -11,10 +11,12 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class GarsonComponent extends Component
 {
     use LivewireAlert;
+    
     public $startdate = null,$enddate = null,$edit,$garson, $table;
     protected $rules = ['garson'=>'required','table'=>'required'];
     protected $messages = ['garson.required'=>'Obrigatório','table.required'=>'Obrigatório'];
     protected $listeners = ['delete'=>'delete','clear'=>'clear'];
+
     public function hydrate()
     {
         $this->dispatch('update-select2');
@@ -285,7 +287,7 @@ class GarsonComponent extends Component
 
             
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+           
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

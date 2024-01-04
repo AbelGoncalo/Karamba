@@ -62,6 +62,9 @@
                                         <button class="btn btn-sm btn-danger"  wire:click='confirmDelete({{$item->id}})' >
                                             <i  class="fa fa-trash"></i>
                                         </button>
+                                        <button class="btn btn-sm btn-danger"  wire:click='edit({{$item->id}})' >
+                                            <i  class="fa fa-trash"></i>
+                                        </button>
                                        </td>
                                     </tr>
                                         

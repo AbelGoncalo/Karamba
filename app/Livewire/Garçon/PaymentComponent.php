@@ -144,8 +144,8 @@ class PaymentComponent extends Component
     public function finallyPayment()
     {
       
-        
-         //Validação de campos
+        DB::beginTransaction();
+       #Validação de campos
          if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
           
          
@@ -190,7 +190,7 @@ class PaymentComponent extends Component
 
         }
          
-        DB::beginTransaction();
+       #Fim de Validação de campos
          try {
 
           if ($this->total == 0) {
@@ -278,10 +278,10 @@ class PaymentComponent extends Component
 
             $reference = \App\Api\FactPlus::create($order->id);
             \App\Api\FactPlus::changeStatu($reference);
-            session()->put('finallyOrder','t');
+           
+            session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
      
-            DB::commit();
         }else{
             $this->alert('warning', 'AVISO', [
                 'toast'=>false,
@@ -295,8 +295,10 @@ class PaymentComponent extends Component
             ]);
         }
         }
+        
+         DB::commit();
           } catch (\Throwable $th) {
-              dd($th->getMessage());
+               
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

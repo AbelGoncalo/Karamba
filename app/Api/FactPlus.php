@@ -3,6 +3,7 @@
 namespace App\Api;
 
 use App\Models\DetailOrder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class FactPlus{
@@ -12,11 +13,16 @@ class FactPlus{
  
     public static function create($orderid)
     {
-         $key = '65847d93edbb6d77bea624101ff616ea';
+        DB::beginTransaction();
+        //real
+        $key = '65847d93edbb6d77bea624101ff616ea';
+        //teste
          //$key = '65899c23c9b6e95943468c44c9ecd952';
         try {
 
-           $details =  DetailOrder::where('order_id','=',$orderid)->get();
+           $details =  DetailOrder::where('order_id','=',$orderid)
+           ->select('id','item','price','quantity')
+           ->get();
            $date = date('Y-m-d');
            $duedate = date('Y-m-d',strtotime('+7 days'));
            $vref = rand(10000,20000);
@@ -83,16 +89,20 @@ class FactPlus{
           return $response['data'];
            
     
-         
+          DB::commit();
         } catch (\Throwable $th) {
+            DB::rollback();
             return redirect()->back()->with('error','Falha ao realizar Operação');
         }
     }
 
     public static function sendInvoice($reference,$email)
     {
+        DB::beginTransaction();
+        //real
         $key = '65847d93edbb6d77bea624101ff616ea';
-        // $key = '65899c23c9b6e95943468c44c9ecd952';
+        //teste
+        //$key = '65899c23c9b6e95943468c44c9ecd952';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -110,7 +120,9 @@ class FactPlus{
             ]);
 
           return $response['data'];
+          DB::commit();
         } catch (\Throwable $th) {
+            DB::rollback();
             return redirect()->back()->with('error','Falha ao realizar Operação');
         }
     }
@@ -118,8 +130,11 @@ class FactPlus{
 
     public static function changeStatu($reference)
     {
+        DB::beginTransaction();
+         //real
         $key = '65847d93edbb6d77bea624101ff616ea';
-        // $key = '65899c23c9b6e95943468c44c9ecd952';
+        //teste
+       // $key = '65899c23c9b6e95943468c44c9ecd952';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',
@@ -133,7 +148,10 @@ class FactPlus{
             ]);
 
           return $response['data'];
+
+          DB::commit();
         } catch (\Throwable $th) {
+            DB::rollback();
             return redirect()->back()->with('error','Falha ao realizar Operação');
         }
     }

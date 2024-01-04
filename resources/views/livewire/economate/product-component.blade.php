@@ -1,9 +1,9 @@
-@section('title','Ingredientes')
+@section('title','Produtos')
 <div>
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="page-header">
-                <h2 class="pageheader-title">PAINEL DE GESTÃO DE ECONOMATO</h2>
+                <h2 class="pageheader-title">PAINEL DE GESTÃO DE ESTOQUE</h2>
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -44,11 +44,11 @@
                                     @foreach ($products as $item)
                                     <tr>
                                         <td style="width:10%">
-                                            <img class="img-fluid rounded-full" style="width: 5rem;height:5rem; border-radius: 100%" src="{{($item->image != null) ? asset('/storage/economato/'.$item->image): asset('/not-found.png')}}" alt="Imagem da categoria {{$item->description}}">
+                                            <img class="img-fluid rounded-full" style="width: 5rem;height:5rem; border-radius: 100%" src="{{($item->image != null) ? asset('/storage/ESTOQUE/'.$item->image): asset('/not-found.png')}}" alt="Imagem da categoria {{$item->description}}">
                                         </td>
                                         <td>{{$item->description}}</td>
                                         <td>{{$item->category_economato->description ?? ''}}</td>
-                                        <td>{{number_format($item->cost ?? 0,2,',','.')}} Kz</td>
+                                        <td>{{$item->unit}}</td>
                                         <td>
                                             <button wire:click='editProduct({{$item->id}})' data-toggle="modal" data-target="#product-economate" class="btn btn-sm btn-primary mt-1"><i class="fa fa-edit"></i></button>
                                             <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1"><i class="fa fa-trash"></i></button>

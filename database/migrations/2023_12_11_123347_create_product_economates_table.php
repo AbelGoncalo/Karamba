@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('description');
             $table->string('image')->nullable();
-            $table->decimal('cost',10,2);
+            $table->string('unit',100)->nullable();
             $table->foreignIdFor(CategoryEconomate::class)->nullable();
             $table->foreignIdFor(Company::class)->nullable();
             $table->softDeletes();

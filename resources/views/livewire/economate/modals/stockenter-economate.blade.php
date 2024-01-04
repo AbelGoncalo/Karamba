@@ -28,15 +28,8 @@
              @error('quantity') <span class="text-danger">{{$message}}</span> @enderror
             </div>
             <div class="form-group col-md-6">
-              <label for="description">Unidade</label>
-              <select name="unit" id="unit" wire:model='unit' class="form-control">
-                <option value="">--Selecionar--</option>
-                <option value="g">G</option>
-                <option value="un">UN</option>
-                <option value="ml">ML</option>
-                <option value="unidade de medida">Unidade de Medida</option>
-                <option value="Hr">Hr</option>
-              </select>
+              <label for="unit">Unidade</label>
+              <input readonly type="text" name="unit" id="unit" wire:model='unit' class="form-control">
               @error('unit') <span class="text-danger">{{$message}}</span> @enderror
 
           </div>

@@ -12,7 +12,6 @@ class ProductEconomate extends Model
     protected $fillable = [
         'description',
         'image',
-        'cost',
         'company_id',
         'category_economate_id',
         'fixe_price',

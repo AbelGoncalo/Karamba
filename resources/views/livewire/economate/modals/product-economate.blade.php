@@ -16,12 +16,18 @@
   
             </div>
             <div class="form-group">
-                <label for="cost">Custo</label>
-                <input id="cost" type="text" wire:model='cost' description="cost"  autocomplete="on" class="form-control">
-                @error('cost') <span class="text-danger">{{$message}}</span> @enderror
-  
-            </div>
-           
+              <label for="unit">Unidade</label>
+              <select name="unit" id="unit" wire:model='unit' class="form-control">
+                <option value="">--Selecionar--</option>
+                <option value="g">G</option>
+                <option value="un">UN</option>
+                <option value="ml">ML</option>
+                <option value="unidade de medida">Unidade de Medida</option>
+                <option value="Hr">Hr</option>
+              </select>
+              @error('unit') <span class="text-danger">{{$message}}</span> @enderror
+
+          </div>
         <div x-data="{isUploading: false, progress: 0}" class="form-group"
         x-on:livewire-upload-start = "isUploading = true"
         x-on:livewire-upload-finish = "isUploading = false"

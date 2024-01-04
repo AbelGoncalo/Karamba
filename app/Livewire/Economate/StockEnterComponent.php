@@ -41,6 +41,28 @@ class StockEnterComponent extends Component
         'expiratedate.required'=>'Obrigatório',
     ];
 
+    public function getUnit()
+    {
+    
+          try {
+            if ($this->product_economate_id) {
+                
+                $product =  ProductEconomate::find($this->product_economate_id);
+              
+                $this->unit =  $product->unit;
+            }
+          } catch (\Throwable $th) {
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+          }
+        
+    }
+
     public function render()
     {
         return view('livewire.economate.stock-enter-component',[

@@ -10,7 +10,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class ProductComponent extends Component
 {
     use LivewireAlert,WithFileUploads;
-    public $description,$edit,$search,$category,$image,$cost;
+    public $description,$edit,$search,$category,$image,$unit;
 
     protected $rules = ['description'=>'required|unique:product_economates,description'];
     protected $messages = ['description.required'=>'Obrigatório','description.unique'=>'Já Existe'];
@@ -46,7 +46,7 @@ class ProductComponent extends Component
                    ProductEconomate::create([
                        'description'=>$this->description,
                        'image'=>$imageString,
-                       'cost'=>$this->cost,
+                       'unit'=>$this->unit,
                        'company_id'=>auth()->user()->company_id,
                        'category_economate_id'=>$this->category,
                        'company_id'=>auth()->user()->company_id

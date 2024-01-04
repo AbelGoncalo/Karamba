@@ -2,18 +2,18 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> ATRIBUIR MESA</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{($edit != '')? 'ACTUALIZAR':'ATRIBUIR'}} MESA</h5>
         <button wire:click='clearFields' type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
       </div>
       <div class="modal-body">
-        <form enctype="multipart/form-data" wire:submit.prevent='store' class="row">
+        <form enctype="multipart/form-data" wire:submit.prevent='{{($edit != '') ? 'update':'store'}}' class="row">
               
           <div class="col-md-12">
            
                <div class="form-group" wire:ignore>
                 <label for="user">Garçon</label>
-                <select  wire:model.live="garson" id="garson"  class="form-control selectgarson @error('garson') is-invalid @enderror">
+                <select required  wire:model.live="garson" id="garson"  class="form-control selectgarson @error('garson') is-invalid @enderror">
                   <option value="">Selecionar</option>
                   @if ($users->count() > 0)
                       @foreach ($users as $item)
@@ -25,7 +25,8 @@
               </div> 
                <div class="form-group"  wire:ignore>
                 <label for="table">Mesas</label>
-                <select multiple wire:model.live="table" id="table" name="table"  class="form-control selecttable @error('table') is-invalid @enderror">
+                <select required  wire:model.live="table" id="table" name="table"  class="form-control selecttable @error('table') is-invalid @enderror">
+                  <option value="">Selecionar</option>
                   @if ($tables->count() > 0)
                       @foreach ($tables as $item)
                           <option   value="{{$item->number ?? old('table')}}">{{$item->number}}</option>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Company::class)->nullable();
             $table->foreignIdFor(User::class);
-            $table->json('table');
+            $table->string('table');
             $table->date('start')->default(date('Y-m-d'))->nullable();
             $table->time('starttime')->default(date('H:i'))->nullable();
             $table->date('end')->nullable();

@@ -76,9 +76,7 @@
                          @if (isset($tables) and $tables->count() > 0)
                         @foreach ($tables as $value)
 
-                            @foreach ($value->garsontablemanagement as $item)
-                            <p class="h6 text-uppercase text-center">Atribuida :{{$item->table}}</p>
-                            @endforeach
+                        <p class="h6 text-uppercase text-center">Atribuida :{{$value->table}}</p>
                         @endforeach
                         <button wire:click='confirm' class="btn btn-md btn-danger w-100 mt-4">
                             <i class="fa fa-times"></i>

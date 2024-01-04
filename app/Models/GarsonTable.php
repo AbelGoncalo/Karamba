@@ -18,6 +18,7 @@ class GarsonTable extends Model
         'endtime',
         'company_id',
         'status',
+        'table',
 
     ];
 

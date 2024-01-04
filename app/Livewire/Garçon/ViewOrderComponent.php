@@ -57,7 +57,7 @@ class ViewOrderComponent extends Component
     {
         try {
 
-       
+        
             return GarsonTable::where('user_id','=',auth()->user()->id)
             ->where('company_id','=',auth()->user()->company_id)
             ->where('status','=','Turno Aberto')

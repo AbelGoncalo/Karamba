@@ -15,7 +15,7 @@ class GarsonComponent extends Component
     public $startdate = null,$enddate = null,$edit,$garson, $table;
     protected $rules = ['garson'=>'required','table'=>'required'];
     protected $messages = ['garson.required'=>'Obrigatório','table.required'=>'Obrigatório'];
-    protected $listeners = ['delete'=>'delete','clear'=>'clear'];
+    protected $listeners = ['clear'=>'clear'];
 
     public function hydrate()
     {
@@ -102,116 +102,57 @@ class GarsonComponent extends Component
 
     public function store()
     {
-        $this->validate($this->rules,$this->messages);
+       $this->validate($this->rules,$this->messages);
+    
         try {
 
-                //Verificar se o garson já tem um turno aberto
-
-             
-
-                    $exist = GarsonTable::where('user_id','=',$this->garson)
-                    ->where('company_id','=',auth()->user()->company_id)
-                    ->where('status','=','Turno Aberto')
-                    ->first();
             
-                //Verificar se o garson já tem mesa atribuida a ele
-                if(isset($exist) and $exist->count() > 0)
-                {
+            $verify =
+             GarsonTable::where('status','=','Turno Aberto')
+            ->where('table','=',$this->table)
+            ->get();
 
-                    $this->alert('warning', 'AVISO', [
-                        'toast'=>false,
-                        'position'=>'center',
-                        "timer"=> 2000,
-                        'text'=>"O garçon que pretende atruir mesa, já tem a mesas atruidas e turno aberto!!!"
-                    ]);
-
-
-                }else{
-                    
-                    $collections = GarsonTableManagement::join('garson_tables','garson_table_management.garson_table_id','=','garson_tables.id')
-                    ->select('garson_table_management.table')
-                    ->where('garson_tables.status','=','Turno Aberto')
-                    ->where('garson_tables.company_id','=',auth()->user()->company_id)
-                    ->get();
-                     
-               
-
-                if(isset($collections) and $collections->count() > 0){
-                    $existe = [];
-                    foreach ($collections as  $value) {
-                        
-                        foreach ($this->table as  $item) {
-                            if ($value->table == $item) {
-                                array_push($existe,$value->table);
-                             }
-                        }
-                    }
-
-
-                        
-                    if (isset($existe) and count($existe) > 0) {
-                        # code...
+          
+                    if (isset($verify) and $verify->count() > 0) {
                         $this->alert('warning', 'AVISO', [
                             'toast'=>false,
                             'position'=>'center',
                             'showConfirmButton' => true,
                             'confirmButtonText' => 'OK',
-                            "timer"=> 5000,
-                            'text'=>" A(s) ".implode(" ",$existe)." já foram atribuidas a outro garçon "
+                            'text'=>'Essa mesa já foi atribuida a um garson...'
                         ]);
-                    } else {
-                        $garson = GarsonTable::create([
+
+                    }else{
+
+            
+                        $garsontable =  GarsonTable::create([
                             'user_id'=>$this->garson,
-                            'table'=>$this->table,
                             'start'=>date('Y-m-d'),
                             'starttime'=>date('H:i'),
                             'company_id'=>auth()->user()->company_id,
+                            'table'=>$this->table,
                             'status'=>'Turno Aberto',
                         ]);
-  
-                        foreach ($this->table as $item) {
-                          GarsonTableManagement::create([
-                              'garson_table_id'=>$garson->id,
-                              'table'=>$item,
-                              'company_id'=>auth()->user()->company_id,
-                          ]);
+            
+                        if ($garsontable) {
+                            $this->alert('success', 'SUCESSO', [
+                                'toast'=>false,
+                                'position'=>'center',
+                                'showConfirmButton' => true,
+                                'confirmButtonText' => 'OK',
+                                'text'=>'Operação realizada com sucesso'
+                            ]);
+            
                         }
+
+                        $this->dispatch('clear');
+                        $this->clearFields();
                     }
-                    
-                    $this->dispatch('clear');
 
-                }else{
+        
 
-                   
-                   $garson = GarsonTable::create([
-                          'user_id'=>$this->garson,
-                          'table'=>$this->table,
-                          'start'=>date('Y-m-d'),
-                          'starttime'=>date('H:i'),
-                          'company_id'=>auth()->user()->company_id,
-                          'status'=>'Turno Aberto',
-                      ]);
-
-                      foreach ($this->table as $item) {
-                        GarsonTableManagement::create([
-                            'garson_table_id'=>$garson->id,
-                            'table'=>$item,
-                            'company_id'=>auth()->user()->company_id,
-                        ]);
-                      }
-                     
-                    
-                      $this->dispatch('clear');
-
-                }
-                }
-
-                
-           
-            
-                
         } catch (\Throwable $th) {
- 
+           
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -223,26 +164,17 @@ class GarsonComponent extends Component
     }
 
 
-    public function confirmDelete($id)
+    public function editTable($id)
     {
         
        
         try {
+            $garsontable =   GarsonTable::find($id);
+            
             $this->edit = $id;
+            $this->garson =  $garsontable->user_id ;
+            $this->table =  $garsontable->table ;
        
-            $this->alert('warning', 'Confirmar', [
-                'icon' => 'warning',
-                'position' => 'center',
-                'toast' => false,
-                'text' => "Deseja realmente anular está atribuição? Não pode reverter a ação",
-                'showConfirmButton' => true,
-                'showCancelButton' => true,
-                'cancelButtonText' => 'Cancelar',
-                'confirmButtonText' => 'Anular',
-                'confirmButtonColor' => '#3085d6',
-                'cancelButtonColor' => '#d33',
-                'onConfirmed' => 'delete' 
-            ]);
             
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [
@@ -256,38 +188,57 @@ class GarsonComponent extends Component
     }
 
 
-    public function delete()
+    public function update()
     {
         
        
         try {
-            
-       
-          $delete =  GarsonTable::find($this->edit);
- 
-          $garsontablemanagement = GarsonTableManagement::where('garson_table_id','=',$delete->id)->delete();
-
-          if($garsontablemanagement)
-          {
-              $delete->delete();
-
-            $this->alert('success', 'SUCESSO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Atribuição anulada.'
-            ]);
-            
 
 
+            $verify =
+            GarsonTable::where('status','=','Turno Aberto')
+           ->where('table','=',$this->table)
+           ->get();
 
-          }
+         
+                   if (isset($verify) and $verify->count() > 0) {
+
+                       $this->alert('warning', 'AVISO', [
+                           'toast'=>false,
+                           'position'=>'center',
+                           'showConfirmButton' => true,
+                           'confirmButtonText' => 'OK',
+                           'text'=>'Essa mesa já foi atribuida a um garson...'
+                       ]);
+
+                   }else{
+
+                       $garsontablemanagement = GarsonTable::find($this->edit)->update([
+                         'table'=>$this->table
+                       ]);
+
+                            if ($garsontablemanagement) {
+                                $this->alert('success', 'SUCESSO', [
+                                    'toast'=>false,
+                                    'position'=>'center',
+                                    'showConfirmButton' => true,
+                                    'confirmButtonText' => 'OK',
+                                    'text'=>'Atribuição anulada.'
+                                ]);
+                    
+                                $this->clearFields();
+                            }
+                                
+
+                   }
+
+        
+
 
 
             
         } catch (\Throwable $th) {
-           
+           dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

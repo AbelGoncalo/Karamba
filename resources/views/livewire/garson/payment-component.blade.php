@@ -71,12 +71,10 @@
                                       --Selecionar Mesa--
                                     </option>
                                     @if (isset($allTables) and $allTables->count() > 0)
-                                        @foreach ($allTables as $item)
-                                        @foreach ($item->garsontablemanagement as $i)
-                                        <option value="{{$i->table}}">{{$i->table}}</option>
+                                    @foreach ($allTables as $item)
+                                        <option value="{{$item->table}}">{{$item->table}}</option>
                                     @endforeach
-                                        @endforeach
-                                    @endif
+                                @endif
                                 </select>
                                 @error('table')<span class="text-danger">{{$message}}</span>@enderror
                             </div>

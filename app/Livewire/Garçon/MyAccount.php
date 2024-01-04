@@ -203,14 +203,18 @@ class MyAccount extends Component
             ->where('company_id','=',auth()->user()->company_id)
             ->where('user_id','=',auth()->user()->id)
             ->where('status','=','Turno Aberto')
-            ->first();
+            ->get();
 
             if($garsontable)
             {
-                $garsontable->end = date('Y-m-d');
-                $garsontable->endtime = date('H:i');
-                $garsontable->status = 'Turno Fechado';
-                $garsontable->save();
+
+                foreach ($garsontable as $value) {
+                    GarsonTable::find($value->id)->update([
+                      'end' => date('Y-m-d'),
+                       'endtime' => date('H:i'),
+                       'status' => 'Turno Fechado'
+                    ]);
+                }
 
                 $this->alert('success', 'SUCESSO', [
                     'toast'=>false,
@@ -230,6 +234,7 @@ class MyAccount extends Component
             }
             
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

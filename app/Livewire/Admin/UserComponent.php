@@ -42,8 +42,8 @@ class UserComponent extends Component
     //Salvar Usuarios
     public function save()
     {
+        $this->validate($this->rules,$this->messages);
         try {
-            $this->validate($this->rules,$this->messages);
             $photoString = '';
             if($this->photo)
             {

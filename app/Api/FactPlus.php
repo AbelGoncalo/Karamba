@@ -6,7 +6,8 @@ use App\Models\DetailOrder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
-class FactPlus{
+
+class FactPlus {
 
  
 
@@ -17,7 +18,7 @@ class FactPlus{
         //real
         $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-         //$key = '65899c23c9b6e95943468c44c9ecd952';
+        // $key = '65995993b16b93cdac74e28f1cd69267';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)
@@ -86,7 +87,7 @@ class FactPlus{
                 'items'=>$insert
             ]);
 
-          return $response['data'];
+          return serialize($response['data']);
            
     
           DB::commit();
@@ -102,7 +103,7 @@ class FactPlus{
         //real
         $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        //$key = '65899c23c9b6e95943468c44c9ecd952';
+        //$key = '65995993b16b93cdac74e28f1cd69267';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -119,7 +120,7 @@ class FactPlus{
                 ]
             ]);
 
-          return $response['data'];
+          return serialize($response['data']);
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -134,7 +135,7 @@ class FactPlus{
          //real
         $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        //$key = '65899c23c9b6e95943468c44c9ecd952';
+        //$key = '65995993b16b93cdac74e28f1cd69267';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',
@@ -147,7 +148,7 @@ class FactPlus{
                 ]
             ]);
 
-          return $response['data'];
+          return  serialize($response['data']);
 
           DB::commit();
         } catch (\Throwable $th) {

@@ -143,9 +143,9 @@
                                     @error('divisorresult')<span class="text-danger">{{$message}}</span>@enderror
                                 </div>
                              @endif
-                            <div class="form-group mt-2">
-                                <button type="submit" class="w-50 btn btn-md btn-primary-welcome-client">FINALIZAR <i class="fa fa-check"></i></button>
-                                <button type="submit" class="w-50 btn btn-md btn-primary-welcome-client">FINALIZAR <i class="fa fa-check"></i></button>
+                            <div class="row col-md-12 d-flex justify-content-center align-items-center flex-wrap">
+                                <button type="submit" class="col-md-4 btn btn-md btn-primary-welcome-client">FINALIZAR (API)<i class="fa fa-check"></i></button>
+                                <button type="submit" class="col-md-4 btn btn-md btn-primary-welcome-client">FINALIZAR (Local)<i class="fa fa-check"></i></button>
                             </div>
     
                         </div>

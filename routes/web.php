@@ -91,7 +91,12 @@ use Illuminate\Support\Facades\Route;
 //     dd($response['message']);
 // });
 
+Route::get('/test',function(){
 
+    sleep(1);
+    echo 'aqui';
+
+});
  
 
 require __DIR__ .'/admin/routes.php';

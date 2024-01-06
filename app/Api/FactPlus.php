@@ -90,7 +90,7 @@ class FactPlus {
             ])->json();
 
     
-            $collection = collect(json_decode($response,true));
+            $collection = collect(json_decode($response['data'],true));
             return $collection;
            
     

@@ -30,7 +30,7 @@ class HomeComponent extends Component
             return Table::where('company_id','=',auth()->user()->company_id)->get();
         }catch(\Throwable $th)
         {
-          
+          dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -70,6 +70,7 @@ class HomeComponent extends Component
              
             }
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -124,7 +125,7 @@ class HomeComponent extends Component
             $cartdetail =  CartLocalDetail::find($this->preparid);
             $cartdetail->status = $this->status;
             $cartdetail->save();
-            
+
             if ($this->status == 'PRONTO') {
                
 

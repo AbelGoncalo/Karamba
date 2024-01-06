@@ -14,6 +14,9 @@
                       @endforeach
                   @endif
                 </select>
+
+
+                <button wire:click='eventTest'>click me</button>
           </div> 
             <div class="col-md-12">
                  

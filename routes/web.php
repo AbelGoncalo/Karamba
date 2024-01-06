@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\ChannelPublic;
+use App\Events\NotifyEvent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -91,11 +92,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-
-Route::get('/hash',function(){
-
-    \App\Models\CartLocalDetail::where('id','=',1)->delete();
-});
+ 
 
 require __DIR__ .'/admin/routes.php';
 require __DIR__ .'/chef/routes.php';

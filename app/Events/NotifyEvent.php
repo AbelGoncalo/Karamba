@@ -10,26 +10,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ChannelPublic implements ShouldBroadcast
+class NotifyEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    protected $message;
-    public function __construct($message)
+    protected $data ;
+    public function __construct($data)
     {
         //
-        $this->message = $message;
-    }
-
-
-    public function broadcastWith()
-    {
-        return [
-            'message'=>$this->message,
-        ];
+        $this->data = $data;
     }
 
     /**
@@ -40,7 +32,7 @@ class ChannelPublic implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('channel-public'),
+            new Channel('channel-notify'),
         ];
     }
 }

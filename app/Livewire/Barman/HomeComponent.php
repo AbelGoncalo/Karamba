@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Barman;
 
+use App\Events\NotifyEvent;
 use App\Jobs\NotificatioJob;
 use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
@@ -151,6 +152,17 @@ class HomeComponent extends Component
                 'confirmButtonText' => 'OK',
                 'text'=>'Falha ao realizar operação'
             ]);
+        }
+     }
+
+
+     public function eventTest()
+     {
+        try {
+            //dd(NotifyEvent::broadcast('teste'));
+           event(new NotifyEvent('teste'));
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
         }
      }
 }

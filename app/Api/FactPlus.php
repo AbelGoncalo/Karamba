@@ -90,8 +90,7 @@ class FactPlus {
             ])->json();
 
     
-            $collection = collect(json_decode($response['data'],true));
-            return $collection;
+            return $response['data'];
            
     
           DB::commit();

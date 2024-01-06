@@ -94,12 +94,25 @@ use Laravel\SerializableClosure\SerializableClosure;
 // });
 
 Route::get('/test',function(){
-    
+    // $key = '65847d93edbb6d77bea624101ff616ea';
+    // $response = Http::post('https://api.factplus.co.ao', [
+    //     'apicall' => 'VIEW',
+    //     'apikey' => $key,
+    //     'document'=>[
+    //         'reference'=>'',
+    //         'type'=>'factura',
+    //     ],
+    //     'recipient'=>[
+    //         'address'=>'1704551727',
+    //         'subject'=>'FACTURA DE PAGAMENTO',
+    //         'message'=>'SUA FACTURA DE PAGAMENTO, RESTAURANTE KARAMBA',
+    //         'copy'=>'0',
+    //     ]
+    // ]);
 
-$data = '12345623456';
     // $response['result'];
     // $closure = $response['result'];
-    $closure = fn()=> $data;
+    // // $closure = fn()=> $response['result'];
     
     // Recommended
     SerializableClosure::setSecretKey('secret');

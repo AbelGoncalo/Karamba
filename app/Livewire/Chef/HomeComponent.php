@@ -125,7 +125,7 @@ class HomeComponent extends Component
             $cartdetail =  CartLocalDetail::find($this->preparid);
             $cartdetail->status = $this->status;
             $cartdetail->save();
-
+            $this->getOrders($this->tableNumber);
             if ($this->status == 'PRONTO') {
                
 

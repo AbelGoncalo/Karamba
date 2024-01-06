@@ -275,80 +275,11 @@ class PaymentComponent extends Component
                 
             }
 
-
-
-            //-------------------------------------------------------
-            $key = '65847d93edbb6d77bea624101ff616ea';
-            $details =  DetailOrder::where('order_id','=',$order->id)
-            ->select('id','item','price','quantity')
-            ->get();
-            $date = date('Y-m-d');
-            $duedate = date('Y-m-d',strtotime('+7 days'));
-            $vref = rand(10000,20000);
-            $serie = date('Y');
-            $insert = [];
            
- 
-             foreach ($details as  $item) {
-                 if ($item->tax == 0) {
-                     array_push($insert,[
-                     "itemcode"=> $item->id,
-                     "description"=> $item->item,
-                     "price"=> $item->price,
-                     "quantity"=> $item->quantity,
-                     "tax"=> "0",
-                     "discount"=> "0",
-                     "exemption_code"=> "M10",
-                     "retention"=> ""
-                     ]);
-                 } else {
-                     array_push($insert,[
-                         "itemcode"=> $item->id,
-                         "description"=> $item->item,
-                         "price"=> $item->price,
-                         "quantity"=> $item->quantity,
-                         "tax"=> $item->tax,
-                         "discount"=> "0",
-                         "exemption_code"=> "",
-                         "retention"=> ""
-                         ]);
-                 }
-                 
-             }
-            $response =  \Illuminate\Support\Facades\Http::post('https://api.factplus.co.ao', [
-                'apicall' => 'CREATE',
-                'apikey' => $key,
-                'document'=>[
-                    'type'=>'factura',
-                    'date'=>$date,
-                    'duedate'=>$duedate,
-                    'vref'=>$vref,
-                    'serie'=>$serie,
-                    'currency'=>'AOA',
-                    'exchange_rate'=>'0',
-                    'observation'=>'FActura de Pagamento',
-                    'retention'=>'',
-                ],
-                'client'=>[
-                    'name'=>'CONSUMIDOR FINAL',
-                    'nif'=>'99999999',
-                    'email'=>'',
-                    'city'=>'Luanda',
-                    'address'=>'Luanda-Angola',
-                    'postalcode'=>'',
-                    'country'=>'Angola',
-                ],
-                'items'=>$insert
-            ])->json();
-
-                sleep(5);
-          
-            //return $response['data'];
-            //$reference =  \App\Api\FactPlus::create($order->id);
+            $reference =  \App\Api\FactPlus::create($order->id);
             //\App\Api\FactPlus::changeStatu($reference);
 
-            //session()->put('finallyOrder',$reference);
-            session()->put('finallyOrder',$response['data']);
+            session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
             
         }else{

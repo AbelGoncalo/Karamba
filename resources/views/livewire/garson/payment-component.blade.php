@@ -164,8 +164,8 @@
 
 
 
-    document.addEventListener('open-modal',function(){
-       $("#send-receipt").modal('show');
+    document.addEventListener('reload',function(){
+       window.location.reload();
 
     })
    

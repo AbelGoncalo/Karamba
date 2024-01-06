@@ -30,7 +30,7 @@ class PaymentComponent extends Component
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
     public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue;
-    protected $listeners = ['open-modal'=>'open-modal'];
+    protected $listeners = ['realod'=>'reload'];
 
 
 
@@ -258,6 +258,12 @@ class PaymentComponent extends Component
                      ]);
 
                      $itemFinded = Item::where('description','=',$item->name)->first();
+                     if (condition) {
+                        # code...
+                     } else {
+                        # code...
+                     }
+                     
                      $itemFinded->quantity -=$item->quantity;
                      $itemFinded->save();
                  }
@@ -297,7 +303,7 @@ class PaymentComponent extends Component
         }
         }
         
-         DB::commit();
+            DB::commit();
           } catch (\Throwable $th) {
                
               DB::rollBack();
@@ -335,6 +341,9 @@ class PaymentComponent extends Component
                 'confirmButtonText' => 'OK',
                 'text'=>'Pagamento finalizado com sucesso'
             ]);
+
+
+            $this->dispatch('reralod');
            
           
                 

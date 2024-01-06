@@ -74,7 +74,7 @@ class FactPlus {
                     'serie'=>$serie,
                     'currency'=>'AOA',
                     'exchange_rate'=>'0',
-                    'observation'=>'FActura de Pagamento',
+                    'observation'=>'Factura de Pagamento',
                     'retention'=>'',
                 ],
                 'client'=>[
@@ -87,7 +87,7 @@ class FactPlus {
                     'country'=>'Angola',
                 ],
                 'items'=>$insert
-            ])->json();
+            ]);
 
     
             return $response['data'];

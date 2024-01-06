@@ -298,7 +298,7 @@ class PaymentComponent extends Component
         
             DB::commit();
           } catch (\Throwable $th) {
-               
+               dd($th->getMessage());
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

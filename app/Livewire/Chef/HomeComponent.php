@@ -70,7 +70,6 @@ class HomeComponent extends Component
              
             }
         } catch (\Throwable $th) {
-            
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -121,10 +120,11 @@ class HomeComponent extends Component
      {
      
         try {
+       
             $cartdetail =  CartLocalDetail::find($this->preparid);
             $cartdetail->status = $this->status;
             $cartdetail->save();
-            $this->getOrders($this->tableNumber);
+           $this->getOrders($this->tableNumber ?? '');
             
 
             if ($this->status == 'PRONTO') {

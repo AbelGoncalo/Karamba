@@ -341,7 +341,7 @@ class PaymentComponent extends Component
                 'items'=>$insert
             ])->json();
 
-    
+                sleep(5);
           
             //return $response['data'];
             //$reference =  \App\Api\FactPlus::create($order->id);

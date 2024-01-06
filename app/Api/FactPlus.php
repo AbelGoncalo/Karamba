@@ -18,9 +18,9 @@ class FactPlus {
     {
         DB::beginTransaction();
         //real
-        $key = '65847d93edbb6d77bea624101ff616ea';
+        //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        //$key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '65995993b16b93cdac74e28f1cd69267';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)
@@ -78,7 +78,7 @@ class FactPlus {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"65899c23c9b6e95943468c44c9ecd952\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"$date\",\r\n        \"duedate\": \"$duedate\",\r\n        \"vref\": \"$vref\",\r\n        \"serie\":\"$serie\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Factura de Pagamento\",\r\n        \"retention\":\"\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"Consumidor Final\",\r\n        \"nif\": \"999999999\",\r\n        \"email\": \"consumidor@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Luanda,Angola\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": $col\r\n    }",
+            CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"$key\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"$date\",\r\n        \"duedate\": \"$duedate\",\r\n        \"vref\": \"$vref\",\r\n        \"serie\":\"$serie\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Factura de Pagamento\",\r\n        \"retention\":\"\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"Consumidor Final\",\r\n        \"nif\": \"999999999\",\r\n        \"email\": \"consumidor@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Luanda,Angola\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": $col\r\n    }",
             CURLOPT_HTTPHEADER => array(
               "Content-Type: application/json"
             ),

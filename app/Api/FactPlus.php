@@ -89,8 +89,9 @@ class FactPlus {
                 'items'=>$insert
             ]);
 
-    
-            return $response['data'];
+            $collection  = json_decode($response,true);
+
+            return $collection->data;
            
     
           DB::commit();

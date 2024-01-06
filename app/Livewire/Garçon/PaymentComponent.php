@@ -275,8 +275,8 @@ class PaymentComponent extends Component
                 
             }
 
-            $reference =  unserialize(\App\Api\FactPlus::create($order->id));
-            sleep(2);
+            $reference =  \App\Api\FactPlus::create($order->id);
+            sleep(60);
            \App\Api\FactPlus::changeStatu($reference);
 
             session()->put('finallyOrder',$reference);

@@ -87,7 +87,7 @@ class FactPlus {
                 'items'=>$insert
             ]);
 
-          return serialize($response['data']);
+          return unserialize($response['data']);
            
     
           DB::commit();
@@ -120,7 +120,7 @@ class FactPlus {
                 ]
             ]);
 
-          return serialize($response['data']);
+          return unserialize($response['data']);
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -148,7 +148,7 @@ class FactPlus {
                 ]
             ]);
 
-          return  serialize($response['data']);
+          return  unserialize($response['data']);
 
           DB::commit();
         } catch (\Throwable $th) {

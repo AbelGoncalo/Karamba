@@ -228,8 +228,6 @@ class PaymentComponent extends Component
             ->where('company_id','=',auth()->user()->company_id)
             ->get();
             if ($cartLocalDetail) {
-                # code...
-
         
             $order = Order::create([
              'table'=>$this->tableNumber,
@@ -258,14 +256,9 @@ class PaymentComponent extends Component
                      ]);
 
                      $itemFinded = Item::where('description','=',$item->name)->first();
-                     if (condition) {
-                        # code...
-                     } else {
-                        # code...
-                     }
-                     
                      $itemFinded->quantity -=$item->quantity;
                      $itemFinded->save();
+
                  }
 
              }
@@ -282,11 +275,10 @@ class PaymentComponent extends Component
                 
             }
 
-            //$reference = \App\Api\FactPlus::create($order->id);
-            //\App\Api\FactPlus::changeStatu($reference);
-           
-            //session()->put('finallyOrder',$reference);
-            session()->put('finallyOrder','confirm');
+            $reference = \App\Api\FactPlus::create($order->id);
+            \App\Api\FactPlus::changeStatu($reference);
+
+            session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
             
         }else{
@@ -330,7 +322,7 @@ class PaymentComponent extends Component
               
              
               $this->clearFields();
-              //\App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+              \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
               session()->forget('finallyOrder');
               session()->forget('table');
 
@@ -345,12 +337,6 @@ class PaymentComponent extends Component
 
             $this->dispatch('reralod');
            
-          
-                
-
-            
-           
- 
          } catch (\Throwable $th) {
              $this->alert('error', 'ERRO', [
                  'toast'=>false,

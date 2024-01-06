@@ -142,6 +142,7 @@ class HomeComponent extends Component
                     $itemExist =   CartLocalDetail::where('name','=',$item->description)
                     ->where('company_id','=',auth()->user()->company_id)
                     ->where('table','=',$this->tableNumber)
+                    ->where('status','=','PENDENTE')
                     ->first();
 
                 if ($itemExist) {

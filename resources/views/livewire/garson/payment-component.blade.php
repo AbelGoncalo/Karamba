@@ -144,7 +144,8 @@
                                 </div>
                              @endif
                             <div class="form-group mt-2">
-                                <button type="submit" class="w-100 btn btn-md btn-primary-welcome-client">FINALIZAR <i class="fa fa-check"></i></button>
+                                <button type="submit" class="w-50 btn btn-md btn-primary-welcome-client">FINALIZAR <i class="fa fa-check"></i></button>
+                                <button type="submit" class="w-50 btn btn-md btn-primary-welcome-client">FINALIZAR <i class="fa fa-check"></i></button>
                             </div>
     
                         </div>

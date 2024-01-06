@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
       
-    @vite('resources/js/app.js', 'vendor/courier/build')
+
     <title>@yield('title')</title>
 </head>
 <body>
@@ -88,14 +88,5 @@
 
       @stack('select-chef')
 
-      <script src="{{asset('build/assets/app-4ed993c7.js')}}"></script>
-    
-<script>
-
-    Echo.channel(`channel-notify`)
-    .listen('NotifyEvent', (e) => {
-       
-    });
-</script>
 </body>
 </html>

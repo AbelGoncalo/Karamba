@@ -5,6 +5,8 @@ use App\Events\NotifyEvent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Laravel\SerializableClosure\SerializableClosure;
+
 
  
 
@@ -92,9 +94,20 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/test',function(){
+    
 
-    sleep(1);
-    echo 'aqui';
+$data = '12345623456';
+    // $response['result'];
+    // $closure = $response['result'];
+    $closure = fn()=> $data;
+    
+    // Recommended
+    SerializableClosure::setSecretKey('secret');
+    
+    $serialized = serialize(new SerializableClosure($closure));
+    $closure = unserialize($serialized)->getClosure();
+    
+    echo $closure(); // james;
 
 });
  

@@ -5,6 +5,8 @@ namespace App\Api;
 use App\Models\DetailOrder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Laravel\SerializableClosure\SerializableClosure;
+
 
 
 class FactPlus {
@@ -87,7 +89,15 @@ class FactPlus {
                 'items'=>$insert
             ]);
 
-          return unserialize($response['data']);
+            $closure = fn()=> $response['data'];
+    
+            // Recommended
+            SerializableClosure::setSecretKey('secret');
+            
+            $serialized = serialize(new SerializableClosure($closure));
+            $closure = unserialize($serialized)->getClosure();
+             
+            return $closure;
            
     
           DB::commit();
@@ -120,7 +130,7 @@ class FactPlus {
                 ]
             ]);
 
-          return unserialize($response['data']);
+          return $response['data'];
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -148,7 +158,7 @@ class FactPlus {
                 ]
             ]);
 
-          return  unserialize($response['data']);
+          return  $response['data'];
 
           DB::commit();
         } catch (\Throwable $th) {

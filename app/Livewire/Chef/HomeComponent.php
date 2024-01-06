@@ -5,7 +5,7 @@ namespace App\Livewire\Chef;
 use App\Events\NotificationEvent;
 use App\Jobs\NotificatioJob;
 use Livewire\Component;
-use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, NotificationGarson, table, User};
+use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, NotificationGarson, Table, User};
 use App\Notifications\GarsonNotification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component

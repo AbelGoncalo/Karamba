@@ -276,6 +276,7 @@ class PaymentComponent extends Component
             }
 
             sleep(2);
+          
             $reference =  \App\Api\FactPlus::create($order->id);
             //\App\Api\FactPlus::changeStatu($reference);
 

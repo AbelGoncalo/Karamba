@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\SerializableClosure\SerializableClosure;
 
 
-Route::get('/test',function(){
-    dd('test');
-});
+
  
 
 require __DIR__ .'/admin/routes.php';

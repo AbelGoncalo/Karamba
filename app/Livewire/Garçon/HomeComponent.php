@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garson;
+namespace App\Livewire\Garçon;
 
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;

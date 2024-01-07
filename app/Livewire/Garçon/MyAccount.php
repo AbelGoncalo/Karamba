@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garson;
+namespace App\Livewire\Garçon;
 
 use App\Models\GarsonTable;
 use App\Models\User;

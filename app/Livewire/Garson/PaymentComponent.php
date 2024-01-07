@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use App\Api\FactPlus;
 use App\Jobs\FactPlusJob;

@@ -277,7 +277,7 @@ class PaymentComponent extends Component
 
            \App\Api\FactPlus::create($order->id);
             $reference =  \App\Api\FactPlus::create($order->id);
-            //\App\Api\FactPlus::changeStatu($reference);
+            \App\Api\FactPlus::changeStatu($reference);
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -298,7 +298,7 @@ class PaymentComponent extends Component
         
             DB::commit();
           } catch (\Throwable $th) {
-               dd($th->getMessage());
+              
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,
@@ -323,7 +323,7 @@ class PaymentComponent extends Component
               
              
               $this->clearFields();
-              //\App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+              \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
               session()->forget('finallyOrder');
               session()->forget('table');
 

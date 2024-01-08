@@ -14,11 +14,7 @@ class FactPlus {
  
 
  
-<<<<<<< HEAD
     public static function create($orderid,$name,$nif)
-=======
-    public static function create($orderid,$name,$nif,$adddress)
->>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
     {
         DB::beginTransaction();
         //real
@@ -37,13 +33,7 @@ class FactPlus {
            $insert = [];
 
 
-           //dados do cliente
-<<<<<<< HEAD
-           $name = '';
-           $nif = '';
-=======
-   
->>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
+        
           
 
             foreach ($details as  $item) {
@@ -117,9 +107,9 @@ class FactPlus {
     {
         DB::beginTransaction();
         //real
-        $key = '65847d93edbb6d77bea624101ff616ea';
+        //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        //$key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '65995993b16b93cdac74e28f1cd69267';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -149,9 +139,9 @@ class FactPlus {
     {
         DB::beginTransaction();
          //real
-        $key = '65847d93edbb6d77bea624101ff616ea';
+        //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        //$key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '65995993b16b93cdac74e28f1cd69267';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',

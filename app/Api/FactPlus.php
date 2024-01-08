@@ -14,13 +14,14 @@ class FactPlus {
  
 
  
-    public static function create($orderid,$name,$nif)
+    public static function create($orderid,$name,$nif,$address)
     {
+       
         DB::beginTransaction();
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '659bd7b97df70045df81c481d1813746';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)
@@ -81,11 +82,11 @@ class FactPlus {
                     'retention'=>'',
                 ],
                 'client'=>[
-                    'name'=>$name?? 'CONSUMIDOR FINAL',
+                    'name'=>$name ?? 'CONSUMIDOR FINAL',
                     'nif'=>$nif ?? '99999999',
                     'email'=>'',
                     'city'=>'Luanda',
-                    'address'=>$adddress ?? 'Luanda-Angola',
+                    'address'=>$address,
                     'postalcode'=>'',
                     'country'=>'Angola',
                 ],
@@ -109,7 +110,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '659bd7b97df70045df81c481d1813746';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -141,7 +142,7 @@ class FactPlus {
          //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '659bd7b97df70045df81c481d1813746';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',

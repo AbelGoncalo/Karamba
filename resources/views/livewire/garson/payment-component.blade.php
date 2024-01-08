@@ -55,12 +55,19 @@
     <div class="col-md-12 d-flex justify-content-center algin-items-center flex-wrap ">
         <div class="col-md-8">
             <div class="card shadow rounded " id="card-welcome">
-                <div class="card-header">
-                    <h6 class="text-center text-uppercase">
-                        <i class="fa-solid fa-money-bill"></i>
-                        REGISTRAR PAGAMENTO
-                    </h6>
-                </div>
+                <div class="card-header text-center">
+                        <h6 class=" text-uppercase">
+                            <i class="fa-solid fa-money-bill"></i>
+                            REGISTRAR PAGAMENTO
+                        </h6>
+                        <h6 class="text-uppercase">
+                            <button  id="open_camera" data-bs-toggle="modal" data-bs-target="#modalCapturePicture" class="btn btn-sm btn-primary-welcome-client">
+                                <i class="fa-solid fa-camera"></i>
+                                CAPTURAR COMPROVATIVO
+                            </button>
+                            
+                        </h6>
+                   </div>
                 <div class="card-body">
                     <form wire:submit='finallyPayment' method="post" class="container">
                         <div class="row">
@@ -78,7 +85,6 @@
                                 </select>
                                 @error('table')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
-
                             <div class="form-group">
                                 <label for="clientName">Nome do Cliente <span class="text-success">(opcional)</span></span></label>
                                 <input placeholder="Informe do nome do cliente" type="text" name="name" id="name" wire:model='name' class="form-control">
@@ -89,14 +95,11 @@
                                 <input placeholder="Informe o nif do cliente" type="text" name="nif" id="nif" wire:model='nif' class="form-control">
                                 @error('nif')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
-<<<<<<< HEAD
-=======
                             <div class="form-group">
-                                <label for="clientName"><span class="text-success">(opcional)</span></span></label>
-                                <input placeholder="Informe o Endereço do Cliente" type="text" name="adddress" id="adddress" wire:model='adddress' class="form-control">
-                                @error('adddress')<span class="text-danger">{{$message}}</span>@enderror
+                                <label for="clientName">Endereço <span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe o Endereço do Cliente" type="text" name="address" id="address" wire:model='address' class="form-control">
+                                @error('address')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
->>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
                             <div class="form-group">
                                 <label for="clientName">Tipo de Pagamento <span class="text-danger">*</span></label>
                                 <select wire:model.live='paymenttype' name="paymenttype" id="paymenttype" class="form-select">
@@ -178,19 +181,14 @@
 </div>
 
 
-@push('open-modal-g')
+
 <script>
-
-
-
     document.addEventListener('reload',function(){
        window.location.reload();
 
     })
-   
 </script>
-    
-@endpush
+
 
 
 
@@ -210,4 +208,96 @@
         });
         });
 </script>
+@endpush
+
+@push('capture-picture')
+<script>
+    let btn  = document.querySelector('#open_camera')
+    let  video  =  document.querySelector('video');
+    
+    btn.addEventListener('click',function(){
+        navigator.mediaDevices.getUserMedia({video:true,facingMode: "environment"})
+        .then(stream =>{
+            video.srcObject = stream;
+            video.play()
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+
+    })
+
+
+   capiture =  document.querySelector('#capturePicture');
+
+
+
+     capiture.addEventListener('click',()=>{
+        let canvas =  document.querySelector('canvas')
+        canvas.style.display ='block';
+        canvas.height = video.videoHeight
+        canvas.width = video.videoWidth
+       let context = canvas.getContext('2d');
+       context.drawImage(video, 0, 0)
+       console.log(canvas.toDataURL());
+
+ 
+            let link =  document.querySelector('#download');
+            link.href = canvas.toDataURL();
+            link.classList.remove('d-none')
+            video.style.display = 'none';
+     })
+
+
+     document.querySelector('.closecamera').addEventListener('click',()=>{
+        let link =  document.querySelector('#download');
+        let canvas =  document.querySelector('canvas');
+        canvas.style.display ='none';
+        link.classList.add('d-none')
+        link.classList.remove('d-block')
+        video.style.display = 'block';
+        $('#modalCapturePicture').modal('hide')
+
+     })
+
+</script>  
+
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js" integrity="sha512-dQIiHSl2hr3NWKKLycPndtpbh5iaHLo6MwrXm7F0FM5e+kL2U16oE9uIwPHUl6fQBeCthiEuV/rzP3MiAB8Vfw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    Webcam.set({
+		width: '100%',
+		height: '100%',
+		dest_width: 640,
+		dest_height: 480,
+		image_format: 'jpeg',
+		jpeg_quality: 90,
+		force_flash: false,
+		flip_horiz: true,
+		fps: 45
+	});
+    Webcam.attach('#my_camera');
+    function take_snapshot() {
+			Webcam.snap( function(data_uri) {
+                document.getElementById('my_result').innerHTML = '<img class="img-fluid" src="'+data_uri+'"/>';
+            });
+            
+            $('#my_camera').css('display','none');
+            $('.capture').css('display','none');
+        
+            Webcam.reset();
+       
+		}
+
+
+     
+        $('.resetAll').click(function () { 
+           $('#my_camera').css('display','none');
+        });
+
+ 
+
+
+   
+        
+</script> --}}
 @endpush

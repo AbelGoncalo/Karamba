@@ -272,9 +272,14 @@ class PaymentComponent extends Component
                 
             }
 
+<<<<<<< HEAD
            $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif);
             \App\Api\FactPlus::changeStatu($reference,'sent');
             \App\Api\FactPlus::changeStatu($reference,'settled');
+=======
+           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->adddress);
+            \App\Api\FactPlus::changeStatu($reference);
+>>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -295,7 +300,11 @@ class PaymentComponent extends Component
         
             DB::commit();
           } catch (\Throwable $th) {
+<<<<<<< HEAD
             
+=======
+              dd($th->getMessage());
+>>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

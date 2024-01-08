@@ -31,13 +31,13 @@ class HomeComponent extends Component
                 $this->itemsOrder =  CartLocalDetail::where('table','=',$this->tableNumber)
                 ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','<>','Bebidas')
-                ->where('status','<>','PRONTO')
+                //->where('status','<>','PRONTO')
                 ->get();
                
                 $this->drinksOrder = CartLocalDetail::where('table','=',$this->tableNumber)
                 ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
-                ->where('status','<>','PRONTO')
+                //->where('status','<>','PRONTO')
                 ->get();;
 
             
@@ -47,7 +47,7 @@ class HomeComponent extends Component
                 $this->itemsOrder =  CartLocalDetail::
                 where('company_id','=',auth()->user()->company_id)
                 ->where('category','<>','Bebidas')
-                ->where('status','<>','PRONTO')
+                //->where('status','<>','PRONTO')
                 ->get();;
 
                
@@ -55,7 +55,7 @@ class HomeComponent extends Component
                 $this->drinksOrder = CartLocalDetail::
                 where('company_id','=',auth()->user()->company_id)
                 ->where('category','<>','Bebidas')
-                ->where('status','<>','PRONTO')
+                //->where('status','<>','PRONTO')
                 ->get();;
 
             }

@@ -78,6 +78,17 @@
                                 </select>
                                 @error('table')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
+
+                            <div class="form-group">
+                                <label for="clientName">Nome do Cliente <span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe do nome do cliente" type="text" name="name" id="name" wire:model='name' class="form-control">
+                                @error('name')<span class="text-danger">{{$message}}</span>@enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="clientName">Contribuente <span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe o nif do cliente" type="text" name="nif" id="nif" wire:model='nif' class="form-control">
+                                @error('nif')<span class="text-danger">{{$message}}</span>@enderror
+                            </div>
                             <div class="form-group">
                                 <label for="clientName">Tipo de Pagamento <span class="text-danger">*</span></label>
                                 <select wire:model.live='paymenttype' name="paymenttype" id="paymenttype" class="form-select">

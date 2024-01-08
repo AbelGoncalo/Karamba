@@ -14,7 +14,7 @@ class FactPlus {
  
 
  
-    public static function create($orderid)
+    public static function create($orderid,$name,$nif)
     {
         DB::beginTransaction();
         //real
@@ -31,6 +31,11 @@ class FactPlus {
            $vref = rand(10000,20000);
            $serie = date('Y');
            $insert = [];
+
+
+           //dados do cliente
+           $name = '';
+           $nif = '';
           
 
             foreach ($details as  $item) {
@@ -78,8 +83,8 @@ class FactPlus {
                     'retention'=>'',
                 ],
                 'client'=>[
-                    'name'=>'CONSUMIDOR FINAL',
-                    'nif'=>'99999999',
+                    'name'=>$name?? 'CONSUMIDOR FINAL',
+                    'nif'=>$nif ?? '99999999',
                     'email'=>'',
                     'city'=>'Luanda',
                     'address'=>'Luanda-Angola',

@@ -152,6 +152,9 @@ class HomeComponent extends Component
                         $itemExist->quantity += $this->qtd[$id];
                         $itemExist->save();
 
+                        $item->quantity -=$this->qtd[$id];
+                        $item->save();
+
                         $this->alert('success', 'SUCESSO', [
                             'toast'=>false,
                             'position'=>'center',
@@ -166,7 +169,8 @@ class HomeComponent extends Component
                     
                     
                
-                  
+                    $item->quantity -=$this->qtd[$id];
+                    $item->save();
 
                         CartLocalDetail::create([
                             'name'=>$item->description,

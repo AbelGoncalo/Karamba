@@ -111,10 +111,14 @@ class ViewOrderComponent extends Component
    {
        try {
            $cart = CartLocalDetail::find($this->edit);
-          
+
            if($cart)
            {
-
+               
+               $item = Item::where('description','=',$cart->name)->first();
+               $item->quantity += $cart->quantity;
+               $item->save();
+             
                if($cart->status == 'PENDENTE')
                {
                    CartLocalDetail::destroy($this->edit);
@@ -142,7 +146,6 @@ class ViewOrderComponent extends Component
          
        } catch (\Throwable $th) {
        
-
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

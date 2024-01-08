@@ -29,7 +29,7 @@ class PaymentComponent extends Component
     use LivewireAlert;
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
-    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue;
+    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name,$nif;
     protected $listeners = ['realod'=>'reload'];
 
 
@@ -143,7 +143,6 @@ class PaymentComponent extends Component
     //Metodo para finalizar Pagamento
     public function finallyPayment()
     {
-      
         DB::beginTransaction();
        #Validação de campos
          if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
@@ -255,9 +254,7 @@ class PaymentComponent extends Component
                          'company_id'=>auth()->user()->company_id
                      ]);
 
-                     $itemFinded = Item::where('description','=',$item->name)->first();
-                     $itemFinded->quantity -=$item->quantity;
-                     $itemFinded->save();
+                 
 
                  }
 
@@ -275,8 +272,7 @@ class PaymentComponent extends Component
                 
             }
 
-           \App\Api\FactPlus::create($order->id);
-            $reference =  \App\Api\FactPlus::create($order->id);
+           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif);
             \App\Api\FactPlus::changeStatu($reference);
 
             session()->put('finallyOrder',$reference);
@@ -298,7 +294,7 @@ class PaymentComponent extends Component
         
             DB::commit();
           } catch (\Throwable $th) {
-              
+              dd($th->getMessage());
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,
@@ -370,6 +366,8 @@ class PaymentComponent extends Component
             $this->total = 0;
             $this->firstvalue = '';
             $this->secondvalue = '';
+            $this->nif = '';
+            $this->name = '';
            
 
            

@@ -2,14 +2,10 @@
 
 namespace App\Livewire\Barman;
 
-use App\Events\NotifyEvent;
 use App\Jobs\NotificatioJob;
-use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
 use App\Models\GarsonTable;
-use App\Models\GarsonTableManagement;
 use App\Models\Table;
-use Carbon\Carbon;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -29,21 +25,23 @@ class HomeComponent extends Component
     public function getOrders($tableSearch)
     {
         try {
+            
             if(isset($tableSearch) and $tableSearch  != null)
             {
                return CartLocalDetail::where('category','=','Bebidas')
+               ->where('company_id','=',auth()->user()->company_id)
                ->where('table','=',$this->tableNumber)
                ->where('status','=','PENDENTE')
                ->orWhere('status','=','EM PREPARAÇÂO')
-               ->where('company_id','=',auth()->user()->company_id)
                ->get();
+
             }else{
 
               return  CartLocalDetail::where('category','=','Bebidas')
-              ->where('status','=','PENDENTE')
-              ->Orwhere('status','=','EM PREPARAÇÂO')
               ->where('company_id','=',auth()->user()->company_id)
-              ->get();
+               ->where('status','=','PENDENTE')
+               ->orWhere('status','=','EM PREPARAÇÂO')
+               ->get();
             }
              
         
@@ -128,7 +126,7 @@ class HomeComponent extends Component
         
 
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+           
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -156,13 +154,4 @@ class HomeComponent extends Component
      }
 
 
-     public function eventTest()
-     {
-        try {
-            //dd(NotifyEvent::broadcast('teste'));
-           event(new NotifyEvent('teste'));
-        } catch (\Throwable $th) {
-            dd($th->getMessage());
-        }
-     }
 }

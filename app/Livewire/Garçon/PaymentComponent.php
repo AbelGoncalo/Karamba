@@ -15,6 +15,7 @@ use App\Models\{
     Company,
     DetailOrder,
      GarsonTable,
+    HistoryOfAllActivities,
     Item,
     Order,
     OrderDetail,
@@ -142,8 +143,16 @@ class PaymentComponent extends Component
 
     //Metodo para finalizar Pagamento
     public function finallyPayment()
+<<<<<<< HEAD
     {
         DB::beginTransaction();
+=======
+    {  
+        
+       
+      
+        //DB::beginTransaction();
+>>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
        #Validação de campos
          if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
           
@@ -166,11 +175,8 @@ class PaymentComponent extends Component
             ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
         }
 
-        if ($this->paymenttype == 'Numerário') {
-          
-           
+        if ($this->paymenttype == 'Numerário') {         
             $this->validate(['paymenttype'=>'required'],['paymenttype.required'=>'Obrigatório']);
-
         }
        
 
@@ -191,6 +197,7 @@ class PaymentComponent extends Component
          
        #Fim de Validação de campos
          try {
+
 
           if ($this->total == 0) {
             $this->alert('warning', 'AVISO', [
@@ -242,6 +249,13 @@ class PaymentComponent extends Component
              'company_id'=>auth()->user()->company_id
             ]);
 
+            
+           
+
+
+
+                   
+
              if($cartLocalDetail->count() > 0)
              {
                  foreach ($cartLocalDetail as $item) {
@@ -254,28 +268,46 @@ class PaymentComponent extends Component
                          'company_id'=>auth()->user()->company_id
                      ]);
 
+<<<<<<< HEAD
 
                      
                  
+=======
+                     $itemFinded = Item::where('description','=',$item->name)->first();
+                     $itemFinded->quantity -=$item->quantity;
+                     $itemFinded->save(); 
+>>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
 
-                 }
+
+                     
+                     //Registar o log de pagamentos
+                    $log  = new HistoryOfAllActivities();
+                    $log->tipo_acao = "Finalizacao de pagamento";
+                    $log->responsavel = auth()->user()->name;
+                    $log->descricao = 'O garson '.auth()->user()->name. 'Finalizou o pagamento de '.$item->name. ' no valor de '. $item->price.'KZS'. ' com o subtotal de '.$item->price * $item->quantity.'KZS';
+                    $log->save();
+
+
+                                    
+                   
+                   
+                 }                
 
 
 
 
              }
-             
+
              $table = Table::where('number','=',$this->tableNumber)
              ->where('company_id','=',auth()->user()->company_id)
              ->first();
 
-             if($table){
-                 
+             if($table){                 
                 $table->status = 0;
                 $table->save();
                 $this->orderid = $order->id;
-                
             }
+<<<<<<< HEAD
           
            $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
            $is_true =  \App\Api\FactPlus::changeStatu($reference,'sent');
@@ -285,6 +317,15 @@ class PaymentComponent extends Component
                
                 \App\Api\FactPlus::changeStatu($reference,'settled');
           }
+=======
+
+            
+                
+
+           \App\Api\FactPlus::create($order->id);
+            $reference =  \App\Api\FactPlus::create($order->id);
+            \App\Api\FactPlus::changeStatu($reference);
+>>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -296,16 +337,21 @@ class PaymentComponent extends Component
                 'showConfirmButton' => true,
                 'confirmButtonText' => 'OK',
                 'text'=>'
-                         O cliente que fez este pedido, ainda não realizou o pagamento,
-                         Deve aguardar que o cliente 
+                    O cliente que fez este pedido, ainda não realizou o pagamento,
+                    Deve aguardar que o cliente 
                     '
             ]);
         }
         }
+
+        //DB::commit();
         
-            DB::commit();
           } catch (\Throwable $th) {
+<<<<<<< HEAD
             
+=======
+              dd($th->getMessage());
+>>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,
@@ -315,6 +361,10 @@ class PaymentComponent extends Component
                   'text'=>'Falha ao realizar operação'
               ]);
           }
+
+
+          
+          
     }
 
 
@@ -326,6 +376,8 @@ class PaymentComponent extends Component
      
         
          try {
+
+           
             
               
              

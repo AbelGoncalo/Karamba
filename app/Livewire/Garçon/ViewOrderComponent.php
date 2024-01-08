@@ -3,7 +3,7 @@
 namespace App\Livewire\Garçon;
 
 use Livewire\Component;
-use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, Item, ServiceControl};
+use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -131,6 +131,15 @@ class ViewOrderComponent extends Component
                    ]);
                    
               $this->getOrders();
+
+             //Cancelando a  atividade na tabela de Log 
+             $log_registers = new HistoryOfAllActivities();
+             $log_registers->tipo_acao = "Cencelar pedido";
+             $log_registers->descricao = "O Garçon ".auth()->user()->name." cancelou " .$cart->quantity. ($cart->quantity > 1 ? " quantidades " : " quantidade " ). " do pedido de ".$cart->name. "em estado". $cart->status;
+             $log_registers->responsavel = auth()->user()->name;
+             $log_registers->save();
+
+
             }else{
                    $this->getOrders();
                    $this->alert('warning', 'AVISO', [
@@ -182,6 +191,8 @@ class ViewOrderComponent extends Component
             $itemFinded = Item::where('description','=',$cartDetail->name)
             ->first();
 
+
+
             if ($this->quantity > $itemFinded->quantity) {
 
                  $this->alert('warning', 'AVISO', [
@@ -197,6 +208,15 @@ class ViewOrderComponent extends Component
 
              } else {
 
+            //Atualizando a quantidade atividade de pedidos na tabela de Log para o acto de atualizar pedidos
+            $log_registers = new HistoryOfAllActivities();
+            $lastQuantity = $cartDetail->quantity;
+            $log_registers->tipo_acao = "Atualizar pedido";
+            $log_registers->descricao = "O Garçon ".auth()->user()->name." atualizou a quantidade do pedido de " .$lastQuantity. " para  " .$this->quantity. ($lastQuantity > 1 ? " quantidades " : " quantidade " );
+            $log_registers->responsavel = auth()->user()->name;
+            $log_registers->save(); 
+
+                 
 
              $cartDetail->quantity = $this->quantity;
              $cartDetail->save();
@@ -204,7 +224,8 @@ class ViewOrderComponent extends Component
              $this->quantity = 1;
              $this->itemId = '';
              $this->dispatch('close');
-             
+
+                      
             
 
              }
@@ -213,6 +234,7 @@ class ViewOrderComponent extends Component
 
 
         } catch (\Throwable $th) {
+            dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',

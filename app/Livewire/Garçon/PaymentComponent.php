@@ -272,7 +272,7 @@ class PaymentComponent extends Component
                 
             }
 
-           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif);
+           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->adddress);
             \App\Api\FactPlus::changeStatu($reference);
 
             session()->put('finallyOrder',$reference);

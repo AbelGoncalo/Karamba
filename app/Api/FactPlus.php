@@ -14,13 +14,13 @@ class FactPlus {
  
 
  
-    public static function create($orderid,$name,$nif)
+    public static function create($orderid,$name,$nif,$adddress)
     {
         DB::beginTransaction();
         //real
-        $key = '65847d93edbb6d77bea624101ff616ea';
+        //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        //$key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '65995993b16b93cdac74e28f1cd69267';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)
@@ -34,8 +34,7 @@ class FactPlus {
 
 
            //dados do cliente
-           $name = '';
-           $nif = '';
+   
           
 
             foreach ($details as  $item) {
@@ -87,7 +86,7 @@ class FactPlus {
                     'nif'=>$nif ?? '99999999',
                     'email'=>'',
                     'city'=>'Luanda',
-                    'address'=>'Luanda-Angola',
+                    'address'=>$adddress ?? 'Luanda-Angola',
                     'postalcode'=>'',
                     'country'=>'Angola',
                 ],

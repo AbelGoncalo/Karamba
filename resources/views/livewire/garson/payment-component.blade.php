@@ -90,6 +90,11 @@
                                 @error('nif')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
                             <div class="form-group">
+                                <label for="clientName"><span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe o Endereço do Cliente" type="text" name="adddress" id="adddress" wire:model='adddress' class="form-control">
+                                @error('adddress')<span class="text-danger">{{$message}}</span>@enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="clientName">Tipo de Pagamento <span class="text-danger">*</span></label>
                                 <select wire:model.live='paymenttype' name="paymenttype" id="paymenttype" class="form-select">
                                     <option value="Transferência">Transferência</option>

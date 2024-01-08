@@ -15,6 +15,7 @@ use App\Models\{
     Company,
     DetailOrder,
      GarsonTable,
+    HistoryOfAllActivities,
     Item,
     Order,
     OrderDetail,
@@ -142,9 +143,11 @@ class PaymentComponent extends Component
 
     //Metodo para finalizar Pagamento
     public function finallyPayment()
-    {
+    {  
+        
+       
       
-        DB::beginTransaction();
+        //DB::beginTransaction();
        #Validação de campos
          if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
           
@@ -167,11 +170,8 @@ class PaymentComponent extends Component
             ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
         }
 
-        if ($this->paymenttype == 'Numerário') {
-          
-           
+        if ($this->paymenttype == 'Numerário') {         
             $this->validate(['paymenttype'=>'required'],['paymenttype.required'=>'Obrigatório']);
-
         }
        
 
@@ -192,6 +192,7 @@ class PaymentComponent extends Component
          
        #Fim de Validação de campos
          try {
+
 
           if ($this->total == 0) {
             $this->alert('warning', 'AVISO', [
@@ -243,6 +244,13 @@ class PaymentComponent extends Component
              'company_id'=>auth()->user()->company_id
             ]);
 
+            
+           
+
+
+
+                   
+
              if($cartLocalDetail->count() > 0)
              {
                  foreach ($cartLocalDetail as $item) {
@@ -257,23 +265,37 @@ class PaymentComponent extends Component
 
                      $itemFinded = Item::where('description','=',$item->name)->first();
                      $itemFinded->quantity -=$item->quantity;
-                     $itemFinded->save();
+                     $itemFinded->save(); 
 
-                 }
+
+                     
+                     //Registar o log de pagamentos
+                    $log  = new HistoryOfAllActivities();
+                    $log->tipo_acao = "Finalizacao de pagamento";
+                    $log->responsavel = auth()->user()->name;
+                    $log->descricao = 'O garson '.auth()->user()->name. 'Finalizou o pagamento de '.$item->name. ' no valor de '. $item->price.'KZS'. ' com o subtotal de '.$item->price * $item->quantity.'KZS';
+                    $log->save();
+
+
+                                    
+                   
+                   
+                 }                
 
              }
-             
+
              $table = Table::where('number','=',$this->tableNumber)
              ->where('company_id','=',auth()->user()->company_id)
              ->first();
 
-             if($table){
-                 
+             if($table){                 
                 $table->status = 0;
                 $table->save();
                 $this->orderid = $order->id;
-                
             }
+
+            
+                
 
            \App\Api\FactPlus::create($order->id);
             $reference =  \App\Api\FactPlus::create($order->id);
@@ -289,16 +311,17 @@ class PaymentComponent extends Component
                 'showConfirmButton' => true,
                 'confirmButtonText' => 'OK',
                 'text'=>'
-                         O cliente que fez este pedido, ainda não realizou o pagamento,
-                         Deve aguardar que o cliente 
+                    O cliente que fez este pedido, ainda não realizou o pagamento,
+                    Deve aguardar que o cliente 
                     '
             ]);
         }
         }
+
+        //DB::commit();
         
-            DB::commit();
           } catch (\Throwable $th) {
-              
+              dd($th->getMessage());
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,
@@ -308,6 +331,10 @@ class PaymentComponent extends Component
                   'text'=>'Falha ao realizar operação'
               ]);
           }
+
+
+          
+          
     }
 
 
@@ -319,6 +346,8 @@ class PaymentComponent extends Component
      
         
          try {
+
+           
             
               
              

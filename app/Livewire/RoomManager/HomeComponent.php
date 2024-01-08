@@ -38,7 +38,7 @@ class HomeComponent extends Component
                 ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
                 //->where('status','<>','PRONTO')
-                ->get();;
+                ->get();
 
             
                 

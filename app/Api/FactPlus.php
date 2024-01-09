@@ -20,9 +20,9 @@ class FactPlus {
        
         // DB::beginTransaction();
         // //real
-        // //$key = '65847d93edbb6d77bea624101ff616ea';
+        $key = '65847d93edbb6d77bea624101ff616ea';
         // //teste
-         $key = '659bd7b97df70045df81c481d1813746';
+         //$key = '659bd7b97df70045df81c481d1813746';
          try {
 
             $details =  DetailOrder::where('order_id','=',$orderid)

@@ -138,7 +138,7 @@ class FactPlus {
   
     
              
-           dd($response['data']);
+          
         return $response['data'];
     
     

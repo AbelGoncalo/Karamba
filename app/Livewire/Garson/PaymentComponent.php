@@ -273,6 +273,7 @@ class PaymentComponent extends Component
                     $log  = new HistoryOfAllActivities();
                     $log->tipo_acao = "Finalizacao de pagamento";
                     $log->responsavel = auth()->user()->name;
+                    $log->company_id = auth()->user()->company_id;
                     $log->descricao = 'O garson '.auth()->user()->name. 'Finalizou o pagamento de '.$item->name. ' no valor de '. $item->price.'KZS'. ' com o subtotal de '.$item->price * $item->quantity.'KZS';
                     $log->save();
 

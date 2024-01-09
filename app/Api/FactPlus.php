@@ -92,9 +92,9 @@ class FactPlus {
       $response = curl_exec($curl);
   
       curl_close($curl);
-      $collection = collect(json_decode($response));
+      $value = json_decode($response);
+      return $value->data;
 
-      return $collection['data'];
     }catch(Exception $th){
         dd($th->getMessage());
     }

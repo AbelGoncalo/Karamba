@@ -130,7 +130,7 @@ class FactPlus {
                  'country'=>'Angola',
              ],
              'items'=> $json
-         ])->json();
+         ]);
 
 
         //    return $response['data'];

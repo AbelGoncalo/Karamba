@@ -3,6 +3,7 @@
 namespace App\Api;
 
 use App\Models\DetailOrder;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -22,7 +23,7 @@ class FactPlus {
         // //$key = '65847d93edbb6d77bea624101ff616ea';
         // //teste
          $key = '659bd7b97df70045df81c481d1813746';
-        // try {
+         try {
 
             $details =  DetailOrder::where('order_id','=',$orderid)
             ->select('id','item','price','quantity')
@@ -94,7 +95,9 @@ class FactPlus {
       $collection = collect(json_decode($response));
 
       return $collection['data'];
-      
+    }catch(Exception $th){
+        dd($th->getMessage());
+    }
       
     }
 

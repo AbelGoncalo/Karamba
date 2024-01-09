@@ -132,12 +132,13 @@ class FactPlus {
          ])->json();
 
 
-        //     return $response['data'];
+        //    return $response['data'];
 
   
     
-    dd($response);
-        return $response->data;
+             
+           
+        return $response['data'];
     
     
 

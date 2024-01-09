@@ -33,7 +33,7 @@ class FactPlus {
            $serie = date('Y');
            $insert = [];
 
-
+           $utf8Data = array_map('utf8_encode', $insert);
         
           
 
@@ -67,9 +67,10 @@ class FactPlus {
 
             //Chamada a API do Factplus
 
-            $response = Http::post('https://api.factplus.co.ao', [
+            $response = Http::post('https://api.factplus.co.ao',$utf8Data, [
                 'apicall' => 'CREATE',
                 'apikey' => $key,
+                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'type'=>'factura',
                     'date'=>$date,
@@ -112,9 +113,10 @@ class FactPlus {
         //teste
         $key = '65995993b16b93cdac74e28f1cd69267';
         try {
-            $response = Http::post('https://api.factplus.co.ao', [
+            $response = Http::post('https://api.factplus.co.ao',$utf8Data, [
                 'apicall' => 'SEND',
                 'apikey' => $key,
+                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'reference'=>$reference,
                     'type'=>'factura',
@@ -144,9 +146,10 @@ class FactPlus {
         //teste
         $key = '65995993b16b93cdac74e28f1cd69267';
         try {
-            $response = Http::post('https://api.factplus.co.ao', [
+            $response = Http::post('https://api.factplus.co.ao',$utf8Data, [
                 'apicall' => 'ALTER',
                 'apikey' =>  $key,
+                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'type'=>'factura',
                     'reference'=>$reference,

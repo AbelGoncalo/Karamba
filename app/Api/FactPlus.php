@@ -103,6 +103,7 @@ class FactPlus {
             }, $insert);
 
             $json = json_encode($data);
+            
 
          $response = Http::post('https://api.factplus.co.ao', [
              'apicall' => 'CREATE',

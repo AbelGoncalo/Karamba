@@ -20,9 +20,9 @@ class FactPlus {
        
         // DB::beginTransaction();
         // //real
-        $key = '65847d93edbb6d77bea624101ff616ea';
+        //$key = '65847d93edbb6d77bea624101ff616ea';
         // //teste
-         //$key = '659bd7b97df70045df81c481d1813746';
+         $key = '659bd7b97df70045df81c481d1813746';
          try {
 
             $details =  DetailOrder::where('order_id','=',$orderid)
@@ -73,29 +73,6 @@ class FactPlus {
         
          $data =  json_encode($insert);
        
-
-    //      $curl = curl_init();
-    //      curl_setopt_array($curl, array(
-    //      CURLOPT_URL => "https://api.factplus.co.ao",
-    //      CURLOPT_RETURNTRANSFER => true,
-    //      CURLOPT_ENCODING => "",
-    //      CURLOPT_MAXREDIRS => 10,
-    //      CURLOPT_TIMEOUT => 0,
-    //      CURLOPT_FOLLOWLOCATION => true,
-    //      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_NONE   ,
-    //      CURLOPT_CUSTOMREQUEST => "POST",
-    //      CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"$key\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"$date\",\r\n        \"duedate\": \"$duedate\",\r\n        \"vref\": \"$vref\",\r\n        \"serie\":\"$serie\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Factura de Pagamento\",\r\n        \"retention\":\"\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"$name\",\r\n        \"nif\": \"$nif\",\r\n        \"email\": \"consumidor@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"$address\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": $data\r\n    }",
-    //      CURLOPT_HTTPHEADER => array(
-    //        "Content-Type: application/json"
-    //      ),
-    //    ));
-  
-    //    $response = curl_exec($curl);
-    //    curl_close($curl);
-    //    $value = json_decode($response);
-     
-
-
        //     //Chamada a API do Factplus
 
        $data = array_map(function ($item) {
@@ -132,13 +109,6 @@ class FactPlus {
              'items'=> $json
          ])->timeout(1200);
 
-
-        //    return $response['data'];
-
-  
-    
-             
-          
         return $response['data'];
     
     
@@ -146,7 +116,7 @@ class FactPlus {
 
     }catch(Exception $th){
 
-        dd($th->getMessage());
+       
         return "Api Indisponível";
         
     }

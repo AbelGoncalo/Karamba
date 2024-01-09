@@ -5,6 +5,7 @@ namespace App\Livewire\RoomManager;
 use App\Exports\OrderExport;
 use App\Models\Company;
 use App\Models\DetailOrder;
+use App\Models\HistoryOfAllActivities;
 use App\Models\Order;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -26,6 +27,7 @@ class OrderComponent extends Component
     
     public function render()
     {
+
         return view('livewire.room-manager.order-component',[
             'data'=>$this->getData($this->startdate,$this->enddate),
         ])->layout('layouts.room_manager.app');
@@ -36,6 +38,8 @@ class OrderComponent extends Component
     public function getData($startdate = null,$enddate = null,$table = null,$garson = null)
     {
         try {
+
+
 
             if ($startdate != null and $enddate != null )  {
 
@@ -67,12 +71,10 @@ class OrderComponent extends Component
     public function viewItems($id)
     {
         try {
-          
 
             $this->details = DetailOrder::where('order_id','=',$id)
             ->where('company_id','=',auth()->user()->company_id)
-            ->get();
-          
+            ->get();        
            
 
             
@@ -90,14 +92,21 @@ class OrderComponent extends Component
 
     public function export()
     {
-        try {
+        try { 
+            
+
                 $start = Carbon::parse($this->startdate)->format('Y-m-d') .' 00:00:00';
                 $end   = Carbon::parse($this->enddate )->format('Y-m-d') .' 23:59:59';
 
-            
-                return (new OrderExport($start,$end))->download('pedidos.xls',\Maatwebsite\Excel\Excel::XLS); 
-
-            
+                 //Registar o log de atividades de exportaçao do ficheiro do Excel
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Exportar relatório de pedidos';
+                $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.' exportou o relatório de pedidos em formato excel';
+                $log->save();
+           
+                return (new OrderExport($start,$end))->download('pedidos.xls',\Maatwebsite\Excel\Excel::XLS);             
 
         } catch (\Throwable $th) {
           
@@ -112,11 +121,11 @@ class OrderComponent extends Component
     }
     public function exportPdf()
     {
-        try {
-               
+        try {               
                 $total = 0;
            
                 if ($this->startdate != null || $this->enddate != null) {
+
 
                     $start = Carbon::parse($this->startdate)->format('Y-m-d') .' 00:00:00';
                     $end   = Carbon::parse($this->enddate)->format('Y-m-d') .' 23:59:59';
@@ -135,12 +144,24 @@ class OrderComponent extends Component
                      ->select('detail_orders.item','detail_orders.price','detail_orders.quantity','detail_orders.tax','detail_orders.discount','detail_orders.subtotal')
                      ->where('orders.company_id','=',auth()->user()->company_id)->get();
           
+
                  }
                 
                 if($data->count() > 0){
+
                     foreach ($data as  $value) {
                        $total += $value->price;
-                }
+                    }
+
+                    //Registar o log de atividades de exportaçao do ficheiro do Excel
+                    $log = new HistoryOfAllActivities();
+                    $log->tipo_acao = 'Exportar relatório de pedidos';
+                    $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                    $log->company_id = auth()->user()->company_id;
+                    $log->descricao = 'O chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.' exportou o relatório de pedidos em formato pdf';
+                    $log->save();
+
+                       
       
                   $company = Company::find(auth()->user()->company_id);
                   $pdfContent = new Dompdf();
@@ -154,7 +175,10 @@ class OrderComponent extends Component
                       fn () => print($pdfContent),
                       "Relatório-de-Pedidos.pdf"
                   );
+
+                 
               }
+
                 
             
             

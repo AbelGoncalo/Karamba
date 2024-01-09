@@ -143,6 +143,7 @@
 
 <x-livewire-alert::scripts />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{asset('/admin/vendor/jquery/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('/admin/vendor/bootstrap/js/bootstrap.bundle.js')}}"></script>
   <script src="{{asset('/admin/vendor/slimscroll/jquery.slimscroll.js')}}"></script>
@@ -163,6 +164,7 @@
     @stack('chart')
     @stack('select2-categories')
     @stack('select2-categories-modal')
+    @stack('chart-log')
 
   
   

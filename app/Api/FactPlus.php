@@ -146,7 +146,7 @@ class FactPlus {
 
     }catch(Exception $th){
 
-
+        dd($th->getMessage());
         return "Api Indisponível";
         
     }

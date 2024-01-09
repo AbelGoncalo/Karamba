@@ -114,11 +114,11 @@ class FactPlus {
     ));
 
     $response = curl_exec($curl);
-    $HttpCode =  curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
 
-    if ($HttpCode != 200) {
-        dd('Erro '.$HttpCode);
+    
+    if ($response == false) {
+        throw new \Exception('Erro cURL: ' . curl_error($curl));
     } else {
         dd($response);
     }

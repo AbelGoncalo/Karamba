@@ -92,7 +92,7 @@ class FactPlus {
   
       curl_close($curl);
       $collection = json_decode($response,true);
-      dd($collection['data']);
+      dd($collection);
     }
 
     public static function sendInvoice($reference,$email)

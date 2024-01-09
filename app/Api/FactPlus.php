@@ -41,7 +41,7 @@ class FactPlus {
                  if ($item->tax == 0) {
                      array_push($insert,[
                      "itemcode"=> $item->id,
-                     "description"=> $item->item,
+                     "description"=> \App\Services\Replace::newString($item->item),
                      "price"=> $item->price,
                      "quantity"=> $item->quantity,
                      "tax"=> "0",
@@ -52,7 +52,7 @@ class FactPlus {
                  } else {
                      array_push($insert,[
                          "itemcode"=> $item->id,
-                         "description"=> $item->item,
+                         "description"=> \App\Services\Replace::newString($item->item),
                          "price"=> $item->price,
                          "quantity"=> $item->quantity,
                          "tax"=> $item->tax,
@@ -79,7 +79,7 @@ class FactPlus {
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 300,
+        CURLOPT_TIMEOUT => 460,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",

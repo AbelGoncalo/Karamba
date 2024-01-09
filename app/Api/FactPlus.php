@@ -93,7 +93,7 @@ class FactPlus {
       curl_close($curl);
       $collection = collect(json_decode($response));
 
-      dd($collection['data']);
+      return $collection['data'];
       
       
     }

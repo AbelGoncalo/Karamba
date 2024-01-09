@@ -97,26 +97,33 @@ class FactPlus {
     //   return $value->data;
 
 
-      $curl = curl_init();
-curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://api.factplus.co.ao",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"659bd7b97df70045df81c481d1813746\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"2024-08-18\",\r\n        \"duedate\": \"2024-08-25\",\r\n        \"vref\": \"XPTO001\",\r\n        \"serie\":\"2020\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Documento simples\",\r\n        \"retention\":\"6.5\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"john Doe\",\r\n        \"nif\": \"000000000\",\r\n        \"email\": \"cliente@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Av Fidel Castro\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": [\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Software\",\r\n                    \"price\": \"1000000\",\r\n                    \"quantity\": \"1\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                },\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Website\",\r\n                    \"price\": \"200000\",\r\n                    \"quantity\": \"2\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                }\r\n               \r\n            ]\r\n    }",
-  CURLOPT_HTTPHEADER => array(
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://api.factplus.co.ao",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "POST",
+    CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"659bd7b97df70045df81c481d1813746\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"2024-08-18\",\r\n        \"duedate\": \"2024-08-25\",\r\n        \"vref\": \"XPTO001\",\r\n        \"serie\":\"2020\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Documento simples\",\r\n        \"retention\":\"6.5\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"john Doe\",\r\n        \"nif\": \"000000000\",\r\n        \"email\": \"cliente@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Av Fidel Castro\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": [\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Software\",\r\n                    \"price\": \"1000000\",\r\n                    \"quantity\": \"1\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                },\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Website\",\r\n                    \"price\": \"200000\",\r\n                    \"quantity\": \"2\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                }\r\n               \r\n            ]\r\n    }",
+    CURLOPT_HTTPHEADER => array(
     "Content-Type: application/json"
-  ),
-));
+    ),
+    ));
 
-$response = curl_exec($curl);
+    $response = curl_exec($curl);
+    $HttpCode =  curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
 
-curl_close($curl);
- dd($response);
+    if ($HttpCode != 200) {
+        dd('Erro '.$HttpCode);
+    } else {
+        dd($response);
+    }
+    
+
 
     }catch(Exception $th){
         dd($th->getMessage());

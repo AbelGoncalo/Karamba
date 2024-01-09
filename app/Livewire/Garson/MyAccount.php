@@ -3,6 +3,7 @@
 namespace App\Livewire\Garson;
 
 use App\Models\GarsonTable;
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -181,6 +182,14 @@ class MyAccount extends Component
                 'cancelButtonColor' => '#d33',
                 'onConfirmed' => 'confirmed' 
             ]);
+
+            //Log de fecho de turno do Grarçon
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Fecho de turno';
+            $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+            $log->descricao = 'O Garçon '.auth()->user()->name.''.auth()->user()->lastname.' Fechou o seu turno';
+            $log->company_id = auth()->user()->company_id;
+            $log->save();
             
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [

@@ -143,16 +143,11 @@ class PaymentComponent extends Component
 
     //Metodo para finalizar Pagamento
     public function finallyPayment()
-<<<<<<< HEAD
-    {
-        DB::beginTransaction();
-=======
     {  
         
        
       
         //DB::beginTransaction();
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
        #Validação de campos
          if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
           
@@ -268,15 +263,9 @@ class PaymentComponent extends Component
                          'company_id'=>auth()->user()->company_id
                      ]);
 
-<<<<<<< HEAD
-
-                     
-                 
-=======
                      $itemFinded = Item::where('description','=',$item->name)->first();
                      $itemFinded->quantity -=$item->quantity;
                      $itemFinded->save(); 
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
 
 
                      
@@ -307,25 +296,12 @@ class PaymentComponent extends Component
                 $table->save();
                 $this->orderid = $order->id;
             }
-<<<<<<< HEAD
-          
-           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
-           $is_true =  \App\Api\FactPlus::changeStatu($reference,'sent');
-       
-           if($is_true == 'success')
-           {
-               
-                \App\Api\FactPlus::changeStatu($reference,'settled');
-          }
-=======
 
             
                 
 
-           \App\Api\FactPlus::create($order->id);
-            $reference =  \App\Api\FactPlus::create($order->id);
-            \App\Api\FactPlus::changeStatu($reference);
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
+        $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
+        \App\Api\FactPlus::changeStatu($reference,'sent');
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -347,11 +323,7 @@ class PaymentComponent extends Component
         //DB::commit();
         
           } catch (\Throwable $th) {
-<<<<<<< HEAD
-            
-=======
               dd($th->getMessage());
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

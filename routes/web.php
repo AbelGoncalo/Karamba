@@ -9,6 +9,11 @@ use Laravel\SerializableClosure\SerializableClosure;
 
 
 
+Route::get('/test',function(){
+   $new  = \App\Services\Replace::newString('António José Miguel');
+   dd($new);
+});
+
  
 
 require __DIR__ .'/admin/routes.php';

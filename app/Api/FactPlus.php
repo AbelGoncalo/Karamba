@@ -21,11 +21,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-<<<<<<< HEAD
-        $key = '659bd7b97df70045df81c481d1813746';
-=======
         $key = '65995993b16b93cdac74e28f1cd69267';
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)
@@ -45,7 +41,7 @@ class FactPlus {
                 if ($item->tax == 0) {
                     array_push($insert,[
                     "itemcode"=> $item->id,
-                    "description"=> $item->item,
+                    "description"=> \App\Services\Replace::newString($item->item),
                     "price"=> $item->price,
                     "quantity"=> $item->quantity,
                     "tax"=> "0",
@@ -56,7 +52,7 @@ class FactPlus {
                 } else {
                     array_push($insert,[
                         "itemcode"=> $item->id,
-                        "description"=> $item->item,
+                        "description"=> \App\Services\Replace::newString($item->item),
                         "price"=> $item->price,
                         "quantity"=> $item->quantity,
                         "tax"=> $item->tax,
@@ -114,11 +110,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-<<<<<<< HEAD
-        $key = '659bd7b97df70045df81c481d1813746';
-=======
         $key = '65995993b16b93cdac74e28f1cd69267';
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -150,11 +142,7 @@ class FactPlus {
          //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-<<<<<<< HEAD
-        $key = '659bd7b97df70045df81c481d1813746';
-=======
         $key = '65995993b16b93cdac74e28f1cd69267';
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',

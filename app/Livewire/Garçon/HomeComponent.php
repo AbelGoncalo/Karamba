@@ -161,10 +161,6 @@ class HomeComponent extends Component
                         $itemExist->quantity += $this->qtd[$id];
                         $itemExist->save();
 
-<<<<<<< HEAD
-                        $item->quantity -=$this->qtd[$id];
-                        $item->save();
-=======
                         //Registando Atividade na tabela de Log  para o acto de anotar pedidos
                         $log_registers = new HistoryOfAllActivities();
                         $log_registers->tipo_acao = "Anotar pedidos";
@@ -173,7 +169,6 @@ class HomeComponent extends Component
                         $log_registers->save();
 
 
->>>>>>> 1df80c8dade5c9409c1f67a2d1a7be7d2be7af83
 
                         $this->alert('success', 'SUCESSO', [
                             'toast'=>false,

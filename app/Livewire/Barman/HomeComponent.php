@@ -26,22 +26,24 @@ class HomeComponent extends Component
     {
         try {
             
-            if(isset($tableSearch) and $tableSearch  != null)
+            if($tableSearch !=null)
             {
-               return CartLocalDetail::where('category','=','Bebidas')
-               ->where('company_id','=',auth()->user()->company_id)
-               ->where('table','=',$this->tableNumber)
-               ->where('status','=','PENDENTE')
-               ->orWhere('status','=','EM PREPARAÇÂO')
-               ->get();
-
+                return CartLocalDetail::where('table','=',$this->tableSearch)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->Orwhere('status','=','EM PREPARAÇÃO')
+                ->get();
+               
             }else{
+               
+                return CartLocalDetail::
+                where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->Orwhere('status','=','EM PREPARAÇÃO')
+                ->get();;
 
-              return  CartLocalDetail::where('category','=','Bebidas')
-              ->where('company_id','=',auth()->user()->company_id)
-               ->where('status','=','PENDENTE')
-               ->orWhere('status','=','EM PREPARAÇÂO')
-               ->get();
             }
              
         

@@ -223,6 +223,7 @@ class HomeComponent extends Component
            
         }
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

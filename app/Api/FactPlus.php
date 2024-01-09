@@ -91,7 +91,7 @@ class FactPlus {
       $response = curl_exec($curl);
   
       curl_close($curl);
-            dd($response);
+            dd($response['data']);
     }
 
     public static function sendInvoice($reference,$email)

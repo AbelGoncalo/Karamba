@@ -72,7 +72,7 @@ class FactPlus {
 
         
         $data =  json_encode($insert);
-        dd($data);
+       
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -91,7 +91,7 @@ class FactPlus {
       ));
   
       $response = curl_exec($curl);
-  
+      dd($response);
       curl_close($curl);
       $value = json_decode($response);
       return $value->data;

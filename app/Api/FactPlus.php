@@ -80,7 +80,7 @@ class FactPlus {
          CURLOPT_RETURNTRANSFER => true,
          CURLOPT_ENCODING => "",
          CURLOPT_MAXREDIRS => 10,
-         CURLOPT_TIMEOUT => 300,
+         CURLOPT_TIMEOUT => 0,
          CURLOPT_FOLLOWLOCATION => true,
          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_NONE   ,
          CURLOPT_CUSTOMREQUEST => "POST",

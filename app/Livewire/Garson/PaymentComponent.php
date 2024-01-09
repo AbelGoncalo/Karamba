@@ -30,7 +30,7 @@ class PaymentComponent extends Component
     use LivewireAlert;
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
-    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name,$nif,$address;
+    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name = 'CONSUMIDOR FINAL',$nif ='99999999',$address = 'Luanda,Angola';
     protected $listeners = ['reload'=>'reload'];
 
 

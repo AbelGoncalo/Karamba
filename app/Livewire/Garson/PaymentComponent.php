@@ -301,7 +301,7 @@ class PaymentComponent extends Component
                 
 
         $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
-        \App\Api\FactPlus::changeStatu($reference,'sent');
+        //\App\Api\FactPlus::changeStatu($reference,'sent');
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -354,7 +354,7 @@ class PaymentComponent extends Component
               
              
               $this->clearFields();
-              \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+             // \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
               session()->forget('finallyOrder');
               session()->forget('table');
 

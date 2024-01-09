@@ -21,7 +21,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-         $key = '65995993b16b93cdac74e28f1cd69267';
+         $key = '659bd7b97df70045df81c481d1813746';
         try {
 
            $details =  DetailOrder::where('order_id','=',$orderid)
@@ -33,15 +33,14 @@ class FactPlus {
            $serie = date('Y');
            $insert = [];
 
-           $utf8Data = array_map('utf8_encode', $insert);
-        
+      
           
 
             foreach ($details as  $item) {
                 if ($item->tax == 0) {
                     array_push($insert,[
                     "itemcode"=> $item->id,
-                    "description"=> \App\Services\Replace::newString($item->item),
+                    "description"=> $item->item,
                     "price"=> $item->price,
                     "quantity"=> $item->quantity,
                     "tax"=> "0",
@@ -52,7 +51,7 @@ class FactPlus {
                 } else {
                     array_push($insert,[
                         "itemcode"=> $item->id,
-                        "description"=> \App\Services\Replace::newString($item->item),
+                        "description"=> $item->item,
                         "price"=> $item->price,
                         "quantity"=> $item->quantity,
                         "tax"=> $item->tax,
@@ -64,10 +63,17 @@ class FactPlus {
                 
             }
 
+            $data = array_map(function ($item) {
+                return array_map('utf8_encode', $item);
+            }, $insert);
+            
+            
+            
+
 
             //Chamada a API do Factplus
 
-            $response = Http::post('https://api.factplus.co.ao',$utf8Data, [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'CREATE',
                 'apikey' => $key,
                 'Content-Type' => 'application/json; charset=utf-8',
@@ -91,8 +97,8 @@ class FactPlus {
                     'postalcode'=>'',
                     'country'=>'Angola',
                 ],
-                'items'=>$insert
-            ]);
+                'items'=> $data
+            ])->json();
 
 
             return $response['data'];
@@ -111,7 +117,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '659bd7b97df70045df81c481d1813746';
         try {
             $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
                 'apicall' => 'SEND',

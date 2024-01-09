@@ -28,17 +28,16 @@ class HomeComponent extends Component
          
             if($table !=null)
             {
-                $this->itemsOrder =  CartLocalDetail::where('table','=',$this->tableNumber)
+                $this->itemsOrder =  CartLocalDetail::where('table','=',$this->table)
                 ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','<>','Bebidas')
-                //->where('status','<>','PRONTO')
                 ->get();
                
-                $this->drinksOrder = CartLocalDetail::where('table','=',$this->tableNumber)
-                ->where('company_id','=',auth()->user()->company_id)
+                $this->drinksOrder = CartLocalDetail::
+                where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
-                //->where('status','<>','PRONTO')
                 ->get();;
+                
 
             
                 
@@ -47,18 +46,20 @@ class HomeComponent extends Component
                 $this->itemsOrder =  CartLocalDetail::
                 where('company_id','=',auth()->user()->company_id)
                 ->where('category','<>','Bebidas')
-                //->where('status','<>','PRONTO')
-                ->get();;
-
-               
+                ->get();
                
                 $this->drinksOrder = CartLocalDetail::
                 where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
+<<<<<<< HEAD
                 //->where('status','<>','PRONTO')
+=======
+>>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
                 ->get();;
 
             }
+
+ 
             
              
         

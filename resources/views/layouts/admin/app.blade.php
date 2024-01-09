@@ -116,6 +116,12 @@
                             Restaurante</a>
                     </li>
 
+                    <li class="nav-item ">
+                        <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.history.of.all.activities') ? 'active':''}}" href="{{route('panel.admin.history.of.all.activities')}}" >
+                            <i class="fa fa-clock"></i>
+                            Histórico de atividades</a>
+                    </li>
+
                 </ul>
             </div>
         </nav>

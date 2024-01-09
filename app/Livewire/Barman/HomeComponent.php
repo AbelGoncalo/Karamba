@@ -26,20 +26,39 @@ class HomeComponent extends Component
     {
         try {
             
+<<<<<<< HEAD
             if($tableNumber !=null)
             {
                 return CartLocalDetail::where('table','=',$this->tableNumber)
                 ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
                 ->where('status','=','PENDENTE')
+=======
+            if($tableSearch !=null)
+            {
+                return CartLocalDetail::where('table','=',$this->tableSearch)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->Orwhere('status','=','EM PREPARAÇÃO')
+>>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
                 ->get();
                
             }else{
                
+<<<<<<< HEAD
                 return CartLocalDetail::where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
                 ->where('status','=','PENDENTE')
                 ->get();
+=======
+                return CartLocalDetail::
+                where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->Orwhere('status','=','EM PREPARAÇÃO')
+                ->get();;
+>>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
 
             }
         

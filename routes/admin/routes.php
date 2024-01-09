@@ -9,6 +9,7 @@ use App\Livewire\Admin\{
     ReportComponent,
     UserComponent,
     CuponComponent,
+    HistoryOfAllActivities,
     LocationComponent,
     ReviewComponent,
 };
@@ -25,4 +26,5 @@ Route::get('/painel/admin/utilizadores',UserComponent::class)->name('panel.admin
 Route::get('/painel/admin/minha-conta',MyAccount::class)->name('panel.admin.account')->middleware(['auth','admin']);
 Route::get('/painel/admin/minha-conta',MyAccount::class)->name('panel.admin.account')->middleware(['auth','admin']);
 Route::get('/painel/admin/avaliacoes',ReviewComponent::class)->name('panel.admin.review')->middleware(['auth','admin']);
+Route::get("/consultar/log/actividades/geral", HistoryOfAllActivities::class)->name('panel.admin.history.of.all.activities');
 

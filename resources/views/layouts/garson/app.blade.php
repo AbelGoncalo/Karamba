@@ -56,7 +56,7 @@
             </ul>
             
           </li>
-          @livewire('garçon.notification-component')
+          @livewire('garson.notification-component')
         
   
         </ul>

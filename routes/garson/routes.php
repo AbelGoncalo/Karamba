@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Garçon\{
+use App\Livewire\Garson\{
     HomeComponent,
     PaymentComponent,
     ViewOrderComponent,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use Livewire\Component;
 use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};

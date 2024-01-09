@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use App\Models\Company;
 use App\Models\DetailOrder;
@@ -110,7 +110,7 @@ class NotificationComponent extends Component
            $table->status = 0;
            $table->save();
             //Mudar o estado da factura
-            \App\Api\FactPlus::changeStatu($notification->reference,'sent');
+            \App\Api\FactPlus::changeStatu($notification->reference);
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

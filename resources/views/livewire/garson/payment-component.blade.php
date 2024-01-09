@@ -216,7 +216,13 @@
     let  video  =  document.querySelector('video');
     
     btn.addEventListener('click',function(){
-        navigator.mediaDevices.getUserMedia({video:true,facingMode: "environment"})
+        const constraints = {
+        video: {
+            facingMode: "environment"
+        },
+};
+
+        navigator.mediaDevices.getUserMedia(constraints)
         .then(stream =>{
             video.srcObject = stream;
             video.play()

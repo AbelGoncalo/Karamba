@@ -105,7 +105,7 @@ class FactPlus {
             $json = json_encode($data);
             
 
-         $response = Http::timeout(30)->post('https://api.factplus.co.ao', [
+         $response = Http::timeout(-1)->post('https://api.factplus.co.ao', [
              'apicall' => 'CREATE',
              'apikey' => $key,
              'Content-Type' => 'application/json; charset=utf-8',

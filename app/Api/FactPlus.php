@@ -136,7 +136,7 @@ class FactPlus {
 
   
     
-    
+    dd($response);
         return $response->data;
     
     

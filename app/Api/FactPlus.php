@@ -91,11 +91,10 @@ class FactPlus {
       $response = curl_exec($curl);
   
       curl_close($curl);
-      $collection = json_decode($response,true);
+      $collection = collect(json_decode($response));
 
-      dd($response);
-      if ($collection['result'] == 'success') {
-      } 
+      dd($collection['data']);
+      
       
     }
 

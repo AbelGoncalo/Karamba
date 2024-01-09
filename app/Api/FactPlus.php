@@ -13,13 +13,8 @@ class FactPlus {
 
  
 
-<<<<<<< HEAD
-  
-    public static function create($orderid,$name,$nif,$adddress)
-=======
  
     public static function create($orderid,$name,$nif,$address)
->>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
     {
        
         DB::beginTransaction();
@@ -38,14 +33,8 @@ class FactPlus {
            $serie = date('Y');
            $insert = [];
 
-<<<<<<< HEAD
-
-           //dados do cliente
-   
-=======
            $utf8Data = array_map('utf8_encode', $insert);
         
->>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
           
 
             foreach ($details as  $item) {
@@ -120,9 +109,9 @@ class FactPlus {
     {
         DB::beginTransaction();
         //real
-        //$key = '65847d93edbb6d77bea624101ff616ea';
+        $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        //$key = '65995993b16b93cdac74e28f1cd69267';
         try {
             $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
                 'apicall' => 'SEND',
@@ -153,9 +142,9 @@ class FactPlus {
     {
         DB::beginTransaction();
          //real
-        //$key = '65847d93edbb6d77bea624101ff616ea';
+        $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        //$key = '65995993b16b93cdac74e28f1cd69267';
         try {
             $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
                 'apicall' => 'ALTER',

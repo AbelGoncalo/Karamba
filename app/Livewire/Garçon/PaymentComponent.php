@@ -31,11 +31,7 @@ class PaymentComponent extends Component
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
     public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name,$nif,$address;
-<<<<<<< HEAD
-    protected $listeners = ['realod'=>'reload'];
-=======
     protected $listeners = ['reload'=>'reload'];
->>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
 
 
 
@@ -301,16 +297,11 @@ class PaymentComponent extends Component
                 $this->orderid = $order->id;
             }
 
-<<<<<<< HEAD
-           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
-            \App\Api\FactPlus::changeStatu($reference,'sent');
-=======
             
                 
 
         $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
         \App\Api\FactPlus::changeStatu($reference,'sent');
->>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -332,11 +323,7 @@ class PaymentComponent extends Component
         //DB::commit();
         
           } catch (\Throwable $th) {
-<<<<<<< HEAD
-            dd($th->getMessage());
-=======
-              dd($th->getMessage());
->>>>>>> ecef26617ab9a62c2efe9d67bf80c88a97ca06c3
+             
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

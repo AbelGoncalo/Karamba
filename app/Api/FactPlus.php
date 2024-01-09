@@ -67,7 +67,7 @@ class FactPlus {
 
             //Chamada a API do Factplus
 
-            $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
+            $response = Http::post('https://api.factplus.co.ao',$utf8Data, [
                 'apicall' => 'CREATE',
                 'apikey' => $key,
                 'Content-Type' => 'application/json; charset=utf-8',

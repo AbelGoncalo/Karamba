@@ -89,14 +89,11 @@
                                 <input placeholder="Informe o nif do cliente" type="text" name="nif" id="nif" wire:model='nif' class="form-control">
                                 @error('nif')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
-<<<<<<< HEAD
-=======
                             <div class="form-group">
                                 <label for="clientName"><span class="text-success">(opcional)</span></span></label>
                                 <input placeholder="Informe o Endereço do Cliente" type="text" name="adddress" id="adddress" wire:model='adddress' class="form-control">
                                 @error('adddress')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
->>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
                             <div class="form-group">
                                 <label for="clientName">Tipo de Pagamento <span class="text-danger">*</span></label>
                                 <select wire:model.live='paymenttype' name="paymenttype" id="paymenttype" class="form-select">

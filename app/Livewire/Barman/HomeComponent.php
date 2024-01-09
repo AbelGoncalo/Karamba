@@ -22,30 +22,29 @@ class HomeComponent extends Component
         ])->layout('layouts.barman.app');
     }
 
-    public function getOrders($tableSearch)
+    public function getOrders($tableNumber)
     {
         try {
             
-            if(isset($tableSearch) and $tableSearch  != null)
+            if($tableNumber !=null)
             {
-               return CartLocalDetail::where('category','=','Bebidas')
-               ->where('company_id','=',auth()->user()->company_id)
-               ->where('table','=',$this->tableNumber)
-               ->where('status','=','PENDENTE')
-               ->orWhere('status','=','EM PREPARAÇÂO')
-               ->get();
-
+                return CartLocalDetail::where('table','=',$this->tableNumber)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->get();
+               
             }else{
+               
+                return CartLocalDetail::where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->get();
 
-              return  CartLocalDetail::where('category','=','Bebidas')
-              ->where('company_id','=',auth()->user()->company_id)
-               ->where('status','=','PENDENTE')
-               ->orWhere('status','=','EM PREPARAÇÂO')
-               ->get();
             }
-             
         
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

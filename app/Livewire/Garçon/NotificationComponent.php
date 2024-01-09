@@ -110,7 +110,7 @@ class NotificationComponent extends Component
            $table->status = 0;
            $table->save();
             //Mudar o estado da factura
-            \App\Api\FactPlus::changeStatu($notification->reference);
+            \App\Api\FactPlus::changeStatu($notification->reference,'sent');
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

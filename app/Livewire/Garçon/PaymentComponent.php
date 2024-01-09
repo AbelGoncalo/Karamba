@@ -29,7 +29,7 @@ class PaymentComponent extends Component
     use LivewireAlert;
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
-    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name,$nif;
+    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name,$nif,$address;
     protected $listeners = ['realod'=>'reload'];
 
 
@@ -272,14 +272,8 @@ class PaymentComponent extends Component
                 
             }
 
-<<<<<<< HEAD
-           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif);
+           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
             \App\Api\FactPlus::changeStatu($reference,'sent');
-            \App\Api\FactPlus::changeStatu($reference,'settled');
-=======
-           $reference  = \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->adddress);
-            \App\Api\FactPlus::changeStatu($reference);
->>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -300,11 +294,7 @@ class PaymentComponent extends Component
         
             DB::commit();
           } catch (\Throwable $th) {
-<<<<<<< HEAD
-            
-=======
-              dd($th->getMessage());
->>>>>>> 4f49453152621e8ef3a43f440b151e2979bcaae4
+            dd($th->getMessage());
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

@@ -54,7 +54,7 @@ class HomeComponent extends Component
                
                 $this->drinksOrder = CartLocalDetail::
                 where('company_id','=',auth()->user()->company_id)
-                ->where('category','<>','Bebidas')
+                ->where('category','=','Bebidas')
                 //->where('status','<>','PRONTO')
                 ->get();;
 

@@ -165,6 +165,7 @@
     @stack('select2-categories')
     @stack('select2-categories-modal')
     @stack('chart-log')
+    @stack('show-type-report')
 
   
   

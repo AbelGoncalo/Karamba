@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Exports\TableExport;
+use App\Models\HistoryOfAllActivities;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\Table;
@@ -25,14 +26,24 @@ class TableComponent extends Component
     //Salvar Table
     public function save()
     {
+
         $this->validate($this->rules,$this->messages);
         try {
          
+            
             Table::create([
                 'number'=>'Mesa '.$this->number,
                 'location'=>$this->location,
                 'company_id'=>auth()->user()->company_id,
             ]);
+
+            //Log para Adicionar mesa
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Adicionar mesa ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' adiciounou a Mesa '.$this->number;
+            $log->save();
 
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -85,7 +96,18 @@ class TableComponent extends Component
        
         try {
             $this->edit = $id;
-       
+            $table = Table::find($id);
+
+            //Log para excluir mesa
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Excluir mesa ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' excluiu a '.$table->number;
+            $log->save();
+
+            
+            
             $this->alert('warning', 'Confirmar', [
                 'icon' => 'warning',
                 'position' => 'center',
@@ -155,6 +177,16 @@ class TableComponent extends Component
             if ($tableFinded->status == 0) {
                 $tableFinded->status = 1;
                 $tableFinded->save();
+
+                //Log para alterar o status da Mesa
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Atualizar status da mesa ';
+                $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou o status da '.$tableFinded->number.' para ocupada';
+                $log->save();
+
+
                 $this->alert('success', 'SUCESSO', [
                     'toast'=>false,
                     'position'=>'center',
@@ -197,10 +229,19 @@ class TableComponent extends Component
        
         try {
   
+            
             Table::find($this->edit)->update([
                'number'=>'Mesa '.$this->number,
                'location'=>$this->location,
             ]);
+
+            //Log para atualizar o número da Mesa
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Atualizar status da mesa ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou para a Mesa'.$this->number;
+            $log->save();
             
 
             $this->dispatch('close');
@@ -233,6 +274,15 @@ class TableComponent extends Component
         try {
            
             Table::destroy($this->edit);
+            $table = Table::find($this->edit);
+
+            //Log para Excluir a Mesa
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Excluir mesa ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' excluiu  a Mesa '.$table->number;
+            $log->save();
            
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -294,10 +344,26 @@ class TableComponent extends Component
         
            if($format == 'pdf')
            {
+            //Log para exportar o relatório de mesas em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Exportar relatório de mesas em Excel';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->descricao = 'O Administrador '.auth()->user()->name.' exportou o relatório de mesas em PDF';
+            $log->company_id = auth()->user()->company_id;
+            $log->save();
+            
                return (new TableExport($this->search))->download('Mesas.'.$format,\Maatwebsite\Excel\Excel::DOMPDF); 
                
            }elseif($format == 'xls')
            {
+
+            //Log para exportar o relatório de mesas em PDF
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Exportar relatório de mesas em PDF';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->descricao = 'O Administrador '.auth()->user()->name.' exportou o relatório de mesas em Excel';
+            $log->company_id = auth()->user()->company_id;
+            $log->save();
                return (new TableExport($this->search))->download('Mesas.'.$format,\Maatwebsite\Excel\Excel::XLS); 
 
            }

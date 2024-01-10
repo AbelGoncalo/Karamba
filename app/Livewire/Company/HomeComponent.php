@@ -3,6 +3,7 @@
 namespace App\Livewire\Company;
 
 use App\Models\Company;
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Exception;
 use Livewire\{Component,WithFileUploads};
@@ -123,6 +124,7 @@ class HomeComponent extends Component
         
                     }
                 
+                   
                 $company->update([
                      "companyname"=>$this->companyname,
                      "companynif"=>$this->companynif,
@@ -140,6 +142,18 @@ class HomeComponent extends Component
                      "companywebsite"=>$this->companywebsite,
                      "companycoin"=>$this->companycoin ?? "Kwanza(AO)",
                  ]);
+
+
+            //Log para exportar o relatório de categorias em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Atualizar os dados da empresa';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou os dados da  empresa '.$this->companyname.
+            'para, NIF: '.$this->companynif.' Regime: '.$this->companyregime.' Telefone: '.$this->companyphone.' Telefone alternativo: '.$this->companyalternativephone
+            .'Email: '.$this->companyemail.' Negócio da empresa: '.$this->companybusiness.' País: '.$this->companycountry.' Província '.$this->companyprovince.' Slogan: '.$this->companyslogan.
+            ' Website: '.$this->companywebsite.' Moeda: '.$this->companycoin;
+            $log->save();
 
                  $this->alert('success', 'SUCESSO', [
                     'toast'=>false,

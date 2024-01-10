@@ -20,31 +20,31 @@
 
         <div class="card-header">
             <div class="d-flex align-items-center ">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label for="">Selecionar forma de visualização</label>
                     <select wire:model.live="report_type" class="form-control" name="report_type" id="report_type">
-                            <option selected  value="">--Selecionar--</option>
                             <option value="Tabela">Tabela</option>
                     </select>
                 </div>
 
-                {{-- <div class="form-group col-md-3">
-                    <label for="">Selecionar tipo de acção</label>
-                    <select  wire:model.live="type_service" class="form-control" name="type_service" id="type_service">
-                            <option selected disabled value="">--Selecionar--</option>
-                            <option value="Atribuir mesa">Atribuir mesa</option>
-                            <option value="Editar mesa atribuída">Editar mesa atribuída</option>
-                            <option value="Exportar relatório de pedidos">Exportar relatório de pedidos</option>
+                 <div class="form-group col-md-3">
+                    <label for="">Selecionar  responsável</label>
+                    <select  wire:model.live="authorOfActivity" class="form-control" name="authorOfActivity" id="authorOfActivity">
+                            <option selected value="">--Selecionar--</option>
+                            <option value="Todos">Todos</option>
+                            @foreach ($responsable as $user)
+                              <option value="{{$user->name.' '.$user->lastname ?? ''}}">{{$user->name.' '.$user->lastname ?? ''}}</option> 
+                            @endforeach
                     </select>
 
-                </div> --}}
+                </div> 
 
-                <div class="form-group col-md-4">
-                    <label for="">Data Final</label>
+                <div class="form-group col-md-3">
+                    <label for="">Data Inicial</label>
                     <input type="date" wire:model.live='startdate' name="startdate" id="startdate" class="form-control">
                 </div>
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label for="">Data Final</label>
                     <input type="date" wire:model.live='enddate' name="enddate" id="enddate" class="form-control">
                 </div>
@@ -52,14 +52,26 @@
             </div>
         </div>
 
-        <div class="card-body">
-            
+        <div class="card-body">           
 
+           
 
             <!-- Tabela -->
 
-                @if ($this->report_type == 'Tabela')
-                    <div class="table-responsive mt-4">
+                @if (count($historyOfActivities) > 0)
+
+                <div class="col-md-12 d-flex justify-content-end align-items-center flex-wrap mt-1 mb-1">
+                    <button wire:click='printHistoryOfAllActivities' class="btn btn-sm mx-1" style=" background-color: #222831e5;color:#fff;">
+                        <i class="fa fa-file-pdf"></i>
+                        EXPORTAR PDF
+                    </button> 
+                    <button class="btn btn-sm btn-success mx-1" title="Exportar Excel" wire:click='exportExcel'>
+                      <i class="fas fa-file-excel"></i>
+                      Exportar EXCEL
+                    </button>
+
+                </div>
+                    <div id="table" class="table-responsive mt-4">
                         <table class="table table-hover table-striped">
                             <thead class="container">
                                 <tr>
@@ -86,29 +98,39 @@
                                 <td></td>
                             </tr>
                         </tbody>
-                    </div>               
-                @endif
+                    </div>    
                     
-                                    
-          
-            
-            <!-- Tabela -->
+                  @endif
+                  <!-- Tabela -->                   
 
-            <div class="col-md-12 d-flex align-items-start my-5">
-                
-                <div  class="col-md-7 ">
+
+
+                       <!-- Chart js -->           
+              <div  id="chartjsContent" class="col-md-12 d-flex align-items-start my-5">
+                  
+                <div id="barChart" class="barChart col-md-7 ">
                     <h1>Gráfico de barras</h1>                
                         <canvas id="myChart"></canvas>
-                  </div> 
+                </div> 
                   
                   
-                <div  class="col-md-4 " >
+                <div id="pizzaChart" class="col-md-4 " >
                     <h1>Gráfico de pizza</h1>
                     <canvas id="pie-chart" width="10px"></canvas>                
                         
                   </div>  
 
             </div>
+          <!-- Chart js -->
+
+                                    
+          
+         
+              
+
+
+
+            
 
 
         </div>
@@ -130,6 +152,7 @@
   
     new Chart(ctx, {
       type: 'bar',
+      animation:false,
       data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         datasets: [{
@@ -174,4 +197,28 @@
     });
   </script>
     
+@endpush
+
+@push("show-type-report")
+  <script src="{{asset('admin/vendor/jquery/jquery-3.3.1.min.js')}}"></script>
+  <script>
+    $(document).ready(function(){      
+
+      $('#report_type').on('change', function() {
+        if (this.value == "Tabela"){
+         $(".barChart").addClass('d-none');
+         $(this).off('load');
+        }else if(this.value == 'Grafico'){
+          $("#chartjs").show();
+
+        }
+
+      //alert(this.value );
+});
+
+
+    });     
+
+  </script>
+  
 @endpush

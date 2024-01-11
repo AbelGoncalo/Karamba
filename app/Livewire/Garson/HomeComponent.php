@@ -277,7 +277,13 @@ class HomeComponent extends Component
              $this->allItems = [];
              $this->tableNumber ='';
         } catch (\Throwable $th) {
-            //throw $th;
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
         }
     }
 }

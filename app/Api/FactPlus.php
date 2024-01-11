@@ -34,6 +34,36 @@ class FactPlus {
             $serie = date('Y');
            $insert = [];
 
+<<<<<<< HEAD
+           
+        
+          
+
+            foreach ($details as  $item) {
+                if ($item->tax == 0) {
+                    array_push($insert,[
+                    "itemcode"=> $item->id,
+                    "description"=> $item->item,
+                    "price"=> $item->price,
+                    "quantity"=> $item->quantity,
+                    "tax"=> "0",
+                    "discount"=> "0",
+                    "exemption_code"=> "M10",
+                    "retention"=> ""
+                    ]);
+                } else {
+                    array_push($insert,[
+                        "itemcode"=> $item->id,
+                        "description"=>$item->item,
+                        "price"=> $item->price,
+                        "quantity"=> $item->quantity,
+                        "tax"=> $item->tax,
+                        "discount"=> "0",
+                        "exemption_code"=> "",
+                        "retention"=> ""
+                        ]);
+                }
+=======
       
           
 
@@ -61,10 +91,46 @@ class FactPlus {
                          "retention"=> ""
                          ]);
                  }
+>>>>>>> e9a451259d67950ba865218ea97152a9bd1b8246
                 
               }
 
+<<<<<<< HEAD
+
+            //Chamada a API do Factplus
+
+            $response = Http::post('https://api.factplus.co.ao', [
+                'apicall' => 'CREATE',
+                'apikey' => $key,
+                'Content-Type' => 'application/json; charset=utf-8',
+                'document'=>[
+                    'type'=>'factura',
+                    'date'=>$date,
+                    'duedate'=>$duedate,
+                    'vref'=>$vref,
+                    'serie'=>$serie,
+                    'currency'=>'AOA',
+                    'exchange_rate'=>'0',
+                    'observation'=>'Factura de Pagamento',
+                    'retention'=>'',
+                ],
+                'client'=>[
+                    'name'=>$name ?? 'CONSUMIDOR FINAL',
+                    'nif'=>$nif ?? '99999999',
+                    'email'=>'',
+                    'city'=>'Luanda',
+                    'address'=>$address,
+                    'postalcode'=>'',
+                    'country'=>'Angola',
+                ],
+                'items'=>$insert
+            ]);
+
+
+            return $response['data'];
+=======
               
+>>>>>>> e9a451259d67950ba865218ea97152a9bd1b8246
            
 
         
@@ -131,10 +197,9 @@ class FactPlus {
         //teste
         $key = '659bd7b97df70045df81c481d1813746';
         try {
-            $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
                 'apikey' => $key,
-                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'reference'=>$reference,
                     'type'=>'factura',
@@ -164,10 +229,9 @@ class FactPlus {
         //teste
         $key = '65995993b16b93cdac74e28f1cd69267';
         try {
-            $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',
                 'apikey' =>  $key,
-                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'type'=>'factura',
                     'reference'=>$reference,

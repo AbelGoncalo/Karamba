@@ -4,7 +4,7 @@
        
         <div  class="row d-flex justify-content-between align-items-start flex-wrap">
             <div class="col-md-4">
-                <div class="input-group" wire:ignore>
+                <div class="form-group mt-1" wire:ignore>
                   <select wire:model.live='tableNumber'  name="tableNumber" id="tableNumber" class="form-control searchItemsWithSelect text-uppercase">
                     <option value="" select>
                       --Selecionar Mesa--
@@ -17,10 +17,11 @@
                   </select>
                 </div>
             </div> 
-           
-            <button   data-bs-toggle="modal" data-bs-target="#transferMOdal" class="col-md-2 btn btn-md" style=" background-color: #222831e5;color:#fff;" >
-                <i class="fa-solid fa-right-left"></i>
-                Transferir</button>
+     
+                <button   data-bs-toggle="modal" data-bs-target="#transferMOdal" class="col-md-2 btn btn-md mt-1" style=" background-color: #222831e5;color:#fff;" >
+                    <i class="fa-solid fa-right-left"></i>
+                    Transferir</button>
+          
            
         </div>
        

@@ -58,6 +58,7 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item text-dark" style="color: #000 !important" href="{{route('room.manager.account')}}"><i class="fas fa-user mr-2"></i> Conta</a></li>
               <li><a class="dropdown-item text-dark" style="color: #000 !important" href="{{route('panel.room.manager.service.control')}}"><i class="fas fa-clock mr-2"></i> Tempo de Entregas</a></li>
+              <li><a class="dropdown-item text-dark" style="color: #000 !important" href="{{route('panel.room.manager.transfer.item')}}"><i class="fa fa-right-left"></i> Transferir Items</a></li>
               @livewire('auth.logout')
             </ul>
           </li>
@@ -116,5 +117,6 @@
       @stack('select2-garson')
       @stack('select2-tables')
       @stack('selects')
+      @stack('checkAll')
 </body>
 </html>

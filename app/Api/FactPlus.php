@@ -33,7 +33,7 @@ class FactPlus {
            $serie = date('Y');
            $insert = [];
 
-           $utf8Data = array_map('utf8_encode', $insert);
+           
         
           
 
@@ -41,7 +41,7 @@ class FactPlus {
                 if ($item->tax == 0) {
                     array_push($insert,[
                     "itemcode"=> $item->id,
-                    "description"=> \App\Services\Replace::newString($item->item),
+                    "description"=> $item->item,
                     "price"=> $item->price,
                     "quantity"=> $item->quantity,
                     "tax"=> "0",
@@ -52,7 +52,7 @@ class FactPlus {
                 } else {
                     array_push($insert,[
                         "itemcode"=> $item->id,
-                        "description"=> \App\Services\Replace::newString($item->item),
+                        "description"=>$item->item,
                         "price"=> $item->price,
                         "quantity"=> $item->quantity,
                         "tax"=> $item->tax,
@@ -67,7 +67,7 @@ class FactPlus {
 
             //Chamada a API do Factplus
 
-            $response = Http::post('https://api.factplus.co.ao',$utf8Data, [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'CREATE',
                 'apikey' => $key,
                 'Content-Type' => 'application/json; charset=utf-8',
@@ -113,10 +113,9 @@ class FactPlus {
         //teste
         //$key = '65995993b16b93cdac74e28f1cd69267';
         try {
-            $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
                 'apikey' => $key,
-                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'reference'=>$reference,
                     'type'=>'factura',
@@ -146,10 +145,9 @@ class FactPlus {
         //teste
         //$key = '65995993b16b93cdac74e28f1cd69267';
         try {
-            $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',
                 'apikey' =>  $key,
-                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'type'=>'factura',
                     'reference'=>$reference,

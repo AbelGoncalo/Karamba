@@ -140,6 +140,7 @@ class GarsonComponent extends Component
                         $log->tipo_acao = 'Atribuir mesa';
                         $log->descricao =  'O chefe de sala '.auth()->user()->name. auth()->user()->lastname. ' atribuiu a mesa '. $this->table. ' ao garçon '. $getNameOfGarson->name.' '.$getNameOfGarson->lastname;
                         $log->responsavel = auth()->user()->name;
+                        $log->company_id = auth()->user()->company_id;
                         $log->save();                        
             
                         if ($garsontable) {

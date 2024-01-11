@@ -166,6 +166,7 @@ class HomeComponent extends Component
                         $log_registers->tipo_acao = "Anotar pedidos";
                         $log_registers->descricao = "O Garçon ".auth()->user()->name." anotou " .$this->qtd[$id]. ($this->qtd[$id] > 1 ? " quantidades " : " quantidade ") ." do produto ".$item->description;
                         $log_registers->responsavel = auth()->user()->name;
+                        $log_registers->company_id = auth()->user()->company_id;
                         $log_registers->save();
 
 

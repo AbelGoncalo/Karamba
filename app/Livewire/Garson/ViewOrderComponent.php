@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use Livewire\Component;
 use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};
@@ -215,6 +215,7 @@ class ViewOrderComponent extends Component
             $log_registers->tipo_acao = "Atualizar pedido";
             $log_registers->descricao = "O Garçon ".auth()->user()->name." atualizou a quantidade do pedido de " .$lastQuantity. " para  " .$this->quantity. ($lastQuantity > 1 ? " quantidades " : " quantidade " );
             $log_registers->responsavel = auth()->user()->name;
+            $log_registers->company_id = auth()->user()->company_id;
             $log_registers->save(); 
 
                  

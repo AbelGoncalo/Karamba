@@ -4,7 +4,7 @@ namespace App\Livewire\RoomManager;
 
 use App\Exports\DeliveryExport;
 use Livewire\Component;
-use App\Models\{Company, Delivery,DeliveryDetail};
+use App\Models\{Company, Delivery,DeliveryDetail, HistoryOfAllActivities};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -159,12 +159,6 @@ class DeliveryComponent extends Component
 
            }
            
-       
-
-
-           
-            
-           
             
         } catch (\Throwable $th) {
          
@@ -198,8 +192,9 @@ class DeliveryComponent extends Component
     public function download($id)
     {
         try {
-            $delivery = Delivery::find($id);
-           
+
+            
+            $delivery = Delivery::find($id);           
 
             $test =   $this->alert('info', '', [
                 'toast'=>false,
@@ -209,7 +204,7 @@ class DeliveryComponent extends Component
                 'text'=>'A PROCESSAR DOWNLOAD...'
             ]);
 
-           
+         
             return response()->download(storage_path().'/app/public/receipts/'.$delivery->receipt);
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [
@@ -226,9 +221,19 @@ class DeliveryComponent extends Component
     public function export()
     {
         try {
+
+            
                 $start = Carbon::parse($this->startdate)->format('Y-m-d') .' 00:00:00';
                 $end   = Carbon::parse($this->enddate )->format('Y-m-d') .' 23:59:59';
 
+                
+                //Registar o log de atividades de exportaçao do ficheiro do Excel
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Exportar relatório de encomendas';
+                $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.' exportou o relatório de encomendas em formato excel';
+                $log->save();
          
                 return (new DeliveryExport($start,$end))->download('encomendas.xls',\Maatwebsite\Excel\Excel::XLS); 
 
@@ -248,14 +253,25 @@ class DeliveryComponent extends Component
     public function exportPdf()
     {
         try {
-               
+
                 $total = 0;
                 $data = $this->deliveryList($this->startdate,$this->enddate);
 
                 if($data->count() > 0){
                     foreach ($data as  $value) {
                        $total +=$value->total;
-                    }
+
+
+                       //Registar o log de atividades de exportaçao do ficheiro do Excel
+                        $log = new HistoryOfAllActivities();
+                        $log->tipo_acao = 'Exportar relatório de encomendas';
+                        $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                        $log->company_id = auth()->user()->company_id;
+                        $log->descricao = 'O chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.' exportou o relatório de encomendas em formato pdf';
+                        $log->save();
+                    
+                }
+
       
                   $company = Company::find(auth()->user()->company_id);
                   $pdfContent = new Dompdf();
@@ -269,6 +285,9 @@ class DeliveryComponent extends Component
                       fn () => print($pdfContent),
                       "Relatório-de-Pedidos.pdf"
                   );
+
+                  
+
               }
                 
             

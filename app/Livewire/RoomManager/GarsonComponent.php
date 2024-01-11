@@ -233,6 +233,7 @@ class GarsonComponent extends Component
                        $getNameOfGarson = User::find($this->garson);
                        
                        $log->tipo_acao = 'Editar mesa atribuída';
+                       $log->company_id = auth()->user()->company_id;
                        $log->descricao = 'O chefe de sala '. auth()->user()->name.' editou para a mesa '.$this->table.' ao garçon '.$getNameOfGarson->name.''.$getNameOfGarson->lastname;
                        $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
                        $log->save();

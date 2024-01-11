@@ -3,6 +3,7 @@
 namespace App\Livewire\RoomManager;
 
 use App\Models\GarsonTable;
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -87,6 +88,14 @@ class MyAccount extends Component
                 'phone'=>$this->phone,
             ]);
 
+              //Log de alteração dos dados pessoais do chefe de sala
+              $log = new HistoryOfAllActivities();
+              $log->tipo_acao = 'Alteração de dados pessoais';
+              $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+              $log->descricao = 'O Chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.'Alterou os dados pessoais da sua conta';
+              $log->company_id = auth()->user()->company_id;
+              $log->save();
+
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -137,6 +146,16 @@ class MyAccount extends Component
                 $this->password = '';
                 $this->npassword = '';
                 $this->cpassword = '';
+
+                 //Log de alteração de senha do chefe de sala
+                 $log = new HistoryOfAllActivities();
+                 $log->tipo_acao = 'Alteração de senha';
+                 $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                 $log->descricao = 'O Chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.'alterou a sua senha';
+                 $log->company_id = auth()->user()->company_id;
+                 $log->save();
+
+
             }else{
                 
                 $this->alert('error', 'ERRO', [

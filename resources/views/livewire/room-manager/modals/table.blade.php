@@ -7,9 +7,9 @@
         <div class="modal-body">
             <div class="container">
                 <div class="row">
-                    <div class="form-group">
+                    <div class="form-group" wire:ignore>
                         <label for="table">Mesas</label>
-                        <select name="" wire:model='table' id="table" class="form-control">
+                        <select name="" wire:model='table' id="table" class="form-control selectTableForTransfer">
                             <option value="">--Selecionar--</option>
                             @if (isset($allTables) and $allTables->count()  > 0)
                                 @foreach ($allTables as $item)

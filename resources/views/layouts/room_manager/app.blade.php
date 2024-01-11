@@ -117,6 +117,7 @@
       @stack('select2-garson')
       @stack('select2-tables')
       @stack('selects')
-      @stack('checkAll')
+      @stack('select2-select-change')
+      @stack('select2-select-search')
 </body>
 </html>

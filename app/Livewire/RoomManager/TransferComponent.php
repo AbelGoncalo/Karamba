@@ -10,6 +10,7 @@ class TransferComponent extends Component
 {
     use LivewireAlert;
     public $tableNumber,$table, $check = [],$orders = [];
+    protected $listeners = ['close'=>'close'];
     public function render()
     {
 
@@ -94,6 +95,9 @@ class TransferComponent extends Component
                 'text'=>'Operação realizada com sucesso'
             ]);
             $this->getOrders($this->table);
+            $this->dispatch('close');
+            $this->check = [];
+            $this->table = '';
         }else{
             $this->alert('warning', 'AVISO', [
                 'toast'=>false,
@@ -107,7 +111,6 @@ class TransferComponent extends Component
 
 
         }
-           
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [
                 'toast'=>false,

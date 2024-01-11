@@ -5,7 +5,7 @@
         <div  class="row d-flex justify-content-between align-items-start flex-wrap">
             <div class="col-md-4">
                 <div class="input-group" wire:ignore>
-                  <select wire:model.live='tableNumber'  name="tableNumber" id="tableNumber" class="form-select text-uppercase selectTable">
+                  <select wire:model.live='tableNumber'  name="tableNumber" id="tableNumber" class="form-control searchItemsWithSelect text-uppercase">
                     <option value="" select>
                       --Selecionar Mesa--
                     </option>
@@ -85,25 +85,55 @@
 </div>
 
 
-@push('checkAll')
-    <script>
-        
-        $('.mark').click((e)=>{
-            e.preventDefault()
-           
-            if ($(".inputCheck").prop( "checked")) {
-                
-                $(".inputCheck").prop( "checked",false)
-            }else{
-               
-                $(".inputCheck").prop( "checked",true)       
 
-            }
-        })
-        
- 
-    </script>
+
+<script>
+    document.addEventListener('close',function(){
+       $("#transferMOdal").modal('hide');
+    })
+    
+</script>
+
+
+@push('select2-select-search')
+<script>
+$(document).ready(function() {
+    $('.searchItemsWithSelect').select2({
+      theme: "bootstrap-5",
+      width:"100%",
+    
+    });
+  
+    $('.searchItemsWithSelect').change(function (e) { 
+      e.preventDefault();
+     
+      @this.set('tableNumber', $('.searchItemsWithSelect').val());
+     
+    });
+});
+</script>
 @endpush
+
+
+@push('select2-select-change')
+<script>
+$(document).ready(function() {
+    $('.selectTableForTransfer').select2({
+      theme: "bootstrap-5",
+      width:"100%",
+      dropdownParent: $('#transferMOdal')
+    });
+  
+    $('.selectTableForTransfer').change(function (e) { 
+      e.preventDefault();
+     
+      @this.set('table', $('.selectTableForTransfer').val());
+     
+    });
+});
+</script>
+@endpush
+
 
 
 

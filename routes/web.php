@@ -31,4 +31,10 @@ require __DIR__ .'/barman/routes.php';
 
 
 
+Route::get("/pass", function(){
+    $pass = \Hash::make("123456789");
+    return $pass;
+});
+
+
 

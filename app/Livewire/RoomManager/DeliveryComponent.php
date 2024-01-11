@@ -159,12 +159,6 @@ class DeliveryComponent extends Component
 
            }
            
-       
-
-
-           
-            
-           
             
         } catch (\Throwable $th) {
          
@@ -240,7 +234,6 @@ class DeliveryComponent extends Component
                 $log->company_id = auth()->user()->company_id;
                 $log->descricao = 'O chefe de sala '.auth()->user()->name.''.auth()->user()->lastname.' exportou o relatório de encomendas em formato excel';
                 $log->save();
-
          
                 return (new DeliveryExport($start,$end))->download('encomendas.xls',\Maatwebsite\Excel\Excel::XLS); 
 

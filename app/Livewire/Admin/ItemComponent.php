@@ -6,6 +6,7 @@ use App\Exports\ItemExport;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\HistoryOfAllActivities;
 use App\Models\Item;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
@@ -91,6 +92,16 @@ class ItemComponent extends Component
                  'category_id'=>$this->category_id,
                  'company_id'=>auth()->user()->company_id,
              ]);
+
+            //Log para exportar o relatório de categorias em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Adicionar items ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' adiciounou o item '.$this->description.
+            ' no valor de '.$this->price.'KZS'.' e de valor de quantidade '.$this->quantity;
+            $log->save();
+
  
              $this->alert('success', 'SUCESSO', [
                  'toast'=>false,
@@ -376,8 +387,15 @@ class ItemComponent extends Component
     {
         try {
          
-           
-                return (new ItemExport($this->search))->download('items.xls',\Maatwebsite\Excel\Excel::XLS); 
+            //Log para exportar o relatório de categorias em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Exportar items ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório de itens em PDF';
+            $log->save();
+            
+            return (new ItemExport($this->search))->download('items.xls',\Maatwebsite\Excel\Excel::XLS); 
 
             
 

@@ -202,7 +202,7 @@ class ReportComponent extends Component
 
 
             $total = 0;
-           $data = $this->getData($this->startdate,$this->enddate,$this->searchByTable,$this->searchByGarson);
+            $data = $this->getData($this->startdate,$this->enddate,$this->searchByTable,$this->searchByGarson);
             if($data->count() > 0){
                 $company = Company::find(auth()->user()->company_id);
                 $pdfContent = new Dompdf();
@@ -229,8 +229,6 @@ class ReportComponent extends Component
                     $log->save();
                     
                 }
-
-
                
 
 

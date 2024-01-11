@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Exports\LocalExport;
 use App\Models\Company;
+use App\Models\HistoryOfAllActivities;
 use Livewire\Component;
 use App\Models\Location;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -39,6 +40,14 @@ class LocationComponent extends Component
                 'price'=>$this->price,
                 'company_id'=>auth()->user()->company_id,
             ]);
+
+            //Log para registar o local de entregas
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Adicionar local de entregas';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' adicionou '.$this->location.' como local de entregas'.' com o preço de '.$this->price.',00 Kzs';
+            $log->save();
 
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -89,6 +98,14 @@ class LocationComponent extends Component
        
         try {
             $this->edit = $id;
+            $location = Location::find($id);
+             //Log para excluir o local de entregas
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Excluir local de entregas';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' excluiu o local de entregas '.$location->location;
+             $log->save();
        
             $this->alert('warning', 'Confirmar', [
                 'icon' => 'warning',
@@ -130,6 +147,13 @@ class LocationComponent extends Component
                 'price'=>$this->price,
             ]);
 
+             //Log para atualizar o local de entregas
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Atualizar local de entregas';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou o local de entregas para '.$this->location.' com o preço de '.$this->price.' Kzs';
+             $log->save();
             
 
 
@@ -223,6 +247,14 @@ class LocationComponent extends Component
     public function export()
     {
         try {
+
+             //Log para exportar o relatório  de locais de entregas em Excel
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Exportar relatório de locais de entregas';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório  de locais de entregas em Excel';
+             $log->save();
          
             
                 return (new LocalExport($this->search))->download('Localizações.xls',\Maatwebsite\Excel\Excel::XLS); 
@@ -248,18 +280,29 @@ class LocationComponent extends Component
                 $data = $this->searchLocation($this->search);
 
                 if($data->count() > 0){
-      
-                  $company = Company::find(auth()->user()->company_id);
-                  $pdfContent = new Dompdf();
-                  $pdfContent = Pdf::loadView('livewire.report.locations',[
-                      'data'=>$data,
-                      'company'=>$company,
+
+                //Log para exportar o relatório  de locais de entregas em PDF
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Exportar relatório de locais de entregas';
+                $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório  de locais de entregas em PDF';
+                $log->save();
+
+                $company = Company::find(auth()->user()->company_id);
+                $pdfContent = new Dompdf();
+                $pdfContent = Pdf::loadView('livewire.report.locations',[
+                'data'=>$data,
+                'company'=>$company,
                      
                   ])->setPaper('a4', 'portrait')->output();
                   return response()->streamDownload(
                       fn () => print($pdfContent),
                       "Relatório-de-Pedidos.pdf"
                   );
+
+                  
+
               }
                 
             

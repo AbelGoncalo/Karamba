@@ -5,16 +5,23 @@ namespace App\Livewire\RoomManager;
 use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
 use App\Models\Table;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class HomeComponent extends Component
 {
     use LivewireAlert;
-    protected $listeners = ['cancelOrder'=>'cancelOrder'];
+    protected $listeners = ['cancelOrder'=>'cancelOrder','getOrders'=>'getOrders'];
     public $cancelAll,$cancelItem,$itemsOrder = [], $drinksOrder = [],$tableNumber;
     public function render()
     {
+
+     
+
+
+     
+        
         return view('livewire.room-manager.home-component',[
             'allOrders'=>$this->getOrders($this->tableNumber),
             'allTables'=>$this->getTables(),

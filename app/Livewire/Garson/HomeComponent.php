@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Garson;
 
+use App\Events\BroadcastingEvent;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\{
@@ -14,7 +15,7 @@ use App\Models\{
     GarsonTable,
     HistoryOfAllActivities
 };
-
+use Illuminate\Support\Facades\Cache;
 
 class HomeComponent extends Component
 {
@@ -25,6 +26,21 @@ class HomeComponent extends Component
 
     public function render()
     {
+        $key = 'broadcasting';
+        $event = Cache::get($key);
+
+        if($event){
+
+            if($event['data'] == 'update')
+            {
+             $this->dispatch('reload');
+ 
+            }
+ 
+             Cache::forget($key);
+             $this->dispatch('broadcasting',$event);
+         }
+       
         return view('livewire.garson.home-component',[
             'allCategories'=>$this->allCategories($this->searchCategories),
             'allTables'=>$this->getTables()
@@ -220,12 +236,16 @@ class HomeComponent extends Component
             }
 
           
-
+            event(new BroadcastingEvent(
+                
+                data: 'update'
+            ));
+         
             $this->getItems($this->category_id);
            
         }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+        
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -277,7 +297,13 @@ class HomeComponent extends Component
              $this->allItems = [];
              $this->tableNumber ='';
         } catch (\Throwable $th) {
-            //throw $th;
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
         }
     }
 }

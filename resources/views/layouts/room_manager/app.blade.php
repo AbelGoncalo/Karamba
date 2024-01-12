@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     
+
+  {{--Pusher CDN--}}
+  {{-- <script src="https://js.pusher.com/7.0/pusher.min.js"></script> --}}
   <title>@yield('title')</title>
 </head>
 <body>

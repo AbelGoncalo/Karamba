@@ -17,7 +17,8 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    
+      {{--Pusher CDN--}}
+  {{-- <script src="https://js.pusher.com/7.0/pusher.min.js"></script> --}}
 
     <title>@yield('title')</title>
 </head>
@@ -106,6 +107,30 @@
       @stack('open-modal-g')
       @stack('select-garson')
       @stack('capture-picture')
+
+
+
+
+      {{--Config pusher boradcast--}}
+
+      {{-- <script>
+        const pusher = new Pusher('{{config('broadcasting.connections.pusher.key')}}',{{cluster:'eu'}})
+        const channel = pusher.subscrisbe('public')
+
+
+        //Receive messages
+        channel.bind('chat',function(data){
+          $.post('receive',{
+            _token:{{csrf_token}}
+            message: data.message,
+
+          }).
+          done(function(res){
+            $("messages >  .message").last().after(res)
+            $(document).scrollTop($(document).height());
+          })
+        })
+      </script> --}}
      
 
 

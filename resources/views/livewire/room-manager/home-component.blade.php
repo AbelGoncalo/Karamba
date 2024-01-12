@@ -159,4 +159,12 @@
 @endpush
 
 
+
+<script>
+    document.addEventListener('reload',function(){
+       window.location.reload();
+    })
+    
+</script>
+
  

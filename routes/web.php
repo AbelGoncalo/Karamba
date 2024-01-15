@@ -9,11 +9,6 @@ use Laravel\SerializableClosure\SerializableClosure;
 
 
 
-Route::get('/test',function(){
-   $new  = \App\Services\Replace::newString('António José Miguel');
-   dd($new);
-});
-
  
 
 require __DIR__ .'/admin/routes.php';
@@ -29,12 +24,6 @@ require __DIR__ .'/economate/routes.php';
 require __DIR__ .'/treasury/routes.php';
 require __DIR__ .'/barman/routes.php';
 
-
-
-Route::get("/pass", function(){
-    $pass = \Hash::make("123456789");
-    return $pass;
-});
 
 
 

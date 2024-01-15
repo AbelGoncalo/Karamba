@@ -28,13 +28,13 @@ class HomeComponent extends Component
          
             if($table !=null)
             {
-                $this->itemsOrder =  CartLocalDetail::where('table','=',$this->table)
+                $this->itemsOrder =  CartLocalDetail::where('table','=',$table)
                 ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','<>','Bebidas')
                 ->get();
                
-                $this->drinksOrder = CartLocalDetail::
-                where('company_id','=',auth()->user()->company_id)
+                $this->drinksOrder = CartLocalDetail::where('table','=',$table)
+                ->where('company_id','=',auth()->user()->company_id)
                 ->where('category','=','Bebidas')
                 ->get();;
                 
@@ -60,6 +60,7 @@ class HomeComponent extends Component
              
         
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

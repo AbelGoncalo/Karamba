@@ -145,7 +145,7 @@ class PaymentComponent extends Component
     public function finallyPayment()
     {  
         
-       
+      
       
         //DB::beginTransaction();
        #Validação de campos
@@ -189,7 +189,7 @@ class PaymentComponent extends Component
             $this->validate(['payallaccount'=>'required'],['payallaccount.required'=>'Obrigatório']);
 
         }
-         
+        
        #Fim de Validação de campos
          try {
 
@@ -221,7 +221,7 @@ class PaymentComponent extends Component
 
                 }
             }
-
+          
               //Pegar todos os dados necessarios para finalizar pagamento
               
            
@@ -248,11 +248,12 @@ class PaymentComponent extends Component
            
 
 
-
+           
                    
-
+             
              if($cartLocalDetail->count() > 0)
              {
+               
                  foreach ($cartLocalDetail as $item) {
                      DetailOrder::create([
                          'order_id'=>$order->id,
@@ -262,13 +263,13 @@ class PaymentComponent extends Component
                          'subtotal'=>$item->price * $item->quantity,
                          'company_id'=>auth()->user()->company_id
                      ]);
-
+                     
                      $itemFinded = Item::where('description','=',$item->name)->first();
                      $itemFinded->quantity -=$item->quantity;
                      $itemFinded->save(); 
 
-
-                     
+                    
+                    
                      //Registar o log de pagamentos
                     $log  = new HistoryOfAllActivities();
                     $log->tipo_acao = "Finalizacao de pagamento";
@@ -277,7 +278,7 @@ class PaymentComponent extends Component
                     $log->descricao = 'O garson '.auth()->user()->name. 'Finalizou o pagamento de '.$item->name. ' no valor de '. $item->price.'KZS'. ' com o subtotal de '.$item->price * $item->quantity.'KZS';
                     $log->save();
 
-
+          
                                     
                    
                    
@@ -287,7 +288,7 @@ class PaymentComponent extends Component
 
 
              }
-
+             
              $table = Table::where('number','=',$this->tableNumber)
              ->where('company_id','=',auth()->user()->company_id)
              ->first();
@@ -300,9 +301,9 @@ class PaymentComponent extends Component
 
             
                 
-
+        
         $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
-        dd($reference);
+       
         \App\Api\FactPlus::changeStatu($reference,'sent');
 
             session()->put('finallyOrder',$reference);
@@ -325,7 +326,7 @@ class PaymentComponent extends Component
         //DB::commit();
         
           } catch (\Throwable $th) {
-              dd($th->getMessage());
+           
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,

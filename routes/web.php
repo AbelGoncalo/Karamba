@@ -2,6 +2,7 @@
 
 use App\Events\ChannelPublic;
 use App\Events\NotifyEvent;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -25,11 +26,7 @@ require __DIR__ .'/treasury/routes.php';
 require __DIR__ .'/barman/routes.php';
 
 
-
-Route::get("/pass", function(){
+Route::get("/hash", function(){
     $pass = \Hash::make("123456789");
     return $pass;
 });
-
-
-

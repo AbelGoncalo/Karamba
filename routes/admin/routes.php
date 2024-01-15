@@ -12,6 +12,7 @@ use App\Livewire\Admin\{
     HistoryOfAllActivities,
     LocationComponent,
     ReviewComponent,
+    DishOfTheDayComponent
 };
 use App\Livewire\Auth\MyAccount;
 
@@ -26,5 +27,6 @@ Route::get('/painel/admin/utilizadores',UserComponent::class)->name('panel.admin
 Route::get('/painel/admin/minha-conta',MyAccount::class)->name('panel.admin.account')->middleware(['auth','admin']);
 Route::get('/painel/admin/minha-conta',MyAccount::class)->name('panel.admin.account')->middleware(['auth','admin']);
 Route::get('/painel/admin/avaliacoes',ReviewComponent::class)->name('panel.admin.review')->middleware(['auth','admin']);
-Route::get("/consultar/log/actividades/geral", HistoryOfAllActivities::class)->name('panel.admin.history.of.all.activities');
+Route::get("painel/admin/consultar/log/actividades/geral", HistoryOfAllActivities::class)->name('panel.admin.history.of.all.activities');
+Route::get('/painell/admin/prato/do/dia', DishOfTheDayComponent::class)->name('panel.admin.dish.of.the.day');
 

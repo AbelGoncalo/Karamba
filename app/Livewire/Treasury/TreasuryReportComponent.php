@@ -11,7 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Rap2hpoutre\FastExcel\FastExcel;
 
-use App\Models\{Uuse,Company,Order,Delivery,Saque};
+use App\Models\{Uuse,Company,Order,Delivery, HistoryOfAllActivities, Saque};
 
 class TreasuryReportComponent extends Component
 {
@@ -220,6 +220,14 @@ class TreasuryReportComponent extends Component
             if($data->count() > 0){
                 $company = Company::find(auth()->user()->company_id);
                 $pdfContent = new Dompdf();
+
+            //Log de actividades para exportação do relatório de saída em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Exportar relatório de saídas em PDF';
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Tesoureiro '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório de saídas em  PDF';
+            $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+            $log->save();
 
                 foreach($data as $item)
                 {

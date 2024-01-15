@@ -18,8 +18,24 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
       {{--Pusher CDN--}}
-  {{-- <script src="https://js.pusher.com/7.0/pusher.min.js"></script> --}}
 
+
+      <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+      <script>
+    
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+    
+        var pusher = new Pusher('4129adf16485090388dc', {
+          cluster: 'sa1'
+        });
+    
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+          alert(JSON.stringify(data));
+        });
+      </script>
+ 
     <title>@yield('title')</title>
 </head>
 <body style="height: 100vh !important">
@@ -109,29 +125,7 @@
       @stack('capture-picture')
 
 
-
-
-      {{--Config pusher boradcast--}}
-
-      {{-- <script>
-        const pusher = new Pusher('{{config('broadcasting.connections.pusher.key')}}',{{cluster:'eu'}})
-        const channel = pusher.subscrisbe('public')
-
-
-        //Receive messages
-        channel.bind('chat',function(data){
-          $.post('receive',{
-            _token:{{csrf_token}}
-            message: data.message,
-
-          }).
-          done(function(res){
-            $("messages >  .message").last().after(res)
-            $(document).scrollTop($(document).height());
-          })
-        })
-      </script> --}}
-     
+ 
 
 
 

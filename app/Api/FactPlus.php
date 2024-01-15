@@ -34,7 +34,6 @@ class FactPlus {
             $serie = date('Y');
            $insert = [];
 
-<<<<<<< HEAD
            
         
           
@@ -63,39 +62,9 @@ class FactPlus {
                         "retention"=> ""
                         ]);
                 }
-=======
-      
-          
-
-             foreach ($details as  $item) {
-                 if ($item->tax == 0) {
-                     array_push($insert,[
-                     "itemcode"=> $item->id,
-                     "description"=> \App\Services\Replace::newString($item->item),
-                     "price"=> $item->price,
-                     "quantity"=> $item->quantity,
-                     "tax"=> "0",
-                     "discount"=> "0",
-                     "exemption_code"=> "M11",
-                     "retention"=> ""
-                     ]);
-                 } else {
-                     array_push($insert,[
-                         "itemcode"=> $item->id,
-                         "description"=> \App\Services\Replace::newString($item->item),
-                         "price"=> $item->price,
-                         "quantity"=> $item->quantity,
-                         "tax"=> $item->tax,
-                         "discount"=> "0",
-                         "exemption_code"=> "",
-                         "retention"=> ""
-                         ]);
-                 }
->>>>>>> e9a451259d67950ba865218ea97152a9bd1b8246
                 
               }
 
-<<<<<<< HEAD
 
             //Chamada a API do Factplus
 
@@ -128,9 +97,6 @@ class FactPlus {
 
 
             return $response['data'];
-=======
-              
->>>>>>> e9a451259d67950ba865218ea97152a9bd1b8246
            
 
         

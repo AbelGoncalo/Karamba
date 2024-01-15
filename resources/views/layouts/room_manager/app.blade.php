@@ -17,8 +17,24 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     
 
-  {{--Pusher CDN--}}
-  {{-- <script src="https://js.pusher.com/7.0/pusher.min.js"></script> --}}
+    {{--Pusher CDN--}}
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+  
+      // Enable pusher logging - don't include this in production
+      Pusher.logToConsole = true;
+  
+      var pusher = new Pusher('4129adf16485090388dc', {
+        cluster: 'sa1'
+      });
+  
+      var channel = pusher.subscribe('my-channel');
+      channel.bind('my-event', function(data) {
+        alert(JSON.stringify(data));
+      });
+    </script>
+
+ 
   <title>@yield('title')</title>
 </head>
 <body>
@@ -122,5 +138,9 @@
       @stack('selects')
       @stack('select2-select-change')
       @stack('select2-select-search')
+
+
+
+
 </body>
 </html>

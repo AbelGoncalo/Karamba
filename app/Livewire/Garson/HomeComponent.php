@@ -3,6 +3,7 @@
 namespace App\Livewire\Garson;
 
 use App\Events\BroadcastingEvent;
+use App\Events\NotifyEvent;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\{
@@ -26,20 +27,7 @@ class HomeComponent extends Component
 
     public function render()
     {
-        $key = 'broadcasting';
-        $event = Cache::get($key);
-
-        if($event){
-
-            if($event['data'] == 'update')
-            {
-             $this->dispatch('reload');
- 
-            }
- 
-             Cache::forget($key);
-             $this->dispatch('broadcasting',$event);
-         }
+       
        
         return view('livewire.garson.home-component',[
             'allCategories'=>$this->allCategories($this->searchCategories),
@@ -236,11 +224,7 @@ class HomeComponent extends Component
             }
 
           
-            event(new BroadcastingEvent(
-                
-                data: 'update'
-            ));
-         
+    
             $this->getItems($this->category_id);
            
         }

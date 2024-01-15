@@ -109,8 +109,7 @@ class NotificationComponent extends Component
            $table = Table::where('number','=',$notification->tableNumber)->first();
            $table->status = 0;
            $table->save();
-            //Mudar o estado da factura
-            \App\Api\FactPlus::changeStatu($notification->reference);
+           
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

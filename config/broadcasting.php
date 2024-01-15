@@ -44,7 +44,7 @@ return [
                 'scheme' => 'http',
                 // 'scheme' => env('PUSHER_SCHEME', 'https'),
                 'encrypted' => false,
-                'useTLS' => false,
+                'useTLS' => true,
                 // 'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
             ],
             'client_options' => [

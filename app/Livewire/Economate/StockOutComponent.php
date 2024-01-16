@@ -66,7 +66,7 @@ class StockOutComponent extends Component
     {
         return view('livewire.economate.stock-out-component',[
             'stockouts'=>$this->searchStockOut($this->startdate,$this->enddate),
-            'items'=>ProductEconomate::where('company_id','=',auth()->user()->company_id)->get(),
+            'items'=>ProductEconomate::orderBy('description','asc')->where('company_id','=',auth()->user()->company_id)->get(),
             'Compartments'=>Compartment::where("company_id","=",auth()->user()->company_id)->get()
 
         ])->layout('layouts.economate.app');

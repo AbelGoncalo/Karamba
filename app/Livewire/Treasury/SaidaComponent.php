@@ -7,7 +7,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
-use App\Models\{Delivery,DeliveryDetail,Company,Saque, Order};
+use App\Models\{Delivery,DeliveryDetail,Company, HistoryOfAllActivities, Saque, Order};
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
@@ -136,7 +136,13 @@ class SaidaComponent extends Component
        public function export()
        {
            try {
-   
+            //Log de actividades para exportação do relatório de saída em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Exportar relatório de saídas em Excel';
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Tesoureiro '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório de saídas em  Excel';
+            $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+            $log->save();
 
                    return (new DebitReportExport($this->startdate,$this->enddate))->download('saques.xls',\Maatwebsite\Excel\Excel::XLS); 
 
@@ -159,6 +165,8 @@ class SaidaComponent extends Component
             $total = 0;
            $data = $this->saqueList($this->startdate,$this->enddate);
             if($data->count() > 0){
+                
+                
                 $company = Company::find(auth()->user()->company_id);
                 $pdfContent = new Dompdf();
 
@@ -166,6 +174,10 @@ class SaidaComponent extends Component
                 {
                     $total = $total + $item->total;
                 }
+
+               
+
+
 
               
 

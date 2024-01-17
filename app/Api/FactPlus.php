@@ -22,7 +22,7 @@ class FactPlus {
         // //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         // //teste
-         $key = '659bd7b97df70045df81c481d1813746';
+         $key = '65a676382d20f38a75ff2829c0b2a89a';
          try {
 
             $details =  DetailOrder::where('order_id','=',$orderid)
@@ -98,54 +98,6 @@ class FactPlus {
 
             return $response['data'];
            
-
-        
-
-
-        
-         $data =  json_encode($insert);
-       
-       //     //Chamada a API do Factplus
-
-       $data = array_map(function ($item) {
-                 return array_map('utf8_encode', $item);
-            }, $insert);
-
-            $json = json_encode($data);
-            
-
-         $response = Http::post('https://api.factplus.co.ao', [
-             'apicall' => 'CREATE',
-             'apikey' => $key,
-             'Content-Type' => 'application/json; charset=utf-8',
-             'document'=>[
-                 'type'=>'factura',
-                 'date'=>$date,
-                 'duedate'=>$duedate,
-                 'vref'=>$vref,
-                 'serie'=>$serie,
-                 'currency'=>'AOA',
-                 'exchange_rate'=>'0',
-                 'observation'=>'Factura de Pagamento',
-                 'retention'=>'',
-             ],
-             'client'=>[
-                 'name'=>$name ?? 'CONSUMIDOR FINAL',
-                 'nif'=>$nif ?? '99999999',
-                 'email'=>'',
-                 'city'=>'Luanda',
-                 'address'=>$address,
-                 'postalcode'=>'',
-                 'country'=>'Angola',
-             ],
-             'items'=> $json
-         ])->timeout(1200);
-
-        return $response['data'];
-    
-    
-
-
     }catch(Exception $th){
 
        
@@ -161,7 +113,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '659bd7b97df70045df81c481d1813746';
+        $key = '65a676382d20f38a75ff2829c0b2a89a';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -193,7 +145,7 @@ class FactPlus {
          //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '65a676382d20f38a75ff2829c0b2a89a';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',

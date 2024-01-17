@@ -10,9 +10,9 @@
       <div class="modal-body">
         <form wire:submit='{{($edit != '')? 'update':'save'}}' id="basicform">
 
-          <div id="quantity-div" class="form-group" wire:ignore>
+          <div  class="form-group" wire:ignore>
             <label for="category_id">Categoria</label>
-            <select name="category_id"  wire:model='category_id' id="category_id" class="form-control">
+            <select wire:ignore name="category_id"  wire:model='category_id' id="category_id" class="form-control">
               <option value="">--Selecionar Categoria--</option>
               @if ($categories != null)
                   @foreach ($categories as $item)
@@ -35,59 +35,66 @@
               <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="price" type="number" wire:model='price' description="price" class="form-control">
               @error('price') <span class="text-danger">{{$message}}</span> @enderror
           </div>
-         <div class="form-group"  wire:ignore>
+         <div id="quantity-div" class="form-group"  wire:ignore>
               <label for="quantity">Quantidade</label>
               <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="quantity" type="number" wire:model='quantity' description="quantity" class="form-control">
               @error('quantity') <span class="text-danger">{{$message}}</span> @enderror
           </div>
           
           
-          <!-- Detalhes sobre o prato do dia  -->            
+          <!-- Detalhes sobre o prato do dia  -->  
+          
+          
 
               <div id="detail-dishoftheday" class="d-none detail-dishoftheday" wire:ignore>
+                <div  class="form-froup">
+                    <label for="">Entrada:</label>
+                      <select id="entrance" name="entrance"   class="form-control" wire:model="entrance">
+                        <option value="">--Selecionar--</option>
+                        @foreach ($dishes as $dish)
+                          <option value="{{$dish->description ?? ""}}">{{$dish->description ?? ""}}</option>                      
+                        @endforeach
+                      </select>
+                </div>
 
-                <div>
-                  <label for="">Menu:</label>
-                  <select wire:model="menutype" class="form-control" name="menutype" id="menutype">
-                    <option name="">-- Selecionar--</option>
-                    <option value="Menu Executivo">Menu Executivo</option>
-                    @if (isset($companies) )
-                      @foreach ($companies as $company)
-                      <option value="Menu {{$company->companyname ?? ""}}">Menu {{$company->companyname ?? ""}}</option>
-                        
-                      @endforeach
-                      
-                    @endif
+                <div wire:ignore class="form-group">
+                  <label for="">Prato principal:</label>
+                  <select wire:ignore  class="form-control"  id="maindish" wire:model="maindish">
+                    <option value="">--Selecionar--</option>
+                      @if (isset($dishes) && count($dishes) > 0)
+                        @foreach ($dishes as $dishe)
+                          <option value="{{$dishe->description ?? ""}}">{{$dishe->description ?? ""}}</option>
+                        @endforeach
+                      @endif  
+                  </select>
+
+                </div>
+
+                <div wire:ignore class="form-group">
+                  <label for="">Sobremesa:</label>
+                  <select  wire:ignore id="dessert" wire:model="dessert" class="form-control">
+                    <option value="">--Selecionar--</option>
+                      @if (isset($dessertInput) && count($dessertInput) > 0)
+                        @foreach ($dessertInput as $dessert)
+                          <option value="{{$dessert->description ?? ""}}">{{$dessert->description ?? ""}}</option>
+                        @endforeach
+                      @endif
                   </select>
                 </div>
-                
-                <div class="form-group">
-                  <label for="">Entrada:</label>
-                  <input class="form-control" type="text" name="entrance" id="entrance" wire:model="entrance">
-                </div>
 
-                <div class="form-group">
-                  <label for="">Prato principal:</label>
-                  <input value="" class="form-control" type="text" name="maindish" id="maindish" wire:model="maindish">
-                </div>
-
-                <div class="form-group">
-                  <label for="">Sobremesa:</label>
-                  <input class="form-control" type="text" name="dessert" id="dessert" wire:model="dessert">
-                </div>
-                <div class="form-group">
+                <div wire:ignore class="form-group">
                   <label for="">Bebida:</label>
-                  <select class="form-control" name="drink" id="drink" wire:model="drink">
-                    <option value="">-- Selecionar --</option>
+                  <select wire:ignore class="form-control"  id="drink" wire:model="drink">
+                    <option selected value="">-- Selecionar --</option>
                     @foreach ($drinks as $drink)
                       <option value="{{$drink->description ?? ""}}">{{$drink->description ?? ""}}</option>
                     @endforeach
                   </select>
                 </div>
 
-                <div class="form-group">
+                <div wire:ignore class="form-group">
                   <label for="">Café:</label>
-                  <input class="form-control" type="text" name="coffe" id="coffe" wire:model="coffe">
+                  <input class="form-control" type="text"  id="coffe" wire:model="coffe">
                 </div>
 
               </div>

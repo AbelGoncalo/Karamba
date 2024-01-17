@@ -14,14 +14,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('daily_dishes', function (Blueprint $table) {
-            $table->string("menutype");
-            $table->string("entrance");
-            $table->string("maindish");
-            $table->string("dessert");
-            $table->string("drink");
+            $table->string("entrance")->nullable();
+            $table->string("maindish")->nullable();
+            $table->string("dessert")->nullable();
+            $table->string("drink")->nullable();
             $table->string("coffe")->nullable();
-            $table->ForeignIdFor(Company::class);
-            $table->ForeignIdFor(Item::class);
+            $table->ForeignIdFor(Company::class)->nullable();
+            $table->ForeignIdFor(Item::class)->nullable();
             //$table->timestamps();
         });
     }

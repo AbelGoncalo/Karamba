@@ -36,9 +36,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @if (count($itemsOrder) > 0)
-                       
+                        @if (count($itemsOrder) > 0)                       
                         @foreach ($itemsOrder as $item)
+                        @include("livewire.garson.modals.dailydish-info")
+
                         <tr>
                             @if ($item->status != 'ENTREGUE')
                                 <td>{{($item->created_at != null) ? $item->created_at->diffForHumans(): ''}}</td>
@@ -46,6 +47,7 @@
                              <td>...</td>
                             @endif
                             @if ($item->status == 'PENDENTE')
+
                             <td class="fw-bold text-danger">{{$item->status}}</td>
                             @elseif($item->status == 'ENTREGUE')
 
@@ -63,9 +65,9 @@
                             @if ($item->status != 'ENTREGUE')
                             <td>
                                 @if ($item->status == 'PENDENTE')
-                                <button wire:click='confirm({{$item->id}})' class=" btn btn-sm btn-primary mt-1">
+                                <button wire:click='getDailydish({{$item->id}})' data-bs-toggle="modal" data-bs-target="#dailydish" class="{{$item->name != 'Prato do Dia' ? 'd-none' : ''}} btn btn-sm btn-primary mt-1">
                                     <i class="fa  fa-circle-info"></i>
-                                </button>
+                                </button>                            
 
                                 <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1">
                                     <i class="fa fa-times"></i>
@@ -180,6 +182,7 @@
       
     </div>
     @include('livewire.client.modals.change-quantity')
+
 
 </div>
 

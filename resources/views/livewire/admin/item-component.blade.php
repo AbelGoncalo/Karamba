@@ -25,8 +25,8 @@
                                 <input type="search" wire:model.live='search' name="search" id="search" class="form-control rounded" placeholder="Pesquisar Item">
                             </div>
                             <div class="form-group col-md-5" wire:ignore>
-                                <select name="searchCategory" wire:model.live='searchCategory' id="searchCategory" class="form-control">
-                                    <option value="">Categorias</option>
+                                <select wire:ignore name="searchCategory" wire:model.live='searchCategory' id="searchCategory" class="form-control">
+                                    <option >Categorias</option>
                                     @if (isset($categories) and $categories->count() > 0)
                                         @foreach ($categories as $item)
                                             <option value="{{$item->id}}">{{$item->description}}</option>
@@ -122,18 +122,38 @@ $(document).ready(function() {
     $('#searchCategory').select2({
       theme: "bootstrap",
       width:"100%",
-   
-    });
+    });   
   
     $('#searchCategory').change(function (e) { 
       e.preventDefault();
-     
       @this.set('searchCategory', $('#searchCategory').val());
-     
     });
 });
-</script>
+
+    $('#entrance').change(function (e) { 
+    e.preventDefault();
+    @this.set('entrance',$('#entrance').val());
+    }); 
+
+    $('#maindish').change(function (e) { 
+       e.preventDefault();
+         @this.set('maindish',$('#maindish').val());
+     }); 
+
+    $('#dessert').change(function (e) { 
+       e.preventDefault();
+         @this.set('dessert',$('#dessert').val());
+     }); 
+
+    $('#drink').change(function (e) { 
+       e.preventDefault();
+         @this.set('drink',$('#drink').val());
+     }); 
+
+    </script>
+     
 @endpush
+     
 @push('select2-categories-modal')
 <script>
 $(document).ready(function() {
@@ -143,11 +163,54 @@ $(document).ready(function() {
       dropdownParent: $('#item')
     });
 
-    $('#items').select2({
+    $('#entrance').select2({
+      theme: "bootstrap",
+      width:"100%",
+    // dropdownParent: $('#item')
+    });
+
+     $('#entrance').change(function (e) { 
+        //alert();
+       e.preventDefault();
+         @this.set('entrance',$('#entrance').val());
+     }); 
+
+     $('#maindish').change(function (e) { 
+       e.preventDefault();
+         @this.set('maindish',$('#maindish').val());
+     });  
+
+
+     $('#dessert').change(function (e) { 
+       e.preventDefault();
+         @this.set('dessert',$('#dessert').val());
+     });  
+
+     $('#drink').change(function (e) { 
+       e.preventDefault();
+         @this.set('drink',$('#drink').val());
+     });  
+     
+     
+
+
+
+    $('#maindish').select2({
+      theme: "bootstrap",
+      width:"100%",
+     //dropdownParent: $('#item')
+    });
+
+    $('#drink').select2({
+      theme: "bootstrap",
+      width:"100%",
+      //dropdownParent: $('#item')
+    });
+    
+    $('#dessert').select2({
       theme: "bootstrap",
       width:"100%",
      // dropdownParent: $('#item')
-
     });
   
     $('#category_id').change(function (e) { 
@@ -156,23 +219,23 @@ $(document).ready(function() {
       @this.set('category_id', $('#category_id').val());
 
     //Logica para o prato do dia 
-    if ((this.value) == 25){      
+    if ((this.value) == 22){      
        $("#detail-dishoftheday").removeClass('d-none');
+       $("#quantity-div").addClass('d-none');
     }else{
         $("#detail-dishoftheday").addClass('d-none');
+        $("#quantity-div").removeClass('d-none');
+
     }
 
      
     });
+
+    
 });
-
-
-
-
-
-
 
 </script>
 @endpush
+
 
 

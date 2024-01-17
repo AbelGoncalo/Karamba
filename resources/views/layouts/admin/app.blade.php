@@ -76,6 +76,12 @@
                     </li>
                     
                     <li class="nav-item ">
+                        <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.dish.of.the.day') ? 'active':''}} " href="{{route('panel.admin.dish.of.the.day')}}" >
+                            <i class="fa  fa-utensils"></i>
+                            Prato do dia
+                        </a>
+                    </li>
+                    <li class="nav-item ">
                         <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.categories') ? 'active':''}} " href="{{route('panel.admin.categories')}}" >
                             <i class="fa fa-box"></i>
                             Categorias</a>
@@ -116,6 +122,12 @@
                             Restaurante</a>
                     </li>
 
+                    <li class="nav-item ">
+                        <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.history.of.all.activities') ? 'active':''}}" href="{{route('panel.admin.history.of.all.activities')}}" >
+                            <i class="fa fa-clock"></i>
+                            Histórico de atividades</a>
+                    </li>
+
                 </ul>
             </div>
         </nav>
@@ -137,6 +149,7 @@
 
 <x-livewire-alert::scripts />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{asset('/admin/vendor/jquery/jquery-3.3.1.min.js')}}"></script>
   <script src="{{asset('/admin/vendor/bootstrap/js/bootstrap.bundle.js')}}"></script>
   <script src="{{asset('/admin/vendor/slimscroll/jquery.slimscroll.js')}}"></script>
@@ -155,7 +168,10 @@
     @stack('select2')
     @stack('select2-users')
     @stack('chart')
-
+    @stack('select2-categories')
+    @stack('select2-categories-modal')
+    @stack('chart-log')
+    @stack('show-type-report')
 
   
   

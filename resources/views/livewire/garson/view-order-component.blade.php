@@ -63,6 +63,10 @@
                             @if ($item->status != 'ENTREGUE')
                             <td>
                                 @if ($item->status == 'PENDENTE')
+                                <button wire:click='confirm({{$item->id}})' class=" btn btn-sm btn-primary mt-1">
+                                    <i class="fa  fa-circle-info"></i>
+                                </button>
+
                                 <button wire:click='confirm({{$item->id}})' class="btn btn-sm btn-danger mt-1">
                                     <i class="fa fa-times"></i>
                                 </button>

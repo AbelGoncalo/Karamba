@@ -4,6 +4,7 @@ namespace App\Livewire\RoomManager;
 
 use App\Exports\ReportRoomManagerExport;
 use App\Models\Company;
+use App\Models\HistoryOfAllActivities;
 use App\Models\Order;
 use App\Models\Table;
 use App\Models\User;
@@ -34,6 +35,7 @@ class ReportComponent extends Component
     {
         try {
             $this->total = 0;
+
             if ($startdate != null and $enddate != null and $table != null and $garson != null)  {
 
                 $start = Carbon::parse($startdate)->format('Y-m-d') .' 00:00:00';
@@ -196,8 +198,11 @@ class ReportComponent extends Component
     //Metodo para imprimir o relatorio
     public function Print(){
         try {
+
+
+
             $total = 0;
-           $data = $this->getData($this->startdate,$this->enddate,$this->searchByTable,$this->searchByGarson);
+            $data = $this->getData($this->startdate,$this->enddate,$this->searchByTable,$this->searchByGarson);
             if($data->count() > 0){
                 $company = Company::find(auth()->user()->company_id);
                 $pdfContent = new Dompdf();
@@ -206,6 +211,27 @@ class ReportComponent extends Component
                 {
                     $total = $total + $item->total;
                 }
+
+                // $garsonName = User::where('id',$this->searchByGarson)
+                // ->first();
+                $garsonName = User::where('id',$this->searchByGarson)
+                ->get();               
+
+                foreach($garsonName as $garson){                    
+                    //Registo de log de atividades para exportação dos documentos
+                    $log = new HistoryOfAllActivities();
+                    $log->tipo_acao = "Exportar relatório PDF";
+                    $log->company_id = auth()->user()->company_id;
+                    $log->descricao = 'O chefe de sala '. auth()->user()->name.''.auth()->user()->lastname.' exportou o relatório da mesa '
+                    .$this->searchByTable.' do Garçon ' .$garson->name.''.$garson->lastname;
+                    
+                    $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+                    $log->save();
+                    
+                }
+               
+
+
 
               
 
@@ -220,8 +246,14 @@ class ReportComponent extends Component
                     fn () => print($pdfContent),
                     "Relatório-de-arrecadação.pdf"
                 );
+
+       
+
             }
+
+               
         }catch(\Exception $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

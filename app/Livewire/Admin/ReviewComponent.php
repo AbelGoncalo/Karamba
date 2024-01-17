@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\HistoryOfAllActivities;
 use App\Models\Review;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -47,6 +48,14 @@ class ReviewComponent extends Component
              $review  = Review::find($this->edit);
              ($review->status == 1)? $review->status = 0 : $review->status = 1;
              $review->save();
+
+              //Log para atualizar o status do da avaliação do produto feita pelo cliente
+              $log = new HistoryOfAllActivities();
+              $log->tipo_acao = 'Atualizar status de avaliação do produto';
+              $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+              $log->company_id = auth()->user()->company_id;
+              $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou o status de avaliação do produto '.$review->item;
+              $log->save();
             
              $this->alert('success', 'SUCESSO', [
                  'toast'=>false,
@@ -74,8 +83,16 @@ class ReviewComponent extends Component
         
          try {
             
-             Review::destroy($this->edit);
-            
+        //Log para atualizar o status do da avaliação do produto feita pelo cliente
+        $review = Review::find($this->edit);
+        $log = new HistoryOfAllActivities();
+        $log->tipo_acao = 'Excluir avaliação do produto';
+        $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+        $log->company_id = auth()->user()->company_id;
+        $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' excluiu a avaliação do item '.$review->item.' que continha o comentário '.$review->comment;
+        $log->save();
+
+        Review::destroy($this->edit);            
              $this->alert('success', 'SUCESSO', [
                  'toast'=>false,
                  'position'=>'center',

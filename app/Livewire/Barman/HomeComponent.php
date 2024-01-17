@@ -3,12 +3,9 @@
 namespace App\Livewire\Barman;
 
 use App\Jobs\NotificatioJob;
-use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
 use App\Models\GarsonTable;
-use App\Models\GarsonTableManagement;
 use App\Models\Table;
-use Carbon\Carbon;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -25,26 +22,29 @@ class HomeComponent extends Component
         ])->layout('layouts.barman.app');
     }
 
-    public function getOrders($tableSearch)
+    public function getOrders($tableNumber)
     {
         try {
-            if(isset($tableSearch) and $tableSearch  != null)
+            
+            if($tableNumber !=null)
             {
-               return CartLocalDetail::where('category','=','Bebidas')
-               ->where('table','=',$this->tableNumber)
-               ->where('status','=','PENDENTE')
-               ->orWhere('status','=','EM PREPARAÇÂO')
-               ->where('company_id','=',auth()->user()->company_id)
-               ->get();
+                return CartLocalDetail::where('table','=',$this->tableNumber)
+                ->where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->Orwhere('status','=','EM PREPARAÇÃO')
+                ->get();
+               
             }else{
+               
+                return CartLocalDetail::
+                where('company_id','=',auth()->user()->company_id)
+                ->where('category','=','Bebidas')
+                ->where('status','=','PENDENTE')
+                ->Orwhere('status','=','EM PREPARAÇÃO')
+                ->get();;
 
-              return  CartLocalDetail::where('category','=','Bebidas')
-              ->where('status','=','PENDENTE')
-              ->Orwhere('status','=','EM PREPARAÇÂO')
-              ->where('company_id','=',auth()->user()->company_id)
-              ->get();
             }
-             
         
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [
@@ -114,7 +114,7 @@ class HomeComponent extends Component
                 $garsontable = GarsonTable::where('table',$cartdetail->table)
                 ->first(); 
 
-                if($garsontable->garsontable->status == 'Turno Aberto'){
+                if($garsontable->status == 'Turno Aberto'){
                     
                     
                     NotificatioJob::dispatch($garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO DE BEBIDA PRONTA,DEVE SE DIRIGIR AO BAR PARA BUSCAR");
@@ -127,6 +127,7 @@ class HomeComponent extends Component
         
 
         } catch (\Throwable $th) {
+           
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -152,4 +153,6 @@ class HomeComponent extends Component
             ]);
         }
      }
+
+
 }

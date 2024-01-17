@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -11,7 +11,8 @@ use App\Models\{
     CartLocal,
     ClientLocal,
     CartLocalDetail,
-    GarsonTable
+    GarsonTable,
+    HistoryOfAllActivities
 };
 
 
@@ -28,6 +29,7 @@ class HomeComponent extends Component
             'allCategories'=>$this->allCategories($this->searchCategories),
             'allTables'=>$this->getTables()
         ])->layout('layouts.garson.app');
+
     }
 
     public function allCategories($search = null)
@@ -61,11 +63,12 @@ class HomeComponent extends Component
         try {
 
             $this->category_id = $id;
-            $this->allItems =   Item::where('category_id','=',$id)
+            $this->allItems =  Item::where('category_id','=',$id)
             ->where('company_id','=',auth()->user()->company_id)
             ->where('quantity','>',0)
             ->where('status','=','DISPONIVEL')
             ->get();
+
 
             if (isset($this->allItems) and count($this->allItems) > 0) {
                 foreach ($this->allItems as $value) {
@@ -73,6 +76,12 @@ class HomeComponent extends Component
                     $this->qtd[$value->id] = 1;
                 }
             }
+
+
+          
+                
+
+                     
         } catch (\Throwable $th) {
             
             $this->alert('error', 'ERRO', [
@@ -83,13 +92,13 @@ class HomeComponent extends Component
                 'text'=>'Falha ao realizar operação'
             ]);
         }
+
     }
 
 
     //Armazenar Pedidos
     public function makeOrder($id){
         $item = Item::find($id);
-
         try {
             if(!array_key_exists($id,$this->qtd)){
 
@@ -116,7 +125,7 @@ class HomeComponent extends Component
 
             }else{
 
-                if ($this->qtd[$id]  > $item->quantity) {
+                if ($this->qtd[$id]  > $item->quantity || $item->quantity <= 0) {
                     $this->alert('warning', 'AVISO', [
                         'toast'=>false,
                         'position'=>'center',
@@ -142,6 +151,7 @@ class HomeComponent extends Component
                     $itemExist =   CartLocalDetail::where('name','=',$item->description)
                     ->where('company_id','=',auth()->user()->company_id)
                     ->where('table','=',$this->tableNumber)
+                    ->where('status','=','PENDENTE')
                     ->first();
 
                 if ($itemExist) {
@@ -150,6 +160,16 @@ class HomeComponent extends Component
                 
                         $itemExist->quantity += $this->qtd[$id];
                         $itemExist->save();
+
+                        //Registando Atividade na tabela de Log  para o acto de anotar pedidos
+                        $log_registers = new HistoryOfAllActivities();
+                        $log_registers->tipo_acao = "Anotar pedidos";
+                        $log_registers->descricao = "O Garçon ".auth()->user()->name." anotou " .$this->qtd[$id]. ($this->qtd[$id] > 1 ? " quantidades " : " quantidade ") ." do produto ".$item->description;
+                        $log_registers->responsavel = auth()->user()->name;
+                        $log_registers->company_id = auth()->user()->company_id;
+                        $log_registers->save();
+
+
 
                         $this->alert('success', 'SUCESSO', [
                             'toast'=>false,
@@ -165,7 +185,8 @@ class HomeComponent extends Component
                     
                     
                
-                  
+                    $item->quantity -=$this->qtd[$id];
+                    $item->save();
 
                         CartLocalDetail::create([
                             'name'=>$item->description,
@@ -176,6 +197,14 @@ class HomeComponent extends Component
                             'company_id'=>auth()->user()->company_id
 
                         ]);
+
+                        //Registando Atividade na tabela de Log  para o acto de anotar pedidos
+                        $log_registers = new HistoryOfAllActivities();
+                        $log_registers->tipo_acao = "Anotar pedidos";
+                        $log_registers->descricao = "O Garçon ".auth()->user()->name." anotou " .$this->qtd[$id]. ($this->qtd[$id] > 1 ? " quantidades " : " quantidade ") ." do produto ".$item->description;
+                        $log_registers->responsavel = auth()->user()->name;
+                        $log_registers->company_id = auth()->user()->company_id;
+                        $log_registers->save();
 
                         $this->alert('success', 'SUCESSO', [
                             'toast'=>false,
@@ -190,12 +219,13 @@ class HomeComponent extends Component
             }
             }
 
-
+          
 
             $this->getItems($this->category_id);
            
         }
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -235,4 +265,19 @@ class HomeComponent extends Component
         }
     }
 
+    public function clealAllFields()
+    {
+        try {
+            //code...
+             $this->searchItems = '';
+             $this->searchCategories = '';
+             $this->search = '';
+             $this->category_id = '';
+             $this->qtd = [];
+             $this->allItems = [];
+             $this->tableNumber ='';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
 }

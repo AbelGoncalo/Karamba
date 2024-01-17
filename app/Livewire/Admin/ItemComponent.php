@@ -6,9 +6,14 @@ use App\Exports\ItemExport;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\DailyDish;
+use App\Models\DishOfTheDay;
+use App\Models\HistoryOfAllActivities;
 use App\Models\Item;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
+use Illuminate\Http\Client\Request;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithPagination;
@@ -16,7 +21,8 @@ use Livewire\WithPagination;
 class ItemComponent extends Component
 {
     use LivewireAlert,WithFileUploads,WithPagination;
-    public $description, $price,$edit,$search,$category_id,$cost = 0,$iva = 0,$barcode,$image,$quantity; 
+    public $description, $price,$edit,$search,$category_id,$cost = 0,$iva = 0,$barcode,$image,$quantity,$searchCategory,
+    $menutype,$entrance,$maindish,$dessert,$drink,$coffe; 
     protected $rules = ['description'=>'required|unique:items,description','price'=>'required','category_id'=>'required','quantity'=>'required'];
     protected $messages = ['description.required'=>'Obrigatório','description.unique'=>'Já Existe','price.required'=>'Obrigatório','category_id.required'=>'Obrigatório','quantity.required'=>'Obrigatório'];
     protected $listeners = ['close'=>'close','delete'=>'delete','changeStatus'=>'changeStatus'];
@@ -27,16 +33,39 @@ class ItemComponent extends Component
     }
     public function render()
     {
+        $companies = User::join("companies" , 'users.company_id', '=', 'companies.id')
+        ->where('users.company_id',auth()->user()->company_id)
+        ->limit(1)->get();
+
+        $drinks = Item::join("categories", "items.category_id" , "=", "categories.id")
+        ->where("categories.description", "Bebidas")
+        ->get(["items.description"]);
+        
         return view('livewire.admin.item-component',[
-            'categories'=>Category::where('company_id','=',auth()->user()->company_id)->get(),
-            'items'=>$this->searchItem($this->search),
+            'items'=>$this->searchItem($this->search,$this->searchCategory),
+            'categories'=>$this->getCategories(),
+            'companies' => $companies,
+            'drinks' => $drinks
+
         ])->layout('layouts.admin.app');
     }
 
 
-    public function updatedSearch()
+ 
+
+    public function getCategories()
     {
-        $this->resetPage(1);
+        try {
+           return Category::where('company_id','=',auth()->user()->company_id)->get();
+        } catch (\Throwable $th) {
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
     }
      //Salvar Item
      public function save()
@@ -68,17 +97,41 @@ class ItemComponent extends Component
 
             }
 
-             Item::create([
-                 'barcode'=>$this->barcode,
-                 'description'=>$this->description,
-                 'price'=>$this->price,
-                 'cost'=>$this->cost,
-                 'quantity'=>$this->quantity,
-                 'iva'=>$this->iva,
-                 'image'=>$imageString,
-                 'category_id'=>$this->category_id,
-                 'company_id'=>auth()->user()->company_id,
-             ]);
+         
+           $newItem =  Item::create([
+                'barcode'=>$this->barcode,
+                'description'=>$this->description,
+                'price'=>$this->price,
+                'cost'=>$this->cost,
+                'quantity'=>$this->quantity,
+                'iva'=>$this->iva,
+                'image'=>$imageString,
+                'category_id'=>$this->category_id,
+                'company_id'=>auth()->user()->company_id,
+                
+        ]);
+
+        //Salvando as informações do Prato do dia
+        $dishOfToday =  DailyDish::create([
+            "menutype" => $this->menutype,
+            "entrance" => $this->entrance,
+            "maindish" => $this->maindish,
+            "dessert" => $this->dessert,
+            "drink" => $this->drink,
+            "coffe" => $this->coffe,
+            "company_id" => auth()->user()->company_id,
+            "item_id" => $newItem["id"],
+        ]);            
+
+        //Log para exportar o relatório de categorias em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Adicionar items ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' adiciounou o item '.$this->description.
+            ' no valor de '.$this->price.'KZS'.' e de valor de quantidade '.$this->quantity;
+            $log->save();
+
  
              $this->alert('success', 'SUCESSO', [
                  'toast'=>false,
@@ -91,6 +144,7 @@ class ItemComponent extends Component
              $this->clear();
 
          } catch (\Throwable $th) {
+            dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',
@@ -108,6 +162,7 @@ class ItemComponent extends Component
          try {
             
              $item = Item::find($id);
+             $dailyDishes = DailyDish::where("item_id",$id)->first();
              $this->edit = $item->id;
              $this->barcode = $item->barcode;
              $this->iva = $item->iva;
@@ -116,7 +171,14 @@ class ItemComponent extends Component
              $this->price = $item->price;
              $this->category_id = $item->category_id;
              $this->quantity = $item->quantity;
- 
+             $this->entrance = $item->entrance;
+            //Itens do prato dia
+            $this->entrance =  $dailyDishes->entrance;
+            $this->menutype =  $dailyDishes->menutype;
+            $this->maindish =  $dailyDishes->maindish;
+            $this->dessert =  $dailyDishes->dessert;
+            $this->drink =  $dailyDishes->drink;
+            $this->coffe =  $dailyDishes->coffe;
              
          } catch (\Throwable $th) {
              $this->alert('error', 'ERRO', [
@@ -190,7 +252,16 @@ class ItemComponent extends Component
                  'image'=>$imageString,
                  'category_id'=>$this->category_id,
              ]);
-             
+
+             //Atualizar prato do dia
+            DailyDish::where("item_id",$this->edit)->update([
+                "menutype" => $this->menutype,
+                "entrance" => $this->entrance,
+                "maindish" => $this->maindish,
+                "dessert" => $this->dessert,
+                "drink" => $this->drink,
+                "coffe" => $this->coffe,
+            ]);
  
              $this->dispatch('close');
              $this->alert('success', 'SUCESSO', [
@@ -205,6 +276,7 @@ class ItemComponent extends Component
 
              
          } catch (\Throwable $th) {
+            dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',
@@ -244,21 +316,30 @@ class ItemComponent extends Component
          }
      }
      //Pesquisar Categoria
-     public function searchItem($search)
+     public function searchItem($search,$category)
      {
          try {
  
              if($search != null)
              {
-                 return Item::where('description','like','%'.$search.'%')->latest()
+             
+                  return Item::where('description','like','%'.$search.'%')->latest()
+                  ->where('company_id','=',auth()->user()->company_id)
+                  ->get();
+             }elseif($category != null){
+
+                
+                 return Item::where('category_id','=',$category)->latest()
                  ->where('company_id','=',auth()->user()->company_id)
-                 ->paginate(10);
+                 ->get();
+
              }else{
                  return Item::where('company_id','=',auth()->user()->company_id)
-                 ->paginate(10);
+                 ->get();
              }
              
          } catch (\Throwable $th) {
+            dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',
@@ -358,8 +439,15 @@ class ItemComponent extends Component
     {
         try {
          
-           
-                return (new ItemExport($this->search))->download('items.xls',\Maatwebsite\Excel\Excel::XLS); 
+            //Log para exportar o relatório de categorias em Excel
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Exportar items ';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório de itens em PDF';
+            $log->save();
+            
+            return (new ItemExport($this->search))->download('items.xls',\Maatwebsite\Excel\Excel::XLS); 
 
             
 

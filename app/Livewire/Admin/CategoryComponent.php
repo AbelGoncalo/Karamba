@@ -11,6 +11,9 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CategoryExport;
+use App\Livewire\Admin\HistoryOfAllActivities as AdminHistoryOfAllActivities;
+use App\Models\HistoryOfAllActivities;
+use App\Models\Item;
 
 class CategoryComponent extends Component
 {
@@ -33,8 +36,11 @@ class CategoryComponent extends Component
                 ]);
             }
         }
+
+        $items = Item::get();
         return view('livewire.admin.category-component',[
-            'categories'=>$this->searchCategory($this->search)
+            'categories'=>$this->searchCategory($this->search),
+            'items' =>$items
         ])->layout('layouts.admin.app');
     }
 
@@ -62,6 +68,14 @@ class CategoryComponent extends Component
 
             ]);
 
+             //Log de adicionar categoria
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Adicionar categoria';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->descricao = 'O Administrador '.auth()->user()->name.' Adicionou a categoria '.$this->description.' ao sistema';
+             $log->company_id = auth()->user()->company_id;
+             $log->save();
+
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -81,6 +95,7 @@ class CategoryComponent extends Component
             ]);
         }
     }
+
     //Editar categoria
     public function editCategory($id)
     {
@@ -92,6 +107,7 @@ class CategoryComponent extends Component
             $this->edit = $category->id;
             $this->description = $category->description;
             $this->image = $category->image;
+
 
             
         } catch (\Throwable $th) {
@@ -157,10 +173,23 @@ class CategoryComponent extends Component
                 'image'=>$imageString,
             ]);
 
+            
+           
+
             }else{
                 Category::find($this->edit)->update([
                     'description'=>$this->description,
                 ]);
+
+                
+            //Log para atualizar a categoria
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Atualizar categoria';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' actualizou a categoria para '.$this->description;
+            $log->save();
+
             }
 
 
@@ -186,12 +215,21 @@ class CategoryComponent extends Component
     }
     //excluir categoria
     public function delete()
-    {
-       
+    {      
        
         try {
-           
+            
+            $category = Category::find($this->edit);
             Category::destroy($this->edit);
+
+             //Log para excluir  a categoria
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Excluir categoria';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' excluiu a categoria  '.$category->description;
+             $log->save();
+
            
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -255,10 +293,28 @@ class CategoryComponent extends Component
          
             if($format == 'pdf')
             {
+
+            //Log para exportar o relatório de categorias em Excel
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Exportar categoria ';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório de categorias em PDF';
+             $log->save();
+
                 return (new CategoryExport($this->search))->download('categorias.'.$format,\Maatwebsite\Excel\Excel::DOMPDF); 
                 
             }elseif($format == 'xls')
             {
+
+            //Log para exportar o relatório de categorias em Excel
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Exportar categoria ';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' exportou o relatório de categorias em Excel';
+             $log->save();
+
                 return (new CategoryExport($this->search))->download('categorias.'.$format,\Maatwebsite\Excel\Excel::XLS); 
 
             }

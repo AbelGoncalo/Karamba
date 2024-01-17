@@ -169,7 +169,7 @@ class ProductComponent extends Component
                     ProductEconomate::find($this->edit)->update([
                         'description'=>$this->description,
                         'category_id'=>$this->category,
-                        'cost'=>$this->cost,
+                        'unit'=>$this->unit,
                     ]);
                         
             

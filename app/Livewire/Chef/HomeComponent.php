@@ -5,7 +5,7 @@ namespace App\Livewire\Chef;
 use App\Events\NotificationEvent;
 use App\Jobs\NotificatioJob;
 use Livewire\Component;
-use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, NotificationGarson, table, User};
+use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, NotificationGarson, Table, User};
 use App\Notifications\GarsonNotification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -30,7 +30,7 @@ class HomeComponent extends Component
             return Table::where('company_id','=',auth()->user()->company_id)->get();
         }catch(\Throwable $th)
         {
-          
+          dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -47,6 +47,7 @@ class HomeComponent extends Component
     {
         try {
           
+            
             if(isset($tableSearch) and $tableSearch  != null)
             {
                 
@@ -69,7 +70,7 @@ class HomeComponent extends Component
              
             }
         } catch (\Throwable $th) {
-            
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -120,22 +121,21 @@ class HomeComponent extends Component
      {
      
         try {
+       
             $cartdetail =  CartLocalDetail::find($this->preparid);
             $cartdetail->status = $this->status;
             $cartdetail->save();
             $this->getOrders($this->tableNumber);
-            
-
             if ($this->status == 'PRONTO') {
                
 
-                $garsontable = GarsonTableManagement::where('table',$cartdetail->table)
+                $garsontable = GarsonTable::where('table',$cartdetail->table)
                 ->first(); 
 
-                if($garsontable->garsontable->status == 'Turno Aberto'){
+                if($garsontable->status == 'Turno Aberto'){
 
                         
-                    NotificatioJob::dispatch($garsontable->garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO PRONTO,DEVE SE DIRIGIR A COZINHA PARA BUSCAR");
+                    NotificatioJob::dispatch($garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO PRONTO,DEVE SE DIRIGIR A COZINHA PARA BUSCAR");
                 }
                  
             }

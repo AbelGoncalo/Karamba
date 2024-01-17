@@ -2,7 +2,7 @@
 
 namespace App\Livewire\RoomManager;
 
-use App\Models\{User,GarsonTable, GarsonTableManagement, Table};
+use App\Models\{User,GarsonTable, GarsonTableManagement, HistoryOfAllActivities, Table};
 use Carbon\Carbon;
 use Illuminate\Validation\Rules\Exists;
 use Livewire\Component;
@@ -106,7 +106,6 @@ class GarsonComponent extends Component
     
         try {
 
-            
             $verify =
              GarsonTable::where('status','=','Turno Aberto')
             ->where('table','=',$this->table)
@@ -124,7 +123,7 @@ class GarsonComponent extends Component
 
                     }else{
 
-            
+
                         $garsontable =  GarsonTable::create([
                             'user_id'=>$this->garson,
                             'start'=>date('Y-m-d'),
@@ -132,7 +131,17 @@ class GarsonComponent extends Component
                             'company_id'=>auth()->user()->company_id,
                             'table'=>$this->table,
                             'status'=>'Turno Aberto',
-                        ]);
+                        ]);                  
+
+
+                        //Registar a actividade de log para o registo da atribuição de mesas aos Garçons
+                        $getNameOfGarson = User::find($this->garson);
+                        $log = new HistoryOfAllActivities();
+                        $log->tipo_acao = 'Atribuir mesa';
+                        $log->descricao =  'O chefe de sala '.auth()->user()->name. auth()->user()->lastname. ' atribuiu a mesa '. $this->table. ' ao garçon '. $getNameOfGarson->name.' '.$getNameOfGarson->lastname;
+                        $log->responsavel = auth()->user()->name;
+                        $log->company_id = auth()->user()->company_id;
+                        $log->save();                        
             
                         if ($garsontable) {
                             $this->alert('success', 'SUCESSO', [
@@ -147,12 +156,10 @@ class GarsonComponent extends Component
 
                         $this->dispatch('clear');
                         $this->clearFields();
-                    }
-
-        
+                    }        
 
         } catch (\Throwable $th) {
-           
+           dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -169,14 +176,15 @@ class GarsonComponent extends Component
         
        
         try {
-            $garsontable =   GarsonTable::find($id);
-            
+            $garsontable =   GarsonTable::find($id);         
+
             $this->edit = $id;
             $this->garson =  $garsontable->user_id ;
             $this->table =  $garsontable->table ;
-       
-            
+
+                
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -194,11 +202,12 @@ class GarsonComponent extends Component
        
         try {
 
-
             $verify =
             GarsonTable::where('status','=','Turno Aberto')
            ->where('table','=',$this->table)
            ->get();
+
+          
 
          
                    if (isset($verify) and $verify->count() > 0) {
@@ -211,11 +220,23 @@ class GarsonComponent extends Component
                            'text'=>'Essa mesa já foi atribuida a um garson...'
                        ]);
 
+                         
+
                    }else{
 
                        $garsontablemanagement = GarsonTable::find($this->edit)->update([
                          'table'=>$this->table
                        ]);
+
+                       //Registar a actividade para o acto de editar as mesas atribuidas
+                       $log = new HistoryOfAllActivities();
+                       $getNameOfGarson = User::find($this->garson);
+                       
+                       $log->tipo_acao = 'Editar mesa atribuída';
+                       $log->company_id = auth()->user()->company_id;
+                       $log->descricao = 'O chefe de sala '. auth()->user()->name.' editou para a mesa '.$this->table.' ao garçon '.$getNameOfGarson->name.''.$getNameOfGarson->lastname;
+                       $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                       $log->save();
 
                             if ($garsontablemanagement) {
                                 $this->alert('success', 'SUCESSO', [

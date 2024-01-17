@@ -68,6 +68,7 @@
               <option value="">--Selecionar--</option>
               <option value="administrador">Administrador</option>
               <option value="garçon">Garçon</option>
+              <option value="barman">Barman</option>
               <option value="tesoureiro">Tesoureiro</option>
               <option value="gestor-economato">Gestor de Economato</option>
               <option value="chef-de-cozinha">Chefe de Cozinha</option>

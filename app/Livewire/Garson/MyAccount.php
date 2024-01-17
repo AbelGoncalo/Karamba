@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use App\Models\GarsonTable;
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -87,6 +88,14 @@ class MyAccount extends Component
                 'phone'=>$this->phone,
             ]);
 
+            //Log de alteração dos dados pessoais do Garçon
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Alteração de dados pessoais';
+            $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+            $log->descricao = 'O Garçon '.auth()->user()->name.''.auth()->user()->lastname.'Alterou os dados pessoais da sua conta';
+            $log->company_id = auth()->user()->company_id;
+            $log->save();
+
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -136,6 +145,15 @@ class MyAccount extends Component
                 $this->password = '';
                 $this->npassword = '';
                 $this->cpassword = '';
+
+
+                //Log de alteração de senha do Garçon
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Alteração de senha';
+                $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                $log->descricao = 'O Garçon '.auth()->user()->name.''.auth()->user()->lastname.'alterou a sua senha';
+                $log->company_id = auth()->user()->company_id;
+                $log->save();
             }else{
                 
                 $this->alert('error', 'ERRO', [
@@ -181,6 +199,14 @@ class MyAccount extends Component
                 'cancelButtonColor' => '#d33',
                 'onConfirmed' => 'confirmed' 
             ]);
+
+            //Log de fecho de turno do Grarçon
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Fecho de turno';
+            $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+            $log->descricao = 'O Garçon '.auth()->user()->name.''.auth()->user()->lastname.' Fechou o seu turno';
+            $log->company_id = auth()->user()->company_id;
+            $log->save();
             
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [

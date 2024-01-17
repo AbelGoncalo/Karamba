@@ -4,7 +4,7 @@ namespace App\Livewire\Treasury;
 use Illuminate\Support\Facades\Hash;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
-use App\Models\{User,Category, Delivery, Item,Order,Customer,Company,BankAccount};
+use App\Models\{User,Category, Delivery, Item,Order,Customer,Company,BankAccount, HistoryOfAllActivities};
 
 use Livewire\Component;
 
@@ -30,6 +30,7 @@ class BankComponent extends Component
 
     public function render()
     {
+       
         return view('livewire.treasury.bank-component',[
             'banks'=>$this->searchBankAccounts($this->search)
         ])->layout('layouts.treasury.app');
@@ -73,6 +74,15 @@ class BankComponent extends Component
                 'company_id' =>auth()->user()->company_id,
              ]);
 
+             //Log para o registo da conta bancária 
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Adicionar conta bancária';
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O Tesoureiro '. auth()->user()->name.' adicionou a conta bancária ao sistema com os dados Banco: '.$this->bank.' ,IBAN: '.$this->ibam.' Número da conta: '.$this->number;
+                $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                $log->save();
+                  
+
 
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -85,6 +95,7 @@ class BankComponent extends Component
 
                 $this->clear();
             }catch(\Throwable $th){
+                dd($th->getMessage());
                 $this->alert('error', 'ERRO', [
                     'toast'=>false,
                     'position'=>'center',
@@ -144,6 +155,15 @@ class BankComponent extends Component
                 'number' =>$this->number,
                 
             ]);
+
+             //Log para o atualização dos dados  da conta bancária 
+             $customer = BankAccount::find($this->edit);
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Atualização dos dados conta bancária';
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Tesoureiro '. auth()->user()->name.' atualizou os dados da conta bancária do sistema para os dados Banco: '.$customer->bank.' ,IBAN: '. $customer->ibam.' Número da conta: '. $customer->number;
+             $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+             $log->save();
             
             $this->dispatch('close');
             $this->alert('success', 'SUCESSO', [
@@ -172,6 +192,15 @@ class BankComponent extends Component
     {
         try {
            
+             //Log para o registo da conta bancária 
+             $customer = BankAccount::find($this->edit);
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Excluir conta bancária';
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Tesoureiro '. auth()->user()->name.' excluiu a conta bancária do sistema com os dados Banco: '.$customer->bank.' ,IBAN: '. $customer->ibam.' Número da conta: '. $customer->number;
+             $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+             $log->save();
+
             BankAccount::destroy($this->edit);
            
             $this->alert('success', 'SUCESSO', [

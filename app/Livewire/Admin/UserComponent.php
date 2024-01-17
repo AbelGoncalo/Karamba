@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\HistoryOfAllActivities;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -42,8 +43,8 @@ class UserComponent extends Component
     //Salvar Usuarios
     public function save()
     {
+        $this->validate($this->rules,$this->messages);
         try {
-            //$this->validate($this->rules,$this->messages);
             $photoString = '';
             if($this->photo)
             {
@@ -65,6 +66,15 @@ class UserComponent extends Component
                 'company_id' =>auth()->user()->company_id,
                 'password' =>Hash::make($this->email),
             ]);
+
+             //Log para cadastrar novo usuário ao sistema
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Adicionar utilizador';
+             $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' adicionou ao sistema o utilizador  '.$this->name.' '.$this->lastname.' para o perfil de '.$this->profile;
+             $log->save();
+             
 
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -223,6 +233,14 @@ class UserComponent extends Component
                     'profile' =>$this->profile,
                     'email' =>$this->email,
                 ]);
+
+                //Log para atualizar o status do utilizador no sistema
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Atualizar dados da conta do utilizador';
+                $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou os dados pessoais da conta do utilizador  '.$this->name.' '.$this->lastname;
+                $log->save();
             }
 
 
@@ -254,7 +272,18 @@ class UserComponent extends Component
        
         try {
            
+            //Log para excluir o usuário ao sistema
+            $user = User::find($this->edit);
+            $log = new HistoryOfAllActivities();
+            $log->tipo_acao = 'Excluir utilizador';
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' excluiu do sistema o utilizador  '.$user->name.' '.$user->lastname;
+            $log->save();
+
             User::destroy($this->edit);
+            
+                         
            
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -266,6 +295,7 @@ class UserComponent extends Component
             $this->clear();
 
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -282,10 +312,28 @@ class UserComponent extends Component
        
         try {
            
-            $user  = User::find($this->edit);
-            ($user->status == 1)? $user->status = 0 : $user->status = 1;
-            $user->save();
-           
+             $user  = User::find($this->edit);
+            // ($user->status == 1)? $user->status = 0 : $user->status = 1;
+            // $user->save();
+            
+            if($user->status == 1){
+                $user->status = 0;
+                $user->save();
+
+                //Log para atualizar o status do utilizador no sistema
+                $user = User::find($this->edit);
+                $log = new HistoryOfAllActivities();
+                $log->tipo_acao = 'Atualizar o status da conta do utilizador';
+                $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = 'O Administrador '. auth()->user()->name.' '.auth()->user()->lastname.' alterou o status da conta do utilizador  '.$user->name.' '.$user->lastname.' para Inativa';
+                $log->save();
+            
+                }else if($user->status == 0){
+                    $user->status = 1;
+                    $user->save(); 
+                }
+
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
                 'position'=>'center',

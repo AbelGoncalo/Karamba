@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="{{asset('/css/custom.css')}}">
     <link rel="stylesheet" href="{{asset('/admin/libs/css/style.css')}}">
-    <script src="{{asset('build/assets/app-4ed993c7.js')}}" defer></script>
 
 
       {{-- Select 2 --}}
@@ -57,7 +56,7 @@
             </ul>
             
           </li>
-          @livewire('garçon.notification-component')
+          @livewire('garson.notification-component')
         
   
         </ul>
@@ -106,16 +105,11 @@
       @stack('search-table-g')
       @stack('open-modal-g')
       @stack('select-garson')
+      @stack('capture-picture')
+     
 
 
-      <script>
-    
-        Echo.channel('channel-public')
-        .listen('ChannelPublic',(e)=>{
-          alert(e.message);
-        })
-   
-      </script>
+
      
 </body>
 </html>

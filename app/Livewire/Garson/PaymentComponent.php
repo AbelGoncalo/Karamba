@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use App\Api\FactPlus;
 use App\Jobs\FactPlusJob;
@@ -15,9 +15,10 @@ use App\Models\{
     Company,
     DetailOrder,
      GarsonTable,
+    HistoryOfAllActivities,
     Item,
     Order,
-    OrderDetail
+    OrderDetail,
 };
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\DB;
@@ -29,8 +30,8 @@ class PaymentComponent extends Component
     use LivewireAlert;
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
-    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue;
-    protected $listeners = ['open-modal'=>'open-modal'];
+    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name = 'CONSUMIDOR FINAL',$nif ='99999999',$address = 'Luanda,Angola';
+    protected $listeners = ['reload'=>'reload'];
 
 
 
@@ -142,9 +143,11 @@ class PaymentComponent extends Component
 
     //Metodo para finalizar Pagamento
     public function finallyPayment()
-    {
+    {  
+        
+       
       
-        DB::beginTransaction();
+        //DB::beginTransaction();
        #Validação de campos
          if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
           
@@ -167,11 +170,8 @@ class PaymentComponent extends Component
             ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
         }
 
-        if ($this->paymenttype == 'Numerário') {
-          
-           
+        if ($this->paymenttype == 'Numerário') {         
             $this->validate(['paymenttype'=>'required'],['paymenttype.required'=>'Obrigatório']);
-
         }
        
 
@@ -192,6 +192,7 @@ class PaymentComponent extends Component
          
        #Fim de Validação de campos
          try {
+
 
           if ($this->total == 0) {
             $this->alert('warning', 'AVISO', [
@@ -228,8 +229,6 @@ class PaymentComponent extends Component
             ->where('company_id','=',auth()->user()->company_id)
             ->get();
             if ($cartLocalDetail) {
-                # code...
-
         
             $order = Order::create([
              'table'=>$this->tableNumber,
@@ -245,6 +244,13 @@ class PaymentComponent extends Component
              'company_id'=>auth()->user()->company_id
             ]);
 
+            
+           
+
+
+
+                   
+
              if($cartLocalDetail->count() > 0)
              {
                  foreach ($cartLocalDetail as $item) {
@@ -259,29 +265,49 @@ class PaymentComponent extends Component
 
                      $itemFinded = Item::where('description','=',$item->name)->first();
                      $itemFinded->quantity -=$item->quantity;
-                     $itemFinded->save();
-                 }
+                     $itemFinded->save(); 
+
+
+                     
+                     //Registar o log de pagamentos
+                    $log  = new HistoryOfAllActivities();
+                    $log->tipo_acao = "Finalizacao de pagamento";
+                    $log->responsavel = auth()->user()->name;
+                    $log->company_id = auth()->user()->company_id;
+                    $log->descricao = 'O garson '.auth()->user()->name. 'Finalizou o pagamento de '.$item->name. ' no valor de '. $item->price.'KZS'. ' com o subtotal de '.$item->price * $item->quantity.'KZS';
+                    $log->save();
+
+
+                                    
+                   
+                   
+                 }                
+
+
+
 
              }
-             
+
              $table = Table::where('number','=',$this->tableNumber)
              ->where('company_id','=',auth()->user()->company_id)
              ->first();
 
-             if($table){
-                 
+             if($table){                 
                 $table->status = 0;
                 $table->save();
                 $this->orderid = $order->id;
-                
             }
 
-            $reference = \App\Api\FactPlus::create($order->id);
-            \App\Api\FactPlus::changeStatu($reference);
-           
+            
+                
+
+        $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
+        dd($reference);
+        \App\Api\FactPlus::changeStatu($reference,'sent');
+
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
-     
+            
         }else{
             $this->alert('warning', 'AVISO', [
                 'toast'=>false,
@@ -289,16 +315,17 @@ class PaymentComponent extends Component
                 'showConfirmButton' => true,
                 'confirmButtonText' => 'OK',
                 'text'=>'
-                         O cliente que fez este pedido, ainda não realizou o pagamento,
-                         Deve aguardar que o cliente 
+                    O cliente que fez este pedido, ainda não realizou o pagamento,
+                    Deve aguardar que o cliente 
                     '
             ]);
         }
         }
+
+        //DB::commit();
         
-         DB::commit();
           } catch (\Throwable $th) {
-               
+              dd($th->getMessage());
               DB::rollBack();
               $this->alert('error', 'ERRO', [
                   'toast'=>false,
@@ -308,6 +335,10 @@ class PaymentComponent extends Component
                   'text'=>'Falha ao realizar operação'
               ]);
           }
+
+
+          
+          
     }
 
 
@@ -315,25 +346,25 @@ class PaymentComponent extends Component
 
     public function sendReceipt()
     {
-        
-     
-        
+
          try {
-            
-  
-              \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
 
- 
-                $this->clearFields();
-                session()->forget('finallyOrder');
-                session()->forget('table');
-                return redirect()->route('garson.home');
-          
-                
+              $this->clearFields();
+             \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+              session()->forget('finallyOrder');
+              session()->forget('table');
 
-            
+              $this->alert('success', 'SUCESSO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Pagamento finalizado com sucesso'
+            ]);
+
+
+            $this->dispatch('reralod');
            
- 
          } catch (\Throwable $th) {
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
@@ -349,12 +380,14 @@ class PaymentComponent extends Component
     public function clearFields()
     {
         try {
+
+         
+             CartLocalDetail::where('table','=',session('table'))
+            ->where('company_id','=',1)
+            ->delete();
+
+
            
-             CartLocalDetail::where('table','=',$this->tableNumber)
-            ->where('company_id','=',auth()->user()->company_id)
-            ->where('table','=',session('table'))
-            ->delete(); 
-            
 
             $this->paymenttype = 'Transferência';
             $this->payallaccount = 'Pagar Toda Conta';
@@ -364,12 +397,13 @@ class PaymentComponent extends Component
             $this->total = 0;
             $this->firstvalue = '';
             $this->secondvalue = '';
+            $this->nif = '';
+            $this->name = '';
            
 
            
             
         } catch (\Throwable $th) {
-           
 
             $this->alert('error', 'ERRO', [
                 'toast'=>false,

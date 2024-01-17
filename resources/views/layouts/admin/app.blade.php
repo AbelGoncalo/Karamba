@@ -76,6 +76,12 @@
                     </li>
                     
                     <li class="nav-item ">
+                        <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.dish.of.the.day') ? 'active':''}} " href="{{route('panel.admin.dish.of.the.day')}}" >
+                            <i class="fa  fa-utensils"></i>
+                            Prato do dia
+                        </a>
+                    </li>
+                    <li class="nav-item ">
                         <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.categories') ? 'active':''}} " href="{{route('panel.admin.categories')}}" >
                             <i class="fa fa-box"></i>
                             Categorias</a>

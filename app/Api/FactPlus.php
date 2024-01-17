@@ -34,6 +34,7 @@ class FactPlus {
             $serie = date('Y');
            $insert = [];
 
+<<<<<<< HEAD
            
         
           
@@ -97,6 +98,39 @@ class FactPlus {
 
 
             return $response['data'];
+=======
+      
+          
+
+             foreach ($details as  $item) {
+                 if ($item->tax == 0) {
+                     array_push($insert,[
+                     "itemcode"=> $item->id,
+                     "description"=> \App\Services\Replace::newString($item->item),
+                     "price"=> $item->price,
+                     "quantity"=> $item->quantity,
+                     "tax"=> "0",
+                     "discount"=> "0",
+                     "exemption_code"=> "M11",
+                     "retention"=> ""
+                     ]);
+                 } else {
+                     array_push($insert,[
+                         "itemcode"=> $item->id,
+                         "description"=> \App\Services\Replace::newString($item->item),
+                         "price"=> $item->price,
+                         "quantity"=> $item->quantity,
+                         "tax"=> $item->tax,
+                         "discount"=> "0",
+                         "exemption_code"=> "",
+                         "retention"=> ""
+                         ]);
+                 }
+                
+              }
+
+              
+>>>>>>> b1afc937fd0cde2f48484c5045f16e843123dcd1
            
 
         
@@ -105,50 +139,35 @@ class FactPlus {
         
          $data =  json_encode($insert);
        
-       //     //Chamada a API do Factplus
+         $curl = curl_init();
+         curl_setopt_array($curl, array(
+           CURLOPT_URL => "https://api.factplus.co.ao",
+           CURLOPT_RETURNTRANSFER => true,
+           CURLOPT_ENCODING => "",
+           CURLOPT_MAXREDIRS => 10,
+           CURLOPT_TIMEOUT => 0,
+           CURLOPT_FOLLOWLOCATION => true,
+           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+           CURLOPT_CUSTOMREQUEST => "POST",
+           CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"$key\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"2024-01-18\",\r\n        \"duedate\": \"2024-01-25\",\r\n        \"vref\": \"XPTO001\",\r\n        \"serie\":\"2024\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Documento simples\",\r\n        \"retention\":\"6.5\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"john Doe\",\r\n        \"nif\": \"000000000\",\r\n        \"email\": \"cliente@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Av Fidel Castro\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": [\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Software\",\r\n                    \"price\": \"1000000\",\r\n                    \"quantity\": \"1\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                },\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Website\",\r\n                    \"price\": \"200000\",\r\n                    \"quantity\": \"2\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                }\r\n               \r\n            ]\r\n    }",
+           CURLOPT_HTTPHEADER => array(
+             "Content-Type: application/json"
+           ),
+         ));
+         
+         $response = curl_exec($curl);
+         
+         curl_close($curl);
+         $result = collect(json_decode($response,true));
 
-       $data = array_map(function ($item) {
-                 return array_map('utf8_encode', $item);
-            }, $insert);
-
-            $json = json_encode($data);
-            
-
-         $response = Http::post('https://api.factplus.co.ao', [
-             'apicall' => 'CREATE',
-             'apikey' => $key,
-             'Content-Type' => 'application/json; charset=utf-8',
-             'document'=>[
-                 'type'=>'factura',
-                 'date'=>$date,
-                 'duedate'=>$duedate,
-                 'vref'=>$vref,
-                 'serie'=>$serie,
-                 'currency'=>'AOA',
-                 'exchange_rate'=>'0',
-                 'observation'=>'Factura de Pagamento',
-                 'retention'=>'',
-             ],
-             'client'=>[
-                 'name'=>$name ?? 'CONSUMIDOR FINAL',
-                 'nif'=>$nif ?? '99999999',
-                 'email'=>'',
-                 'city'=>'Luanda',
-                 'address'=>$address,
-                 'postalcode'=>'',
-                 'country'=>'Angola',
-             ],
-             'items'=> $json
-         ])->timeout(1200);
-
-        return $response['data'];
+         return $result['data'];
     
     
 
 
     }catch(Exception $th){
 
-       
+       dd($th->getMessage());
         return "Api Indisponível";
         
     }

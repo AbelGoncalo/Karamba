@@ -113,10 +113,9 @@ class FactPlus {
         //teste
         $key = '65a676382d20f38a75ff2829c0b2a89a';
         try {
-            $response = Http::post('https://api.factplus.co.ao','utf8_encode', [
+            $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
                 'apikey' => $key,
-                'Content-Type' => 'application/json; charset=utf-8',
                 'document'=>[
                     'reference'=>$reference,
                     'type'=>'factura',
@@ -130,6 +129,7 @@ class FactPlus {
             ]);
 
           return $response['result'];
+          DB::commit();
           DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();

@@ -351,7 +351,7 @@ class PaymentComponent extends Component
 
               $this->clearFields();
               \App\Api\FactPlus::changeStatu(session('finallyOrder'),'sent');
-             \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+              \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
               session()->forget('finallyOrder');
               session()->forget('table');
 

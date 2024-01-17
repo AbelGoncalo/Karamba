@@ -1,41 +1,39 @@
 <?php
 
 namespace App\Exports;
-
-use App\Models\HistoryOfAllActivities;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use App\Models\HistoryOfAllActivities;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
-class HistoryOfAllActivitiesExport implements FromQuery, WithHeadings
+class HistoryOfAllActivitiesExport implements FromCollection,WithHeadings
 {
+    public $startdate = null, $enddate = null;
     /**
     * @return \Illuminate\Support\Collection
     */
-    use Exportable;
-    protected $start,$end;
-    public function __construct($start = null,$end = null)
+    public function collection()
     {
-        $this->start = $start;
-        $this->end = $end;
+        $start = Carbon::parse($this->startdate)->format('Y-m-d') .' 00:00:00';
+        $end   = Carbon::parse($this->enddate )->format('Y-m-d') .' 23:59:59';
+       
+        return HistoryOfAllActivities::select('tipo_acao','descricao','responsavel', 'created_at')
+        ->whereBetween('created_at',[$start,$end])
+        ->get();
     }
 
-    public function query(){
-
-        try{
-
-        if ($this->start != null || $this->end != null) {
-            
-        }
-
-        }catch(\Exception $ex){
-
-        }
+    public function title(): string
+    {
+        return 'relatório-log-actividades';
     }
 
     public function headings(): array
     {
-        return ['Tipo_acao','Descrição','Responsável', 'Data'];
+        return [
+            'Tipo de ação',
+            'Descrição',
+            'Responsável',
+            'Data'
+        ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Treasury;
 
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -64,6 +65,15 @@ class MyAccount extends Component
                 'email'=>$this->email,
                 'phone'=>$this->phone,
             ]);
+
+             //Log de actividades para atualização da conta
+             $log = new HistoryOfAllActivities();
+             $log->tipo_acao = 'Atualizar dados da conta';
+             $log->company_id = auth()->user()->company_id;
+             $log->descricao = 'O Tesoureiro '. auth()->user()->name.' '.auth()->user()->lastname.' atualizou os dados da sua conta para '
+             .'Nome: '.$this->name.' '.$this->lastname.' Email: '.$this->email;
+             $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+             $log->save();
 
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,

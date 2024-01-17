@@ -6,6 +6,7 @@ use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
 use App\Models\ClientLocal;
 use App\Models\GarsonTable;
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -24,8 +25,6 @@ class Logout extends Component
 
         if (auth()->user()->profile === 'garçon') {
                
-                 
-               
                      $garsontable  =  GarsonTable::where('user_id','=',auth()->user()->id)
                      ->where('company_id','=',auth()->user()->company_id)
                      ->where('user_id','=',auth()->user()->id)
@@ -42,7 +41,19 @@ class Logout extends Component
                             'text'=>'Não pode terminar sessão com turno aberto! Porfavor feche o turno e tente novamente'
                         ]);
                     }else{
-                        
+
+                    //Log de actividades para o término de sessão do Garçom
+                    $garsonName  =  GarsonTable::find(auth()->user()->id)->join("users" , 'garson_tables.user_id', '=', 'users.id')
+                    //where('user_id','=',auth()->user()->id)
+                    ->get();
+
+                    $log = new HistoryOfAllActivities();
+                    $log->tipo_acao = 'Termar sessão no sistema';
+                    $log->company_id = auth()->user()->company_id;
+                    $log->descricao = 'O Garçon '. auth()->user()->name.' '.auth()->user()->lastname.' terminou a sua sessão';
+                    $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                    $log->save();
+             
                         Auth::logout();
                         return redirect()->route('auth.logout');
                     }
@@ -51,6 +62,13 @@ class Logout extends Component
 
                     
                 }else{
+
+                    $log = new HistoryOfAllActivities();
+                    $log->tipo_acao = 'Termar sessão no sistema';
+                    $log->company_id = auth()->user()->company_id;
+                    $log->descricao = 'O Utilizador '. auth()->user()->name.' '.auth()->user()->lastname.' terminou a sua sessão';
+                    $log->responsavel = auth()->user()->name.''.auth()->user()->lastname;
+                    $log->save();
                     
                     Auth::logout();
                     return redirect()->route('auth.logout');

@@ -89,6 +89,7 @@ class CustomerComponent extends Component
            
             $customer = Customer::find($id);
           
+            
             $this->edit = $customer->id;
             $this->name = $customer->name;
             $this->lastname = $customer->lastname;
@@ -164,6 +165,8 @@ class CustomerComponent extends Component
         ],$this->messages);
        
         try {
+            
+
            
             $customer = Customer::find($this->edit)->update([
                 'name' =>$this->name,
@@ -176,6 +179,8 @@ class CustomerComponent extends Component
                 'rua' =>$this->rua,
                 'email' =>$this->email,
             ]);
+
+
             
             $this->dispatch('close');
             $this->alert('success', 'SUCESSO', [

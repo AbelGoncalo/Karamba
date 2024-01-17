@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CategoryExport;
 use App\Livewire\Admin\HistoryOfAllActivities as AdminHistoryOfAllActivities;
 use App\Models\HistoryOfAllActivities;
+use App\Models\Item;
 
 class CategoryComponent extends Component
 {
@@ -35,8 +36,11 @@ class CategoryComponent extends Component
                 ]);
             }
         }
+
+        $items = Item::get();
         return view('livewire.admin.category-component',[
-            'categories'=>$this->searchCategory($this->search)
+            'categories'=>$this->searchCategory($this->search),
+            'items' =>$items
         ])->layout('layouts.admin.app');
     }
 

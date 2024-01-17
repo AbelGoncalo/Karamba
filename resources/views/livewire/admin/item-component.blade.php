@@ -141,6 +141,12 @@ $(document).ready(function() {
       theme: "bootstrap",
       width:"100%",
       dropdownParent: $('#item')
+    });
+
+    $('#items').select2({
+      theme: "bootstrap",
+      width:"100%",
+     // dropdownParent: $('#item')
 
     });
   
@@ -148,9 +154,24 @@ $(document).ready(function() {
       e.preventDefault();
      
       @this.set('category_id', $('#category_id').val());
+
+    //Logica para o prato do dia 
+    if ((this.value) == 25){      
+       $("#detail-dishoftheday").removeClass('d-none');
+    }else{
+        $("#detail-dishoftheday").addClass('d-none');
+    }
+
      
     });
 });
+
+
+
+
+
+
+
 </script>
 @endpush
 

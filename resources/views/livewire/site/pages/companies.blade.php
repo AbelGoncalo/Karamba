@@ -3,7 +3,7 @@
 
 @section('content')
 
-        <div class="container-fluid pt-5 pb-3">
+        <div class=" container-fluid pt-5 pb-3">
             <div class="container">
                
                 <div class="row g-4 mt-5" id="main-container">

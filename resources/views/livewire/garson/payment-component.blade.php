@@ -55,12 +55,19 @@
     <div class="col-md-12 d-flex justify-content-center algin-items-center flex-wrap ">
         <div class="col-md-8">
             <div class="card shadow rounded " id="card-welcome">
-                <div class="card-header">
-                    <h6 class="text-center text-uppercase">
-                        <i class="fa-solid fa-money-bill"></i>
-                        REGISTRAR PAGAMENTO
-                    </h6>
-                </div>
+                <div class="card-header text-center">
+                        <h6 class=" text-uppercase">
+                            <i class="fa-solid fa-money-bill"></i>
+                            REGISTRAR PAGAMENTO
+                        </h6>
+                        <h6 class="text-uppercase">
+                            <button  id="open_camera" data-bs-toggle="modal" data-bs-target="#modalCapturePicture" class="btn btn-sm btn-primary-welcome-client">
+                                <i class="fa-solid fa-camera"></i>
+                                CAPTURAR COMPROVATIVO
+                            </button>
+                            
+                        </h6>
+                   </div>
                 <div class="card-body">
                     <form wire:submit='finallyPayment' method="post" class="container">
                         <div class="row">
@@ -77,6 +84,21 @@
                                 @endif
                                 </select>
                                 @error('table')<span class="text-danger">{{$message}}</span>@enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="clientName">Nome do Cliente <span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe do nome do cliente" type="text" name="name" id="name" wire:model='name' class="form-control">
+                                @error('name')<span class="text-danger">{{$message}}</span>@enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="clientName">Contribuente <span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe o nif do cliente" type="text" name="nif" id="nif" wire:model='nif' class="form-control">
+                                @error('nif')<span class="text-danger">{{$message}}</span>@enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="clientName">Endereço <span class="text-success">(opcional)</span></span></label>
+                                <input placeholder="Informe o Endereço do Cliente" type="text" name="address" id="address" wire:model='address' class="form-control">
+                                @error('address')<span class="text-danger">{{$message}}</span>@enderror
                             </div>
                             <div class="form-group">
                                 <label for="clientName">Tipo de Pagamento <span class="text-danger">*</span></label>
@@ -159,19 +181,14 @@
 </div>
 
 
-@push('open-modal-g')
+
 <script>
-
-
-
     document.addEventListener('reload',function(){
        window.location.reload();
 
     })
-   
 </script>
-    
-@endpush
+
 
 
 
@@ -191,4 +208,63 @@
         });
         });
 </script>
+@endpush
+
+@push('capture-picture')
+<script>
+    let btn  = document.querySelector('#open_camera')
+    let  video  =  document.querySelector('video');
+    
+    btn.addEventListener('click',function(){
+        const constraints = {
+        video: {
+            facingMode: "environment"
+        },
+};
+
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream =>{
+            video.srcObject = stream;
+            video.play()
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+
+    })
+
+
+   capture =  document.querySelector('#capturePicture');
+
+
+
+     capture.addEventListener('click',()=>{
+        let canvas =  document.querySelector('canvas')
+        canvas.style.display ='block';
+        canvas.height = video.videoHeight
+        canvas.width = video.videoWidth
+       let context = canvas.getContext('2d');
+       context.drawImage(video, 0, 0)
+       console.log(canvas.toDataURL());
+
+ 
+            let link =  document.querySelector('#download');
+            link.href = canvas.toDataURL();
+            link.classList.remove('d-none')
+            video.style.display = 'none';
+     })
+
+
+     document.querySelector('.closecamera').addEventListener('click',()=>{
+        let link =  document.querySelector('#download');
+        let canvas =  document.querySelector('canvas');
+        canvas.style.display ='none';
+        link.classList.add('d-none')
+        link.classList.remove('d-block')
+        video.style.display = 'block';
+        $('#modalCapturePicture').modal('hide')
+
+     })
+
+</script>  
 @endpush

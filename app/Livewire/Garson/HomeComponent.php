@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -185,7 +185,8 @@ class HomeComponent extends Component
                     
                     
                
-                  
+                    $item->quantity -=$this->qtd[$id];
+                    $item->save();
 
                         CartLocalDetail::create([
                             'name'=>$item->description,
@@ -224,6 +225,7 @@ class HomeComponent extends Component
            
         }
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

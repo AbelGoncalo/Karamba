@@ -56,7 +56,7 @@
             </ul>
             
           </li>
-          @livewire('garçon.notification-component')
+          @livewire('garson.notification-component')
         
   
         </ul>
@@ -105,6 +105,8 @@
       @stack('search-table-g')
       @stack('open-modal-g')
       @stack('select-garson')
+      @stack('capture-picture')
+     
 
 
 

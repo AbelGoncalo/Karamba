@@ -10,13 +10,18 @@ use Laravel\SerializableClosure\SerializableClosure;
 
 
 
+Route::get('/test',function(){
+   $new  = \App\Services\Replace::newString('António José Miguel');
+   dd($new);
+});
+
  
 
 require __DIR__ .'/admin/routes.php';
 require __DIR__ .'/chef/routes.php';
 require __DIR__ .'/room_manager/routes.php';
 require __DIR__ .'/client/routes.php';
-require __DIR__ .'/garçon/routes.php';
+require __DIR__ .'/garson/routes.php';
 require __DIR__ .'/auth/routes.php';
 require __DIR__ .'/site/routes.php';
 require __DIR__ .'/restaurant/routes.php';

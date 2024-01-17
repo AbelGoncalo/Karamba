@@ -22,7 +22,7 @@ class FactPlus {
         // //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         // //teste
-         $key = '659bd7b97df70045df81c481d1813746';
+         $key = '65a676382d20f38a75ff2829c0b2a89a';
          try {
 
             $details =  DetailOrder::where('order_id','=',$orderid)
@@ -32,13 +32,13 @@ class FactPlus {
             $duedate = date('Y-m-d',strtotime('+7 days'));
             $vref = rand(10000,20000);
             $serie = date('Y');
-           $insert = [];
+            $insert = [];
 
       
           
-
+           
              foreach ($details as  $item) {
-                 if ($item->tax == 0) {
+               
                      array_push($insert,[
                      "itemcode"=> $item->id,
                      "description"=> \App\Services\Replace::newString($item->item),
@@ -46,33 +46,30 @@ class FactPlus {
                      "quantity"=> $item->quantity,
                      "tax"=> "0",
                      "discount"=> "0",
-                     "exemption_code"=> "M11",
+                     "exemption_code"=> "M10",
                      "retention"=> ""
                      ]);
-                 } else {
-                     array_push($insert,[
-                         "itemcode"=> $item->id,
-                         "description"=> \App\Services\Replace::newString($item->item),
-                         "price"=> $item->price,
-                         "quantity"=> $item->quantity,
-                         "tax"=> $item->tax,
-                         "discount"=> "0",
-                         "exemption_code"=> "",
-                         "retention"=> ""
-                         ]);
-                 }
+                 
                 
               }
 
               
-           
-
+      
         
 
 
         
          $data =  json_encode($insert);
        
+       //     //Chamada a API do Factplus
+
+       $data = array_map(function ($item) {
+                 return array_map('utf8_encode', $item);
+            }, $insert);
+
+            $json = json_encode($data);
+             
+
          $curl = curl_init();
          curl_setopt_array($curl, array(
            CURLOPT_URL => "https://api.factplus.co.ao",
@@ -83,7 +80,7 @@ class FactPlus {
            CURLOPT_FOLLOWLOCATION => true,
            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
            CURLOPT_CUSTOMREQUEST => "POST",
-           CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"$key\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"2024-01-18\",\r\n        \"duedate\": \"2024-01-25\",\r\n        \"vref\": \"XPTO001\",\r\n        \"serie\":\"2024\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Documento simples\",\r\n        \"retention\":\"6.5\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"john Doe\",\r\n        \"nif\": \"000000000\",\r\n        \"email\": \"cliente@gmail.com\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"Av Fidel Castro\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": [\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Software\",\r\n                    \"price\": \"1000000\",\r\n                    \"quantity\": \"1\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                },\r\n                {\r\n                    \"itemcode\": \"WEB001\",\r\n                    \"description\": \"Website\",\r\n                    \"price\": \"200000\",\r\n                    \"quantity\": \"2\",\r\n                    \"tax\": \"14\",\r\n                    \"discount\": \"0\",\r\n                    \"exemption_code\": \"\",\r\n                    \"retention\": \"\"\r\n                }\r\n               \r\n            ]\r\n    }",
+           CURLOPT_POSTFIELDS =>"{\r\n      \"apicall\":\"CREATE\",\r\n      \"apikey\": \"$key\",\r\n      \"document\": {\r\n        \"type\": \"factura\",\r\n        \"date\": \"$date\",\r\n        \"duedate\": \"$duedate\",\r\n        \"vref\": \"$vref\",\r\n        \"serie\":\"$serie\",\r\n        \"currency\":\"AOA\",\r\n        \"exchange_rate\":\"0\",\r\n        \"observation\":\"Factura de Consumo no Kytutes\",\r\n        \"retention\":\"0\"\r\n        },\r\n      \"client\":{\r\n        \"name\": \"$name\",\r\n        \"nif\": \"$nif\",\r\n        \"email\": \"\",\r\n        \"city\": \"Luanda\",\r\n        \"address\":\"$address\",\r\n        \"postalcode\":\"\",\r\n        \"country\":\"Angola\"\r\n      },\r\n       \"items\": $json\r\n    }",
            CURLOPT_HTTPHEADER => array(
              "Content-Type: application/json"
            ),
@@ -92,16 +89,16 @@ class FactPlus {
          $response = curl_exec($curl);
          
          curl_close($curl);
-         $result = collect(json_decode($response,true));
-
-         return $result['data'];
+         $result = collect(json_decode($response));
+        
+        return $result['data'];
     
     
 
 
     }catch(Exception $th){
 
-       dd($th->getMessage());
+       
         return "Api Indisponível";
         
     }
@@ -114,7 +111,7 @@ class FactPlus {
         //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '659bd7b97df70045df81c481d1813746';
+        $key = '65a676382d20f38a75ff2829c0b2a89a';
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -133,6 +130,7 @@ class FactPlus {
 
           return $response['result'];
           DB::commit();
+          DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error','Falha ao realizar Operação');
@@ -146,15 +144,16 @@ class FactPlus {
          //real
         //$key = '65847d93edbb6d77bea624101ff616ea';
         //teste
-        $key = '65995993b16b93cdac74e28f1cd69267';
+        $key = '65a676382d20f38a75ff2829c0b2a89a';
         try {
+            
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'ALTER',
                 'apikey' =>  $key,
                 'document'=>[
                     'type'=>'factura',
                     'reference'=>$reference,
-                    'status'=>$statu,
+                    'status'=>'sent',
                     'reason'=>'',
                 ]
             ]);

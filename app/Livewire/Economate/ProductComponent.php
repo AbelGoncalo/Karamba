@@ -233,9 +233,9 @@ class ProductComponent extends Component
        
                    if($search != null)
                    {
-                       return ProductEconomate::where('company_id','=',auth()->user()->company_id)->where('description','like','%'.$search.'%')->latest()->get();
+                       return ProductEconomate::orderBy('description','asc')->where('company_id','=',auth()->user()->company_id)->where('description','like','%'.$search.'%')->latest()->get();
                    }else{
-                       return ProductEconomate::where('company_id','=',auth()->user()->company_id)->latest()->get();
+                       return ProductEconomate::orderBy('description','asc')->where('company_id','=',auth()->user()->company_id)->latest()->get();
                    }
                    
                } catch (\Throwable $th) {

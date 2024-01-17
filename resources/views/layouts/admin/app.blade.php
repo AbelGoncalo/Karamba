@@ -140,7 +140,7 @@
 
 
 
-<x-livewire-alert::scripts />
+  <x-livewire-alert::scripts />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{asset('/admin/vendor/jquery/jquery-3.3.1.min.js')}}"></script>

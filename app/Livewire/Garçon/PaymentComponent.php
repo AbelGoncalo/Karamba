@@ -13,6 +13,7 @@ use App\Models\{
     Table,
     ClientLocal,
     Company,
+    DailyDish,
     DetailOrder,
      GarsonTable,
     HistoryOfAllActivities,
@@ -266,6 +267,36 @@ class PaymentComponent extends Component
                      $itemFinded = Item::where('description','=',$item->name)->first();
                      $itemFinded->quantity -=$item->quantity;
                      $itemFinded->save(); 
+
+                     
+                //Verificar se na mesa do garson possui o prato do Dia.
+                   $dailyDishes = DailyDish::get();
+                   $itemsFound = Item::get();
+
+                   foreach($dailyDishes as $daily){
+                        foreach($itemsFound as $foundedItem){
+                            
+                            if($daily->entrance == $foundedItem->description){
+                                $foundedItem->quantity -=  $foundedItem->quantity;
+                                $itemFinded->save();
+
+                            }else if($daily->entrance == $foundedItem->maindish){
+                                $foundedItem->quantity -=  $foundedItem->quantity;
+                                $itemFinded->save();
+                               
+                            }else if($daily->dessert == $foundedItem->maindish){
+                                $foundedItem->quantity -=  $foundedItem->quantity;
+                                $itemFinded->save();
+
+                            }else if($daily->drink == $foundedItem->maindish){
+                                $foundedItem->quantity -=  $foundedItem->quantity;
+                                $itemFinded->save();
+
+                            }
+                            
+                                }
+                            }
+
 
 
                      

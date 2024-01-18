@@ -187,7 +187,6 @@ class ItemComponent extends Component
      {
          
          try {
-            
              $item = Item::find($id);
              $dailyDishes = DailyDish::where("item_id",$id)->first();
              $this->edit = $item->id;
@@ -279,10 +278,8 @@ class ItemComponent extends Component
                  'image'=>$imageString,
                  'category_id'=>$this->category_id,
              ]);
-
              //Atualizar prato do dia
             DailyDish::where("item_id",$this->edit)->update([
-                "name" => $this->name,
                 "entrance" => $this->entrance,
                 "maindish" => $this->maindish,
                 "dessert" => $this->dessert,

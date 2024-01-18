@@ -49,7 +49,6 @@ class ViewOrderComponent extends Component
     public function getOrders()
     {
         try {
-           
  
             if ($this->tableNumber  != null) {
             
@@ -81,7 +80,7 @@ class ViewOrderComponent extends Component
     public function getTables()
     {
         try {
-
+            
         
             return GarsonTable::where('user_id','=',auth()->user()->id)
             ->where('company_id','=',auth()->user()->company_id)

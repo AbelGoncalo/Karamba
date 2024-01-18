@@ -48,15 +48,19 @@
                     @foreach ($allItems as $key=> $item)
                     <tr>
                       <td class="{{($item->status == 'DISPONIVEL')? 'text-success fw-bold':'text-danger fw-bold'}}">{{$item->status}}</td>
-                        <td style="width: 30%">{{$item->description}}</td>
+                        <td name="descriptionItem" wire:model="descriptionItem" value="{{$item->description}}" style="width: 30%">{{$item->description}}</td>
                         <td style="width:20% ">{{$item->price}} AOA</td>
                         <td style="width: 20%">
                           <input placeholder="0" type="number" style="width:10rem" wire:model='qtd.{{$item->id}}' value="0" min="0" name="qtd" id="qtd" class=" w-100">
                         </td>
+
+
+
+                        <!-- Opção para trazer a categoria do produto selecionado e assim ser util para a opçao do prato do dia-->
                         <td style="width: 30%" >
                           <button wire:click="makeOrder({{$item->id}})" class="btn btn-md" style="background-color: #0e0c28; color:#fff">
                             <i class="fa fa-clipboard-list"></i>
-                            ANOTAR
+                            ANOTAR 
                           </button>
                         </td>
                     </tr>

@@ -11,6 +11,7 @@ use App\Models\{
     CartLocal,
     ClientLocal,
     CartLocalDetail,
+    DailyDish,
     GarsonTable,
     HistoryOfAllActivities
 };
@@ -21,6 +22,7 @@ class HomeComponent extends Component
     use LivewireAlert;
     public $searchItems;
     public $searchCategories,$search,$category_id,$qtd = [],$allItems = [],$tableNumber;
+   
     protected $listeners = ['modal'=>'modal'];
 
     public function render()
@@ -146,7 +148,7 @@ class HomeComponent extends Component
                     ]);
                 }else{
 
-             
+
                     $category = Category::find($this->category_id);
                     $itemExist =   CartLocalDetail::where('name','=',$item->description)
                     ->where('company_id','=',auth()->user()->company_id)
@@ -154,12 +156,13 @@ class HomeComponent extends Component
                     ->where('status','=','PENDENTE')
                     ->first();
 
+                   
+                      
                 if ($itemExist) {
-
-
-                
+                   
                         $itemExist->quantity += $this->qtd[$id];
                         $itemExist->save();
+
 
                         //Registando Atividade na tabela de Log  para o acto de anotar pedidos
                         $log_registers = new HistoryOfAllActivities();
@@ -184,8 +187,6 @@ class HomeComponent extends Component
                 }else{
                     
                     
-               
-                  
 
                         CartLocalDetail::create([
                             'name'=>$item->description,

@@ -3,21 +3,46 @@
 namespace App\Livewire\Garson;
 
 use Livewire\Component;
-use App\Models\{Table,CartLocal,CartLocalDetail, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};
+use App\Models\{Table,CartLocal,CartLocalDetail, DailyDish, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ViewOrderComponent extends Component
 {
     use LivewireAlert;
-    public $tableNumber,$itemsOrder = [],$drinksOrder = [], $quantity = 1, $itemId = null ,$edit = null;
+    public $tableNumber,$dailydish = [],$itemsOrder = [],$drinksOrder = [], $quantity = 1, $itemId = null ,$edit = null;
     protected $listeners = ['cancel'=>'cancel','change'=>'change','close'=>'close'];
     public function render()
     {
+       $dailyDishes = DailyDish::join("items", "daily_dishes.item_id", "=", "items.id")
+       ->join("categories", "items.category_id", "=","categories.id")
+       ->where("categories.description","Prato do Dia")
+       ->where("items.company_id",auth()->user()->company_id)
+       ->get(["categories.description","items.description", "daily_dishes.*", "items.description AS descriptionItem"]);
         return view('livewire.garson.view-order-component',[
-            'allTables'=>$this->getTables()
+            'allTables'=>$this->getTables(),
+            "dailyDishes" => $dailyDishes
         ])->layout('layouts.garson.app');
+    }
+
+    public function getDailydish($id)
+    {
+        try{           
+            $cartdetail = CartLocalDetail::find($id);
+            //$item = Item::select('description')->where('description',$cartdetail->name)->get();
+          
+        }catch(Exception $th){
+            dd($th->getMessage());
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
     }
 
 
@@ -76,9 +101,7 @@ class ViewOrderComponent extends Component
 
      //confirmar exclusao de  categoria
    public function confirm($id)
-   {
-       
-      
+   {  
        try {
            $this->edit = $id;
             $this->getOrders();

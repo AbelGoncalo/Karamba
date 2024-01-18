@@ -22,7 +22,7 @@ class ItemComponent extends Component
 {
     use LivewireAlert,WithFileUploads,WithPagination;
     public $description, $price,$edit,$search,$category_id,$cost = 0,$iva = 0,$barcode,$image,$quantity,$searchCategory,
-    $menutype,$entrance,$maindish,$dessert,$drink,$coffe; 
+    $entrance,$maindish,$dessert,$drink ,$coffe; 
     protected $rules = ['description'=>'required|unique:items,description','price'=>'required','category_id'=>'required','quantity'=>'required'];
     protected $messages = ['description.required'=>'Obrigatório','description.unique'=>'Já Existe','price.required'=>'Obrigatório','category_id.required'=>'Obrigatório','quantity.required'=>'Obrigatório'];
     protected $listeners = ['close'=>'close','delete'=>'delete','changeStatus'=>'changeStatus'];
@@ -37,15 +37,23 @@ class ItemComponent extends Component
         ->where('users.company_id',auth()->user()->company_id)
         ->limit(1)->get();
 
+        $dishes = Item::join("categories", "items.category_id" , "=", "categories.id")
+        ->get(["items.description"]);
+
         $drinks = Item::join("categories", "items.category_id" , "=", "categories.id")
         ->where("categories.description", "Bebidas")
         ->get(["items.description"]);
-        
+
+        $dessertInput = Item::join("categories", "items.category_id" , "=", "categories.id")
+        ->get(["items.description"]);
+
         return view('livewire.admin.item-component',[
             'items'=>$this->searchItem($this->search,$this->searchCategory),
             'categories'=>$this->getCategories(),
             'companies' => $companies,
-            'drinks' => $drinks
+            'drinks' => $drinks,
+            'dishes' => $dishes,
+            'dessertInput' =>  $dessertInput,
 
         ])->layout('layouts.admin.app');
     }
@@ -70,7 +78,9 @@ class ItemComponent extends Component
      //Salvar Item
      public function save()
      {
-         $this->validate($this->rules,$this->messages);
+         
+       //  $this->validate($this->rules,$this->messages);
+
          try {
             //Verificar se o price é nulo
             if($this->price <= 0)
@@ -94,34 +104,52 @@ class ItemComponent extends Component
                 $imageString = md5($this->image->getClientOriginalName()).'.'.
                 $this->image->getClientOriginalExtension();
                 $this->image->storeAs('/public/',$imageString);
-
             }
+            
+            //Obtendo a descrição da categoria selecionada
+            
+            $getCategory = Category::find($this->category_id);
+            
+            if($getCategory->description != "Prato do Dia"){
+                 $newItem =  Item::create([
+                     'barcode'=>$this->barcode,
+                     'description'=>$this->description,
+                     'price'=>$this->price,
+                     'cost'=>$this->cost,
+                     'quantity'=>$this->quantity,
+                     'iva'=>$this->iva,
+                     'image'=>$imageString,
+                     'category_id'=>$this->category_id,
+                     'company_id'=>auth()->user()->company_id,
+                 ]);
+            }else{
+                $newItem =  Item::create([
+                    'barcode'=>$this->barcode,
+                    'description'=>$this->description,
+                    'price'=>$this->price,
+                    'cost'=>$this->cost,
+                    'quantity'=> 1,
+                    'iva'=>$this->iva,
+                    'image'=>$imageString,
+                    'category_id'=>$this->category_id,
+                    'company_id'=>auth()->user()->company_id,
+                ]);
+            
 
-         
-           $newItem =  Item::create([
-                'barcode'=>$this->barcode,
-                'description'=>$this->description,
-                'price'=>$this->price,
-                'cost'=>$this->cost,
-                'quantity'=>$this->quantity,
-                'iva'=>$this->iva,
-                'image'=>$imageString,
-                'category_id'=>$this->category_id,
-                'company_id'=>auth()->user()->company_id,
-                
-        ]);
+            //Salvando as informações do Prato do dia
+                $dishOfToday =  DailyDish::create([
+                "entrance" => $this->entrance,
+                "maindish" => $this->maindish,
+                "dessert" => $this->dessert,
+                "drink" => $this->drink,
+                "coffe" => $this->coffe,
+                "company_id" => auth()->user()->company_id,
+                "item_id" => $newItem["id"],
+        ]);    
+        
+    }
 
-        //Salvando as informações do Prato do dia
-        $dishOfToday =  DailyDish::create([
-            "menutype" => $this->menutype,
-            "entrance" => $this->entrance,
-            "maindish" => $this->maindish,
-            "dessert" => $this->dessert,
-            "drink" => $this->drink,
-            "coffe" => $this->coffe,
-            "company_id" => auth()->user()->company_id,
-            "item_id" => $newItem["id"],
-        ]);            
+            
 
         //Log para exportar o relatório de categorias em Excel
             $log = new HistoryOfAllActivities();
@@ -158,7 +186,6 @@ class ItemComponent extends Component
      public function editItem($id)
      {
          
-        
          try {
             
              $item = Item::find($id);
@@ -171,16 +198,16 @@ class ItemComponent extends Component
              $this->price = $item->price;
              $this->category_id = $item->category_id;
              $this->quantity = $item->quantity;
-             $this->entrance = $item->entrance;
+
             //Itens do prato dia
-            $this->entrance =  $dailyDishes->entrance;
-            $this->menutype =  $dailyDishes->menutype;
-            $this->maindish =  $dailyDishes->maindish;
-            $this->dessert =  $dailyDishes->dessert;
-            $this->drink =  $dailyDishes->drink;
-            $this->coffe =  $dailyDishes->coffe;
+            $this->entrance =  $dailyDishes->entrance ?? "";           
+            $this->maindish =  $dailyDishes->maindish ?? "";
+            $this->dessert =  $dailyDishes->dessert ?? "";
+            $this->drink =  $dailyDishes->drink ?? "";
+            $this->coffe =  $dailyDishes->coffe ?? "";
              
          } catch (\Throwable $th) {
+            dd($th->getMessage());
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
                  'position'=>'center',
@@ -255,7 +282,7 @@ class ItemComponent extends Component
 
              //Atualizar prato do dia
             DailyDish::where("item_id",$this->edit)->update([
-                "menutype" => $this->menutype,
+                "name" => $this->name,
                 "entrance" => $this->entrance,
                 "maindish" => $this->maindish,
                 "dessert" => $this->dessert,

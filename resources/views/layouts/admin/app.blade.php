@@ -74,6 +74,7 @@
                             <i class="fa fa-chart-pie"></i>
                             Dashboard</a>
                     </li>
+
                     <li class="nav-item ">
                         <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.categories') ? 'active':''}} " href="{{route('panel.admin.categories')}}" >
                             <i class="fa fa-box"></i>

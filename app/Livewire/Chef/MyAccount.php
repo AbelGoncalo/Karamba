@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Chef;
 
+use App\Models\HistoryOfAllActivities;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -51,15 +52,24 @@ class MyAccount extends Component
     }
     public function updateAccount()
     {
+       
         $this->validateFields(auth()->user()->id);
         try {
-
             User::find(auth()->user()->id)->update([
                 'name'=>$this->name,
                 'lastname'=>$this->lastname,
                 'email'=>$this->email,
                 'phone'=>$this->phone,
             ]);
+
+            //Log para atualzar os dados pessoais do chefe de cozinha
+            $log = new HistoryOfAllActivities();
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->tipo_acao = "Atualizar dados pessoais";
+            $log->company_id = auth()->user()->company_id;
+            $log->descricao = "O chefe de cozinha ".auth()->user()->name.' '.auth()->user()->lastname.' atualizou os seus dados pessoais para Nome: '
+            .$this->name.''.$this->lastname.' Email: '.$this->email.' Telefone: '.$this->phone;
+            $log->save();
 
             $this->alert('success', 'SUCESSO', [
                 'toast'=>false,
@@ -97,10 +107,18 @@ class MyAccount extends Component
         try {
 
             if (Hash::check($this->password,auth()->user()->password)) {
-                
+               
                 User::find(auth()->user()->id)->update([
                     'password'=>$this->npassword,
                 ]);
+                //Log para atualzar a senha do chefe de cozinha
+                $log = new HistoryOfAllActivities();
+                $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+                $log->tipo_acao = "Alterar senha";
+                $log->company_id = auth()->user()->company_id;
+                $log->descricao = "O chefe de cozinha ".auth()->user()->name.''.auth()->user()->lastname.' alterou a sua senha';
+                $log->save();
+
                 $this->alert('success', 'SUCESSO', [
                     'toast'=>false,
                     'position'=>'center',

@@ -4,6 +4,7 @@ namespace App\Livewire\Garson;
 
 use App\Models\CartLocal;
 use App\Models\CartLocalDetail;
+use App\Models\DailyDish;
 use App\Models\GarsonTable;
 use App\Models\Table;
 use Livewire\Component;
@@ -15,11 +16,13 @@ class ShowOrder extends Component
 
     public function render()
     {
+       
         return view('livewire.garson.show-order',[
             'allOrders'=>$this->getOrders($this->tableNumber),
-            'allTables'=>$this->getTables()
+            'allTables'=>$this->getTables(),
         ])->layout('layouts.garson.app');
     }
+
 
     public function getOrders($table)
     {
@@ -32,9 +35,7 @@ class ShowOrder extends Component
                 ->where('table','=',$this->tableNumber)
                 ->where('company_id','=',auth()->user()->company_id)
                 ->get();
-    
-    
-             
+
                 $this->drinksOrder =  CartLocalDetail::where('category','=','Bebidas')
                 ->where('table','=',$this->tableNumber)
                 ->where('company_id','=',auth()->user()->company_id)

@@ -24,4 +24,3 @@ require __DIR__ .'/control/routes.php';
 require __DIR__ .'/economate/routes.php';
 require __DIR__ .'/treasury/routes.php';
 require __DIR__ .'/barman/routes.php';
-

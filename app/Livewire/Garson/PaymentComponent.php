@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use App\Api\FactPlus;
 use App\Jobs\FactPlusJob;
@@ -30,8 +30,8 @@ class PaymentComponent extends Component
     use LivewireAlert;
    
     public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
-    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue;
-    protected $listeners = ['realod'=>'reload'];
+    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name = 'CONSUMIDOR FINAL',$nif ='99999999',$address = 'Luanda,Angola';
+    protected $listeners = ['reload'=>'reload'];
 
 
 
@@ -283,6 +283,9 @@ class PaymentComponent extends Component
                    
                  }                
 
+
+
+
              }
 
              $table = Table::where('number','=',$this->tableNumber)
@@ -298,9 +301,9 @@ class PaymentComponent extends Component
             
                 
 
-           \App\Api\FactPlus::create($order->id);
-            $reference =  \App\Api\FactPlus::create($order->id);
-            \App\Api\FactPlus::changeStatu($reference);
+        $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
+     
+        
 
             session()->put('finallyOrder',$reference);
             session()->put('table',$this->tableNumber);
@@ -343,16 +346,11 @@ class PaymentComponent extends Component
 
     public function sendReceipt()
     {
-        
-     
-        
+
          try {
 
-           
-            
-              
-             
               $this->clearFields();
+              \App\Api\FactPlus::changeStatu(session('finallyOrder'),'sent');
               \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
               session()->forget('finallyOrder');
               session()->forget('table');
@@ -385,7 +383,7 @@ class PaymentComponent extends Component
         try {
 
          
-            $cart =  CartLocalDetail::where('table','=',session('table'))
+             CartLocalDetail::where('table','=',session('table'))
             ->where('company_id','=',1)
             ->delete();
 
@@ -400,12 +398,13 @@ class PaymentComponent extends Component
             $this->total = 0;
             $this->firstvalue = '';
             $this->secondvalue = '';
+            $this->nif = '';
+            $this->name = '';
            
 
            
             
         } catch (\Throwable $th) {
-           dd($th->getMessage());
 
             $this->alert('error', 'ERRO', [
                 'toast'=>false,

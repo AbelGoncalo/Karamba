@@ -5,7 +5,7 @@ namespace App\Livewire\Chef;
 use App\Events\NotificationEvent;
 use App\Jobs\NotificatioJob;
 use Livewire\Component;
-use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, NotificationGarson, Table, User};
+use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, HistoryOfAllActivities, NotificationGarson, Table, User};
 use App\Notifications\GarsonNotification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -16,7 +16,6 @@ class HomeComponent extends Component
     public $tableNumber = null;
     public function render()
     {
-   
         return view('livewire.chef.home-component',[
             'allOrders'=>$this->getOrders($this->tableNumber),
             'allTables'=>$this->getTable()
@@ -120,12 +119,20 @@ class HomeComponent extends Component
      public function changeStatus()
      {
      
-        try {
-       
+        try {    
             $cartdetail =  CartLocalDetail::find($this->preparid);
             $cartdetail->status = $this->status;
             $cartdetail->save();
             $this->getOrders($this->tableNumber);
+
+            //Log para o registo da mudança de status para em Preparação
+            $log = new HistoryOfAllActivities();
+            $log->company_id = auth()->user()->company_id;
+            $log->tipo_acao = "Alterar status da mesa";
+            $log->responsavel = auth()->user()->name.' '.auth()->user()->lastname;
+            $log->descricao = "O chefe de sala ".auth()->user()->name.' '.auth()->user()->lastname.' alterou o status da mesa '.$cartdetail->table.' para '.$this->status;
+            $log->save();
+
             if ($this->status == 'PRONTO') {
                
 
@@ -133,7 +140,6 @@ class HomeComponent extends Component
                 ->first(); 
 
                 if($garsontable->status == 'Turno Aberto'){
-
                         
                     NotificatioJob::dispatch($garsontable->user_id,$garsontable->table,"ALERTA DE PEDIDO PRONTO,DEVE SE DIRIGIR A COZINHA PARA BUSCAR");
                 }

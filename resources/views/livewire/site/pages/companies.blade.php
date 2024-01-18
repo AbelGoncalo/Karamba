@@ -3,8 +3,8 @@
 
 @section('content')
 
-        <div class="container-fluid pt-5 pb-3">
-            <div class="container">
+        <div class=" container-fluid pt-5 pb-3">
+            <div class=" container">
                
                 <div class="row g-4 mt-5" id="main-container">
                     <div class="input-group mb-3">
@@ -14,8 +14,7 @@
                  <div class="row col-md-12 d-flex">
                     @if ($companies->count() > 0)
                     @foreach ($companies as $item)
-                    <a href="{{route('site.company',['id'=>$item->id])}}" id="card-company" class="col-md-3 mt-2" >
-                        <div class=" wow fadeInUp shadow" data-wow-delay="0.1s" style="border:1px solid #cf597a;border-radius: 1%;">
+
                             <div class="team-item text-center rounded overflow-hidden p-5">
                                 <div class="rounded-circle overflow-hidden m-4">
                                     @if ($item->companylog != null)

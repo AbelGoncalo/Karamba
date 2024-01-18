@@ -74,7 +74,7 @@
                             <i class="fa fa-chart-pie"></i>
                             Dashboard</a>
                     </li>
-                    
+
                     <li class="nav-item ">
                         <a class="nav-link {{(Route::Current()->getName() == 'panel.admin.categories') ? 'active':''}} " href="{{route('panel.admin.categories')}}" >
                             <i class="fa fa-box"></i>
@@ -141,7 +141,7 @@
 
 
 
-<x-livewire-alert::scripts />
+  <x-livewire-alert::scripts />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{asset('/admin/vendor/jquery/jquery-3.3.1.min.js')}}"></script>

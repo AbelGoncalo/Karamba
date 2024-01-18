@@ -11,7 +11,8 @@ use App\Livewire\RoomManager\{
     ShowReviewComponent,
     OrderComponent,
     ShowBookComponent,
-    ServiceControl
+    ServiceControl,
+    TransferComponent
 };
 
 
@@ -24,5 +25,6 @@ Route::get('/painel/chef-sala/pedidos',OrderComponent::class)->name('panel.room.
 Route::get('/painel/chef-sala/encomendas',DeliveryComponent::class)->name('panel.room.manager.delivery')->middleware(['auth','room_manager']);
 Route::get('/painel/chef-sala/reservas',ShowBookComponent::class)->name('panel.room.manager.reserves')->middleware(['auth','room_manager']);
 Route::get('/painel/tempo-entrega',ServiceControl::class)->name('panel.room.manager.service.control')->middleware(['auth','room_manager']);
+Route::get('/painel/transferir',TransferComponent::class)->name('panel.room.manager.transfer.item')->middleware(['auth','room_manager']);
 
 

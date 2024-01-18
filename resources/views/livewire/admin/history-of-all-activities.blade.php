@@ -31,14 +31,7 @@
                         @endif
                 </select>
               </div>
-                          
-{{--                           
-                <div class="form-group col-md-3">
-                    <label for="">Selecionar forma de visualização</label>
-                    <select wire:model.live="report_type" class="form-control" name="report_type" id="report_type">
-                            <option value="Tabela">Tabela</option>
-                    </select>
-                </div> --}}
+                         
 
                 
 
@@ -72,19 +65,12 @@
            <!-- Chart js -->           
            <div  id="chartjsContent" class="col-md-12 d-flex align-items-start flex-wrap my-5">
                   
-            <div id="barChart" class="barChart p-3 col-md-7 ">
                 <h1>Gráfico de barras</h1>                
                     <canvas id="myChart"></canvas>
             </div> 
               
               
-            <div id="pizzaChart" class="col-md-4 " >
-                <h1>Gráfico de pizza</h1>
-                <canvas class="" id="pie-chart"></canvas>                
-                    
-              </div>  
-
-          </div>
+ 
       <!-- Chart js -->           
 
             <!-- Tabela -->

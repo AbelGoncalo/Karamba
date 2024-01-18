@@ -42,11 +42,6 @@ class Logout extends Component
                         ]);
                     }else{
 
-                    //Log de actividades para o término de sessão do Garçom
-                    $garsonName  =  GarsonTable::find(auth()->user()->id)->join("users" , 'garson_tables.user_id', '=', 'users.id')
-                    //where('user_id','=',auth()->user()->id)
-                    ->get();
-
                     $log = new HistoryOfAllActivities();
                     $log->tipo_acao = 'Termar sessão no sistema';
                     $log->company_id = auth()->user()->company_id;

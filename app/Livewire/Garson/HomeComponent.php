@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Garçon;
+namespace App\Livewire\Garson;
 
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -185,7 +185,8 @@ class HomeComponent extends Component
                     
                     
                
-                  
+                    $item->quantity -=$this->qtd[$id];
+                    $item->save();
 
                         CartLocalDetail::create([
                             'name'=>$item->description,
@@ -224,6 +225,7 @@ class HomeComponent extends Component
            
         }
         } catch (\Throwable $th) {
+            
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -275,7 +277,13 @@ class HomeComponent extends Component
              $this->allItems = [];
              $this->tableNumber ='';
         } catch (\Throwable $th) {
-            //throw $th;
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
         }
     }
 }

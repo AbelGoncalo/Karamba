@@ -75,13 +75,13 @@
                                         {{\Carbon\Carbon::parse($item->expiratedate)->format('d-m-Y')}}
                                         @endif
                                         </td>
-                                        <td>{{$item->product->description}}</td>
+                                        <td>{{$item->product->description ?? ''}}</td>
                                         <td class="text-uppercase">{{$item->unit}}</td>
-                                        <td>{{$item->source}}</td>
-                                        <td>{{$item->source_product}}</td>
+                                        <td>{{$item->source ?? ''}}</td>
+                                        <td>{{$item->source_product ?? ''}}</td>
                                         <td>{{number_format($item->price,2,',','.')}} Kz</td>
                                         <td>{{number_format($item->unit_price,2,',','.')}} Kz</td>
-                                        <td>{{$item->quantity}}</td>
+                                        <td>{{$item->quantity ?? ''}}</td>
                                         <td>
                                             <button wire:click='editStoque({{$item->id}})' data-toggle="modal" data-target="#stockenter" class="btn btn-sm btn-primary mt-1"><i class="fa fa-edit"></i></button>
                                         </td>

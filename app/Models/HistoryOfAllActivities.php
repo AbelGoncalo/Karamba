@@ -14,6 +14,8 @@ class HistoryOfAllActivities extends Model
         'tipo_acao',
         'descricao',
         'responsavel',
+        'compnany_id',
         'company_id'
+
     ];
 }

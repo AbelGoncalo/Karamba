@@ -67,7 +67,7 @@ class StockEnterComponent extends Component
     {
         return view('livewire.economate.stock-enter-component',[
             'stockenters'=>$this->searchStockEnter($this->startdate,$this->enddate),
-            'items'=>ProductEconomate::where('company_id','=',auth()->user()->company_id)->get()
+            'items'=>ProductEconomate::orderBy('description','asc')->where('company_id','=',auth()->user()->company_id)->get()
         ])->layout('layouts.economate.app');
     }
 

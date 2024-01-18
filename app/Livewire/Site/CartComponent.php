@@ -1,60 +1,57 @@
 <?php
 
-namespace App\Livewire\Site;
+namespace App\Livewire\Garson;
 
-use Livewire\{Component,WithFileUploads};
-use Darryldecode\Cart\Facades\CartFacade as Cart;
+use App\Api\FactPlus;
+use App\Jobs\FactPlusJob;
+use Livewire\Component;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\{
+    BankAccount,
+    CartLocal,
+    CartLocalDetail,
+    Table,
+    ClientLocal,
+    Company,
+    DetailOrder,
+     GarsonTable,
+    HistoryOfAllActivities,
+    Item,
+    Order,
+    OrderDetail,
+};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\{Item,Location as _Location,Cupon,Delivery,DeliveryDetail};
 use Illuminate\Support\Facades\DB;
-class CartComponent extends Component
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+
+class PaymentComponent extends Component
 {
-    use LivewireAlert,WithFileUploads;
-    protected $listeners = ['remove'=>'remove','refresh'=>'refresh','getTotalItems'=>'getTotalItems'];
+    use LivewireAlert;
+   
+    public $tableNumber,$selectchannel,$channel,$email, $paymenttype = 'Transferência',$payallaccount = 'Pagar Toda Conta',$divisorresult,$totalOtherItems = 0,$totalDrinks = 0;
+    public $total = 0,$firstvalue,$secondvalue,$orderid,$divisorresultvalue,$name = 'CONSUMIDOR FINAL',$nif ='99999999',$address = 'Luanda,Angola';
+    protected $listeners = ['reload'=>'reload'];
 
-    public $edit,$qtd = [],$total,$location = [],$name,$lastname,$receipt,
-    $province,$municipality,$street,$phone,$otherPhone,$paymenttype='Transferência',
-    $otherAddress,$cuponValue,$locationCheced = [],$companyid;
 
 
-    //Validação de finalização de encomenda
-    public $rules = [
-        'name'=>'required',
-        'lastname'=>'required',
-        'province'=>'required',
-        'municipality'=>'required',
-        'street'=>'required',
-        'phone'=>'required',
-        'otherPhone'=>'required',
-        'paymenttype'=>'required',
-        'receipt'=>'required|mimes:pdf'
-    ];
-    public $messages = [
-    'name.required'=>'Obrigatório',
-    'lastname.required'=>'Obrigatório',
-    'province.required'=>'Obrigatório',
-    'municipality.required'=>'Obrigatório',
-    'street.required'=>'Obrigatório',
-    'phone.required'=>'Obrigatório',
-    'otherPhone.required'=>'Obrigatório',
-    'paymenttype.required'=>'Obrigatório'
-    ];
     public function render()
     {
-        
-        return view('livewire.site.cart-component',[
-            'cartContent'=>Cart::getContent(),
-            'locations'=>_Location::where('company_id','=',session('companyid'))->get()
-        ])->layout('layouts.site.app');
+        return view('livewire.garson.payment-component',[
+            'allTables'=>$this->getTable(),
+            'bankAccounts'=>$this->getBankAccount()
+        ])->layout('layouts.garson.app');
     }
 
-    public function mount()
+
+    public function getBankAccount()
     {
         try {
-            foreach (Cart::getContent() as $key => $item) {
-               $this->qtd[$key] = $item->quantity;
-               $this->total += Abs($item->price * $item->quantity);
-            }
+             
+           return BankAccount::where('company_id','=',auth()->user()->company_id)
+            ->where('status','=','1')
+            ->limit(3)
+            ->get();
         } catch (\Throwable $th) {
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
@@ -65,184 +62,309 @@ class CartComponent extends Component
             ]);
         }
     }
+    
 
-
-    //Metodo para remover item do carrinho
-
-    public function isTrue($id)
+    public function getTotal()
     {
         try {
-            $this->edit = $id;
-            $this->alert('warning', 'Confirmar', [
-                'icon' => 'warning',
-                'position' => 'center',
-                'toast' => false,
-                'text' => "Deseja realmente remover este item? Não pode reverter a ação",
-                'showConfirmButton' => true,
-                'showCancelButton' => true,
-                'cancelButtonText' => 'Cancelar',
-                'confirmButtonText' => 'Remover',
-                'confirmButtonColor' => '#3085d6',
-                'cancelButtonColor' => '#d33',
-                'onConfirmed' => 'remove' 
-            ]);
-        } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
-        }
-    }
-    //Metodo para remover item do carrinho
-
-    public function remove()
-    {
-        try {
-
-           Cart::remove($this->edit);
-           $this->total = 0;
-           
-           $this->alert('success', 'SUCESSO', [
-            'toast'=>false,
-            'position'=>'center',
-            'timer'=>'1000',
-            'timerProgressBar'=> true,
-            'text'=>'Sua encomenda foi realizada com sucesso'
-            ]);
-
-            $cupon = Cupon::find(session('IDCUPON'));
-
-            if ($cupon ) {
-                if($cupon->type == 'percent')
-                {
-    
-               
-                 $discount = (Cart::getTotal() / 100 *  $cupon->value) ;
-                    Session()->put('cupondiscount',$discount);
-                    Session()->put('IDCUPON',$cupon->id);
-    
-                
-                 $this->cuponValue = '';
-    
-                }else{
-                    $discount = Cart::getTotal() -  $cupon->value;
-                    Session()->put('cupondiscount',$discount);
-                    Session()->put('IDCUPON',$cupon->id);
-    
-                   
-    
-                    $this->cuponValue = '';
-                }
-            }
-           
-          
-            foreach (Cart::getContent() as $key => $item) {
-                $this->total += Abs($item->price * $item->quantity);
-             }
-            
-            
-        if (count(\Cart::getContent()) == 0) {
-            
-            Session()->forget('cupondiscount');
-            Session()->forget('locationvalue');
-            Cart::clear();
-            session()->forget('companyid');
-            return redirect()->route('site.home');
-        }
-
-        $this->dispatch('getTotalItems');
-
-        } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
-        }
-    }
-
-    //Acrescentar quantidade
-    public function increase($id)
-    {
-    
-        try {
-
-          
-            $item = Item::find($id);
             $this->total = 0;
 
-            if ($this->qtd[$id] > $item->quantity) {
-               
-                $this->alert('warning', 'AVISO', [
-                    'toast'=>false,
-                    'position'=>'center',
-                    'timer'=>'1000',
-                    'timerProgressBar'=> true,
-                    'text'=>'Quantidade Superior a disponível'
-                ]);
-            } else {
-                # code...
-                Cart::remove($id);
-                
-                Cart::add(array(
-                    'id' => $item->id,
-                    'name' => $item->description,
-                    'price' => $item->price,
-                    'quantity' => $this->qtd[$id],
-                    'attributes' => array(
-                        'image' => $item->image,
+            $listTotal = CartLocalDetail::where('table','=',$this->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
+            ->get();
 
-                    )
-                ));
-
-                $cupon = Cupon::find(session('IDCUPON'));
-                if ($cupon ) {
-                    if($cupon->type == 'percent')
-                    {
-        
-                   
-                     $discount = (Cart::getTotal() / 100 *  $cupon->value) ;
-                        Session()->put('cupondiscount',$discount);
-                        Session()->put('IDCUPON',$cupon->id);
-        
-                     
-                     $this->cuponValue = '';
-        
-                    }else{
-                        $discount = Cart::getTotal() -  $cupon->value;
-                        Session()->put('cupondiscount',$discount);
-                        Session()->put('IDCUPON',$cupon->id);
-        
-        
-                        $this->cuponValue = '';
-                    }
-                }
-               
-              
-                foreach (Cart::getContent() as $key => $item) {
-                    $this->total += Abs($item->price * $item->quantity);
-                 }
-
-
-
-
-                $this->alert('success', 'SUCESSO', [
-                    'toast'=>false,
-                    'position'=>'center',
-                    'timer'=>'1000',
-                    'timerProgressBar'=> true,
-                    'text'=>'Item '.$item->description.', adicionado'
-                ]);
-                $this->dispatch('getTotalItems');
-
-            }
+             
+ 
             
+            if ($listTotal) {
+            foreach ($listTotal as  $value) {
+           
+                $this->total += ($value->price * $value->quantity);
+            }
 
+            }else{
+                $this->total = 0;
+            }
+
+             
+
+        } catch (\Throwable $th) {
+           
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
+       
+    }
+
+
+    //Fazer calculo de divisão de pagamento
+    public function divisor()
+    {
+        
+        try {
+
+            if($this->payallaccount == 'Dividir-2')
+            {
+                    $this->divisorresult = number_format((ceil($this->total / 2)),2,',','.');
+                     
+
+            }elseif($this->payallaccount == 'Dividir-3')
+            {
+                
+                $this->divisorresult = number_format((ceil($this->total / 3)),2,',','.');
+            }else{
+                    
+                    $this->divisorresult = number_format((ceil($this->total / 4)),2,',','.');
+                    $this->divisorresultvalue = ceil($this->total / 4);
+            }
+
+
+            
+        } catch (\Throwable $th) {
+           
+
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
+    }
+
+ 
+
+
+    //Metodo para finalizar Pagamento
+    public function finallyPayment()
+    {  
+        
+       
+      
+        //DB::beginTransaction();
+       #Validação de campos
+         if ($this->paymenttype == 'TPA' and $this->paymenttype == 'Transferência') {
+          
+         
+            $this->validate(['firstvalue'=>'required','secondvalue'=>'required'],
+            ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
+
+        } elseif($this->paymenttype == 'Transferência' and $this->paymenttype == 'TPA') {
+
+            $this->validate(['firstvalue'=>'required','secondvalue'=>'required'],
+            ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
+        }elseif($this->paymenttype == 'TPA' and $this->paymenttype == 'Numerário'){
+            
+            $this->validate(['firstvalue'=>'required','secondvalue'=>'required'],
+            ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
+
+        }elseif($this->paymenttype == 'Numerário' and $this->paymenttype == 'Transferência'){
+            
+            $this->validate(['firstvalue'=>'required','secondvalue'=>'required'],
+            ['firstvalue.required'=>'Obrigatório','secondvalue.required'=>'Obrigatório']);
+        }
+
+        if ($this->paymenttype == 'Numerário') {         
+            $this->validate(['paymenttype'=>'required'],['paymenttype.required'=>'Obrigatório']);
+        }
+       
+
+        if ($this->paymenttype == 'Transferência') {
+            
+        } else {
+            $this->validate(['paymenttype'=>'required'],['paymenttype.required'=>'Obrigatório']);
+
+        }
+
+        if ($this->payallaccount != 'Pagar Toda Conta') {
+            $this->validate(['divisorresult'=>'required'],['divisorresult.required'=>'Obrigatório']);
+            
+        } else {
+            $this->validate(['payallaccount'=>'required'],['payallaccount.required'=>'Obrigatório']);
+
+        }
+         
+       #Fim de Validação de campos
+         try {
+
+
+          if ($this->total == 0) {
+            $this->alert('warning', 'AVISO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Não pode anotar pagamento em uma mesa sem pedidos ou com total negativo'
+            ]);
+          }else{
+
+            if ($this->firstvalue != null and $this->secondvalue !=null) {
+                
+                if ($this->total != ($this->firstvalue + $this->secondvalue)) {
+
+                    $this->alert('warning', 'AVISO', [
+                        'toast'=>false,
+                        'position'=>'center',
+                        'showConfirmButton' => true,
+                        'confirmButtonText' => 'OK',
+                        'text'=>'Os valores de diferentes tipos de pagamento não correspondem ao total.'
+                    ]);
+
+
+                    return;
+
+                }
+            }
+
+              //Pegar todos os dados necessarios para finalizar pagamento
+              
+           
+            $cartLocalDetail =  CartLocalDetail::where('table','=',$this->tableNumber)
+            ->where('company_id','=',auth()->user()->company_id)
+            ->get();
+            if ($cartLocalDetail) {
+        
+            $order = Order::create([
+             'table'=>$this->tableNumber,
+             'identify'=>auth()->user()->id,
+             'user_id'=>auth()->user()->id,
+             'paymenttype'=>$this->paymenttype,
+             'splitAccount'=>$this->payallaccount,
+             'firstvalue'=>$this->firstvalue,
+             'secondvalue'=>$this->secondvalue,
+             'divisorresult'=> floatval(preg_replace('/[^\d.]/', '', $this->divisorresult)),
+             'total'=>$this->total,
+             'status'=>'pago',
+             'company_id'=>auth()->user()->company_id
+            ]);
+
+            
+           
+
+
+
+                   
+
+             if($cartLocalDetail->count() > 0)
+             {
+                 foreach ($cartLocalDetail as $item) {
+                     DetailOrder::create([
+                         'order_id'=>$order->id,
+                         'item'=>$item->name,
+                         'price'=>$item->price,
+                         'quantity'=>$item->quantity,
+                         'subtotal'=>$item->price * $item->quantity,
+                         'company_id'=>auth()->user()->company_id
+                     ]);
+
+                     $itemFinded = Item::where('description','=',$item->name)->first();
+                     $itemFinded->quantity -=$item->quantity;
+                     $itemFinded->save(); 
+
+
+                     
+                     //Registar o log de pagamentos
+                    $log  = new HistoryOfAllActivities();
+                    $log->tipo_acao = "Finalizacao de pagamento";
+                    $log->responsavel = auth()->user()->name;
+                    $log->company_id = auth()->user()->company_id;
+                    $log->descricao = 'O garson '.auth()->user()->name. 'Finalizou o pagamento de '.$item->name. ' no valor de '. $item->price.'KZS'. ' com o subtotal de '.$item->price * $item->quantity.'KZS';
+                    $log->save();
+
+
+                                    
+                   
+                   
+                 }                
+
+
+
+
+             }
+
+             $table = Table::where('number','=',$this->tableNumber)
+             ->where('company_id','=',auth()->user()->company_id)
+             ->first();
+
+             if($table){                 
+                $table->status = 0;
+                $table->save();
+                $this->orderid = $order->id;
+            }
+
+            
+                
+
+        $reference =    \App\Api\FactPlus::create($order->id,$this->name,$this->nif,$this->address);
+     
+        \App\Api\FactPlus::changeStatu($reference,'sent');
+
+            session()->put('finallyOrder',$reference);
+            session()->put('table',$this->tableNumber);
+            
+        }else{
+            $this->alert('warning', 'AVISO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'
+                    O cliente que fez este pedido, ainda não realizou o pagamento,
+                    Deve aguardar que o cliente 
+                    '
+            ]);
+        }
+        }
+
+        //DB::commit();
+        
+          } catch (\Throwable $th) {
+              dd($th->getMessage());
+              DB::rollBack();
+              $this->alert('error', 'ERRO', [
+                  'toast'=>false,
+                  'position'=>'center',
+                  'showConfirmButton' => true,
+                  'confirmButtonText' => 'OK',
+                  'text'=>'Falha ao realizar operação'
+              ]);
+          }
+
+
+          
+          
+    }
+
+
+
+
+    public function sendReceipt()
+    {
+
+         try {
+
+              $this->clearFields();
+             \App\Api\FactPlus::sendInvoice(session('finallyOrder'),$this->email);
+              session()->forget('finallyOrder');
+              session()->forget('table');
+
+              $this->alert('success', 'SUCESSO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Pagamento finalizado com sucesso'
+            ]);
+
+
+            $this->dispatch('reralod');
+           
          } catch (\Throwable $th) {
              $this->alert('error', 'ERRO', [
                  'toast'=>false,
@@ -252,239 +374,37 @@ class CartComponent extends Component
                  'text'=>'Falha ao realizar operação'
              ]);
          }
-
     }
-
-    //Verificar cupon de desconto
-    public function applyDiscount()
-    {
-        try {
-           
-            $cupon = Cupon::where('code','=',$this->cuponValue)
-            ->where('company_id','=',auth()->user()->company_id ?? session('companyid'))
-            ->first();
-           
-            if ($cupon) {
-                if (date('Y-m-d') > $cupon->expirateDate) {
-                    $this->alert('error', 'ERRO', [
-                        'toast'=>false,
-                        'position'=>'center',
-                        'showConfirmButton' => true,
-                        'confirmButtonText' => 'OK',
-                        'text'=>'Seu Cupon está espirado!'
-                    ]);
-                    $this->cuponValue = '';
-                }elseif($cupon->times == 0){
-                    $this->alert('error', 'ERRO', [
-                        'toast'=>false,
-                        'position'=>'center',
-                        'showConfirmButton' => true,
-                        'confirmButtonText' => 'OK',
-                        'text'=>'Cupon Inválido'
-                    ]);
-
-
-                }else{
-                        
-                    if($cupon->type == 'percent')
-                    {
-
-                   
-                     $discount = (Cart::getTotal() / 100 *  $cupon->value) ;
-                        Session()->put('cupondiscount',$discount);
-                        Session()->put('IDCUPON',$cupon->id);
-
-                        $cupon->times = $cupon->times - 1;
-                        $cupon->save();
-                     $this->cuponValue = '';
-
-                    }else{
-                        $discount = Cart::getTotal() -  $cupon->value;
-                        Session()->put('cupondiscount',$discount);
-                        Session()->put('IDCUPON',$cupon->id);
-
-                        $cupon->times = $cupon->times - 1;
-                        $cupon->save();
-
-                        $this->cuponValue = '';
-                    }
-
-                }
-                
-            }else{
-                $this->alert('error', 'ERRO', [
-                    'toast'=>false,
-                    'position'=>'center',
-                    'showConfirmButton' => true,
-                    'confirmButtonText' => 'OK',
-                    'text'=>'Cupon Inválido'
-                ]);
-            }
-            $this->dispatch('getTotalItems');
-
-        } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
-        }
-    }
-    //Verificar cupon de desconto
-    public function increaseLocationPrice($id)
-    {
-        try {
-
-            $location = _Location::find($id);
-            if (count(Cart::getContent()) > 0) {
-           
-            if($location){
-
-                Session()->put('locationvalue',$location->price);
-
-            }else{
-                $this->alert('warning', 'AVISO', [
-                    'toast'=>false,
-                    'position'=>'center',
-                    'showConfirmButton' => true,
-                    'confirmButtonText' => 'OK',
-                    'text'=>'Preço da localização não encontrada'
-                ]);
-            }
-
-                
-            }else{
-                $this->alert('warning', 'AVISO', [
-                    'toast'=>false,
-                    'position'=>'center',
-                    'showConfirmButton' => true,
-                    'confirmButtonText' => 'OK',
-                    'text'=>'Nenhum item adicionado no carrinho!'
-                ]);
-            }
-            $this->dispatch('getTotalItems');
-        } catch (\Throwable $th) {
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
-        }
-    }
-
-    //Verificar cupon de desconto
-    public function finallyOrder()
-    {
-       
-        $this->validate($this->rules,$this->messages);
-        DB::beginTransaction();
-        try {
-            
-
-            $receiptString = '';
-
-            if($this->receipt)
-            {
-                $receiptString = md5($this->receipt->getClientOriginalName()).'.'.
-                $this->receipt->getClientOriginalExtension();
-                $this->receipt->storeAs('public/receipts/',$receiptString);
-
-            }
-            //GERAR CÓDIGO ÚNICO PARA CADA DETALHES
-            $code = 'DLS'.rand(1000,5000);
-            $delivery = Delivery::create([
-                "total"=>Cart::getTotal() - session('cupondiscount') + session('locationvalue'),
-                "discount"=>session('cupondiscount'),
-                "locationprice"=>session('locationvalue'),
-                "customername"=>$this->name,
-                'customerlastname'=>$this->lastname,
-                'customerprovince'=>$this->province,
-                'customermunicipality'=>$this->municipality,
-                'customerstreet'=>$this->street,
-                'customerphone'=>$this->phone,
-                'customerotherphone'=>$this->otherPhone,
-                'customerpaymenttype'=>$this->paymenttype,
-                'receipt'=>$receiptString,
-                'customerotheraddress'=>$this->otherAddress,
-                'finddetail'=>$code,
-                'company_id'=>auth()->user()->company_id ?? session('companyid'),
-            ]);
-
-            if($delivery)
-            {
-                foreach (Cart::getContent() as $key => $value) {
-                    DeliveryDetail::create([
-                        "delivery_id"=>$delivery->id,
-                        "item"=>$value->name,
-                        "price"=>$value->price,
-                        "quantity"=>$value->quantity,
-                        'subtotal'=>$value->price * $value->quantity,
-                        'company_id'=>auth()->user()->company_id ?? session('companyid'),
-                    ]);
-                }
-            }
-            if (session('IDCUPON') != null) {
-                $cuponDecrease = Cupon::find(session('IDCUPON'));
-                if($cuponDecrease->times != 0){
-                    
-                    $cuponDecrease->times -= 1;
-                    $cuponDecrease->save();
-                }
-            }
-            DB::commit();
-            //Depois de todo processo for concluido limpar todos os campos
-            //e redirecionar o cliente
-
-            $this->clearFields();
-
-            $this->alert('success', 'SUCESSO', [
-                'toast'=>false,
-                'position'=>'center',
-                'timer'=>'1500',
-                'text'=>'Sua encomenda foi realizada com sucesso'
-            ]);
-            Session()->put('finddetail',$code);
-
-            return redirect()->to('/minhas/encomendas');
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            $this->alert('error', 'ERRO', [
-                'toast'=>false,
-                'position'=>'center',
-                'showConfirmButton' => true,
-                'confirmButtonText' => 'OK',
-                'text'=>'Falha ao realizar operação'
-            ]);
-        }
-    }
-
 
 
     public function clearFields()
     {
         try {
+
+         
+             CartLocalDetail::where('table','=',session('table'))
+            ->where('company_id','=',1)
+            ->delete();
+
+
+           
+
+            $this->paymenttype = 'Transferência';
+            $this->payallaccount = 'Pagar Toda Conta';
+            $this->divisorresult = '';
+            $this->totalOtherItems = 0;
+            $this->totalDrinks = 0;
+            $this->total = 0;
+            $this->firstvalue = '';
+            $this->secondvalue = '';
+            $this->nif = '';
             $this->name = '';
-            $this->lastname = '';
-            $this->province = '';
-            $this->municipality = '';
-            $this->street = '';
-            $this->phone = '';
-            $this->otherPhone = '';
-            $this->paymenttype = '';
-            $this->otherAddress = '';
-            $this->cuponValue = '';
-            Session()->forget('cupondiscount');
-            Session()->forget('locationvalue');
-            Session()->forget('companyid');
-            Cart::clear();
+           
 
-
+           
+            
         } catch (\Throwable $th) {
+
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',
@@ -494,4 +414,38 @@ class CartComponent extends Component
             ]);
         }
     }
+
+
+    public function getTable()
+    {
+        try {
+           $garsontable =  GarsonTable::where('user_id','=',auth()->user()->id)
+           ->where('status','=','Turno Aberto')
+            ->where('company_id','=',auth()->user()->company_id)
+            ->get();
+
+
+
+            if($garsontable)
+            {
+               return $garsontable;
+            }else{
+                return [];
+            }
+
+
+
+        } catch (\Throwable $th) {
+           
+            $this->alert('error', 'ERRO', [
+                'toast'=>false,
+                'position'=>'center',
+                'showConfirmButton' => true,
+                'confirmButtonText' => 'OK',
+                'text'=>'Falha ao realizar operação'
+            ]);
+        }
+    }
+
+
 }

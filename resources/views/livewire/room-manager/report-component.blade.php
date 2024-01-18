@@ -64,6 +64,7 @@
                 <table class="table text-center table-striped table-hover">
                     <thead>
                         <tr>
+                            <th>DATA</th>
                             <th>Garson</th>
                             <th>Mesa</th>
                             <th>Forma de Pagamento</th>
@@ -73,6 +74,7 @@
                     <tbody>
                         @foreach ($data as $item)
                         <tr>
+                            <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y H:i')}}</td>
                             <td>{{$item->user->name ?? ''}} {{$item->user->lastname ?? ''}}</td>
                             <td>{{$item->table}}</td>
                             <td>{{$item->paymenttype}}</td>

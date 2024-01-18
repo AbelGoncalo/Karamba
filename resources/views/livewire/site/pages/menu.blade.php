@@ -4,6 +4,5 @@
 @section('content')
 
  
-@livewire('site.all-items-component',['companyid'=>$company->id])
-
+@livewire('site.all-items-component',['companyid'=>$company->id]) 
 @endsection

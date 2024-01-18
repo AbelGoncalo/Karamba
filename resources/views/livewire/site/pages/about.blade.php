@@ -5,20 +5,44 @@
 
  <!-- About Start -->
  <div class="container-fluid py-5">
-    <div class="container">
-        <div class="row g-5 align-items-center">
-           
-            <div class="col-lg-12" style="margin-top: 8rem">
-                <h5 class="section-title ff-secondary text-start fw-normal" style="color: var(--primary);">Sobre Nós</h5>
-                <p class="mb-4">
-                    O Espaço Karamba oferece uma variedade de opções para atender às
-                    suas necessidades de entrega de comida com conveniência e qualidade
-           
-                </p>
-            </div>
+    <div class="container" id="aboutt">
+        <div class="row g-4 align-items-center" style="margin-top: 6rem">
+                <div class="col-lg-6">
+                        <h5 class="section-title ff-secondary text-start fw-normal mb-2" style="color: var(--primary);">Sobre Nós</h5>
+                    <p class="mb-4">
+                        Atualmente, "Kytutes" é uma plataforma consolidada, 
+                        Com uma extensa rede de restaurantes cadastrados,
+                        a plataforma continua a evoluir. A equipe está explorando novas 
+                        tecnologias, como realidade aumentada para visualização de cardápios,
+                        e colaborando com chefs inovadores para oferecer experiências culinárias únicas.
+                        Bem-vindo a "Kytutes", a plataforma definitiva para explorar uma vasta gama
+                        de restaurantes incríveis ao seu redor! Descubra experiências gastronômicas únicas 
+                        e satisfaça seus desejos culinários com facilidade.
+                    </p>
+
+                    <p class="mb-4">
+                        Atualmente, "Kytutes" é uma plataforma consolidada, 
+                        Com uma extensa rede de restaurantes cadastrados,
+                        a plataforma continua a evoluir. A equipe está explorando novas 
+                        tecnologias, como realidade aumentada para visualização de cardápios,
+                        e colaborando com chefs inovadores para oferecer experiências culinárias únicas.
+                    </p>
+
+                    <p class="mb-4">
+                        Atualmente, "Kytutes" é uma plataforma consolidada, 
+                        Com uma extensa rede de restaurantes cadastrados,
+                        a plataforma continua a evoluir. A equipe está explorando novas 
+                        tecnologias, como realidade aumentada para visualização de cardápios,
+                        e colaborando com chefs inovadores para oferecer experiências culinárias únicas.
+                    </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src="{{asset("site/img/bg-hero.jpg")}}" alt="" style="height: 28rem;" id="imgabout">
+                    </div>
+                </div>
+                
             <div class="col-lg-12">
                 <h5 class="section-title ff-secondary text-start fw-normal" style="color: var(--primary);">Restaurantes Karamba</h5>
-               
 
                  <!-- Team Start -->
         <div class="container-xxl pt-5 pb-3">
@@ -44,7 +68,6 @@
                                 </div>
                             </div>
                         @endforeach
-                        
                     @endif
                 </div>
             </div>
@@ -55,5 +78,4 @@
     </div>
   </div>
   <!-- About End -->
-
 @endsection

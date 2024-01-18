@@ -1,30 +1,125 @@
-<div class="container-fluid py-5">
+<div class="container-fluid py-5"  >
   <div class="container mt-5" >
-      <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 5rem !important">
-          <h1 class="mb-5" style="margin-top: 3rem;">Menu - {{$company->companyname}}</h1>
-      </div>
-      <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
-            <div class="container">
-              <div class="row col-md-12 d-flex justify-content-center align-items-center flex-wrap">
-                <div class="form-group col-md-6 mb-5" wire:ignore>
-                  <select  name="category" id="selectcategory"  class="form-select">
-                    @if ($categories->count() > 0)
-                    <option value="">--Selecionar--</option>
-                        @foreach ($categories as $item)
-                           <option value="{{$item->id}}">{{$item->description}}</option>
-                        @endforeach
-                      @else
-                          <option value="">A consulta não retornou nenhum resultado</option>
-                      @endif
-                    </select>
+
+      <!-- Estilização do Menu -->
+    
+
+        
+
+
+  <!-- =======   Menu Section   ======= -->
+            <section id="menu" class="menu">
+              <div class="container" data-aos="fade-up">
+
+                <div class="section-header">
+                  <p class="text-uppercase" style="font-size: 3vw">Menu {{$company->companyname}}</p>
                 </div>
+
+                
+                <div  class="row col-md-12 d-flex justify-content-center align-items-center flex-wrap">
+                  <ul data-aos="fade-up" data-aos-delay="200" class="list-group-flush list-group-horizontal position-relative overflow-auto w-75 col-md-12 d-flex justify-content-center align-items-center " style="border:none">
+                    @foreach ($categories as $item)
+                      <li  class="list-group-item p-2"  style="cursor: pointer;list-style: none; ">
+                       <button class="btn btn-sm  category" style="border-bottom: 1px solid #ccc" data-id="{{$item->id}}">
+                         {{$item->description}}
+                      </button>
+                      </li>
+                    @endforeach
+                  </ul>
+                </div>
+
+              
+{{-- 
+                <div class="tab-content" data-aos="fade-up" data-aos-delay="300">
+
+                  <div class="tab-pane fade active show" id="menu-breakfast-{{$item->category_id ?? ''}}">
+
+                    <div class="tab-header text-center">
+                      <p>Menu</p>
+                      <h3>Pequeno Almoço</h3>
+                    </div>
+
+                    <div class="row gy-5">
+                      @foreach ($items as $item)
+                      <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="{{($item->image != null) ? asset('storage/'.$item->image) : asset('not-found.png')}}" class="menu-img img-fluid" alt=""></a>
+                        <h4><span >{{$item->description}}</span></h4>
+                        <p class="ingredients">
+                          Lorem, deren, trataro, filede, nerada
+                        </p>
+                        <p class="price">
+                          {{number_format($item->price,2,',','.')}} Kz 
+                        </p>
+                      </div><!-- Menu Item -->
+                      @endforeach
+
+                    </div>
+                  </div><!-- End Breakfast Menu Content -->
+
+                  <div class="tab-pane fade" id="menu-lunch">
+
+                    <div class="tab-header text-center">
+                      <p>Menu</p>
+                      <h3>Almoço</h3>
+                    </div>
+
+                    <div class="row gy-5">
+
+                      <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Magnam Tiste</h4>
+                        <p class="ingredients">
+                          Lorem, deren, trataro, filede, nerada
+                        </p>
+                        <p class="price">
+                          Kz 1.000 
+                        </p>
+                      </div><!-- Menu Item -->
+
+
+                    </div>
+                  </div><!-- End Lunch Menu Content -->
+
+                  <div class="tab-pane fade" id="menu-dinner">
+
+                    <div class="tab-header text-center">
+                      <p>Menu</p>
+                      <h3>Jantar</h3>
+                    </div>
+
+                    <div class="row gy-5">
+
+                      <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Magnam Tiste</h4>
+                        <p class="ingredients">
+                          Lorem, deren, trataro, filede, nerada
+                        </p>
+                        <p class="price">
+                          Kz 1.000 
+                        </p>
+                      </div><!-- Menu Item -->
+
+
+
+
+                    </div>
+                  </div><!-- End Dinner Menu Content -->
+
+                </div> --}}
+
               </div>
-            </div>
+            </section>
+  <!-- ======= End Menu Section ======== -->
+
+      <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
+          
+
           <div class="tab-content">
            
               <div id="tab-{{$item->category_id ?? ''}}" class="tab-pane fade show p-0 active">
                   <div class="row g-4">
-                    @if ($items->count() > 0)
+                    @if (count($items) > 0)
                     @foreach ($items as $item)
                             <div class="col-lg-12">
                               <div class="d-flex align-items-center">
@@ -67,15 +162,17 @@
     
 <script>
 $(document).ready(function() {
-    $('#selectcategory').select2({
-      theme: "bootstrap",
-      width: '100%'
-    });
+    
 
-    $('#selectcategory').change(function (e) { 
-      e.preventDefault();
-      @this.set('category', $('#selectcategory').val());
-    });
+    $('.category').click((e)=>{
+      let id =  $(e.target).data('id')
+      console.log(id);
+      @this.set('category', id);
+    })
+
+  
+
+    
 });
 </script>
 @endpush

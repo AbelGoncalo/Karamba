@@ -19,13 +19,28 @@
     <div class="card">
 
         <div class="card-header">
-            <div class="d-flex align-items-center ">
+            <div class="d-flex flex-wrap align-items-center ">
+              <div class="form-group col-md-3">
+                <label for="">Selecionar Empresa</label>
+                <select wire:model.live="companyname" class="form-control" name="companyname" id="companyname">
+                        <option  >--Selecionar--</option>
+                        @if (isset($companyData) and count($companyData) > 0)
+                        @foreach ($companyData as $data)
+                            <option value="{{$data->id ?? ""}}">{{$data->companyname ?? ""}}</option>
+                        @endforeach
+                        @endif
+                </select>
+              </div>
+                          
+{{--                           
                 <div class="form-group col-md-3">
                     <label for="">Selecionar forma de visualização</label>
                     <select wire:model.live="report_type" class="form-control" name="report_type" id="report_type">
                             <option value="Tabela">Tabela</option>
                     </select>
-                </div>
+                </div> --}}
+
+                
 
                  <div class="form-group col-md-3">
                     <label for="">Selecionar  responsável</label>
@@ -52,9 +67,25 @@
             </div>
         </div>
 
-        <div class="card-body">           
+        <div class="card-body">
+          
+           <!-- Chart js -->           
+           <div  id="chartjsContent" class="col-md-12 d-flex align-items-start flex-wrap my-5">
+                  
+            <div id="barChart" class="barChart p-3 col-md-7 ">
+                <h1>Gráfico de barras</h1>                
+                    <canvas id="myChart"></canvas>
+            </div> 
+              
+              
+            <div id="pizzaChart" class="col-md-4 " >
+                <h1>Gráfico de pizza</h1>
+                <canvas class="" id="pie-chart"></canvas>                
+                    
+              </div>  
 
-           
+          </div>
+      <!-- Chart js -->           
 
             <!-- Tabela -->
 
@@ -105,23 +136,7 @@
 
 
 
-                       <!-- Chart js -->           
-              <div  id="chartjsContent" class="col-md-12 d-flex align-items-start my-5">
-                  
-                <div id="barChart" class="barChart col-md-7 ">
-                    <h1>Gráfico de barras</h1>                
-                        <canvas id="myChart"></canvas>
-                </div> 
-                  
-                  
-                <div id="pizzaChart" class="col-md-4 " >
-                    <h1>Gráfico de pizza</h1>
-                    <canvas id="pie-chart" width="10px"></canvas>                
-                        
-                  </div>  
-
-            </div>
-          <!-- Chart js -->
+           
 
                                     
           
@@ -148,18 +163,14 @@
 @push('chart-log')
 
 <script>
-    const ctx = document.getElementById('myChart');
+    const ctx = document.getElementById('myChart').getContext('2d');
   
     new Chart(ctx, {
       type: 'bar',
       animation:false,
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1
-        }]
+        labels: {!! json_encode($labels) !!},
+        datasets: {!! json_encode($datasets) !!},              
       },
       options: {
         scales: {
@@ -172,16 +183,19 @@
   </script>
 
 
-
+<!-- Gráfico de Pizza -->
 <script>
     new Chart(document.getElementById('pie-chart'), {
       type: 'pie',
       data: {
-        labels: ["HTML", "CSS", "JavaScript", "PHP", "MySql"],
+         labels: [{!! $actionLabel !!}],
         datasets: [{
-          backgroundColor: ["#e63946", "#254BDD",
-            "#ffbe0b", "#1d3557", "#326998"
-          ],
+          backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'
+    ],
+    
           data: [418, 263, 434, 586, 332]
         }],
       

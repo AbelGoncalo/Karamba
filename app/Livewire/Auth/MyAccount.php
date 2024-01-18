@@ -99,10 +99,12 @@ class MyAccount extends Component
         try {
 
             if (Hash::check($this->password,auth()->user()->password)) {
-                
+                dd();
                 User::find(auth()->user()->id)->update([
                     'password'=>$this->npassword,
                 ]);
+
+                
                 $this->alert('success', 'SUCESSO', [
                     'toast'=>false,
                     'position'=>'center',
@@ -128,6 +130,7 @@ class MyAccount extends Component
 
             
         } catch (\Throwable $th) {
+           
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

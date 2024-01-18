@@ -27,7 +27,7 @@
                         <input class="custom-control-input" wire:model='remember' type="checkbox"><span class="custom-control-label">Lembrar me</span>
                     </label>
                 </div>
-                <button type="submit" class="btn  btn-lg btn-block text-light" style="background-color: #cdb81a">Entrar</button>
+                <button type="submit" class="btn  btn-lg btn-block text-light" style="background-color: #cf597a">Entrar</button>
                 <div class="form-group text-center mt-4">
                   <span><a href="{{route('auth.signup')}}">Não possui uma conta?</a></span> <br>
                    <span><a href="{{route('auth.reset.password')}}">Esqueceu suas credências?</a></span><br>

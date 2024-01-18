@@ -42,8 +42,6 @@ class Logout extends Component
                         ]);
                     }else{
 
-                    //Log de actividades para o término de sessão do Garçom
-                    
                     $log = new HistoryOfAllActivities();
                     $log->tipo_acao = 'Termar sessão no sistema';
                     $log->company_id = auth()->user()->company_id;
@@ -73,7 +71,6 @@ class Logout extends Component
             
           
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             $this->alert('error', 'ERRO', [
                 'toast'=>false,
                 'position'=>'center',

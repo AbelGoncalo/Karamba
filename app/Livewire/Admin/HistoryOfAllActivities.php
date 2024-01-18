@@ -17,17 +17,6 @@ class HistoryOfAllActivities extends Component
     public $companyname = null, $authorOfActivity = null, $report_type = null, $type_service = null, $startdate = null, $enddate = null;
     public function render()
     {
-        //Lógica para o gráfico de Barras
-        $logChartBar = ModelsHistoryOfAllActivities::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-        ->whereYear('created_at',date('Y'))
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get();
-
-        $labels = [];
-        $data = [];
-        $colors = ['rgba(255, 99, 132, 0.2)' , 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(201, 203, 207, 0.2)'];
-        $borders = ['rgb(255, 99, 132)','rgb(255, 159, 64)' ,'rgb(255, 205, 86)', 'rgb(75, 192, 192)',  'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)'];
 
         for ($i=1; $i<=12; $i++){
             $month = date('F',mktime(0,0,0,$i,1));
@@ -99,17 +88,6 @@ class HistoryOfAllActivities extends Component
        $end   = Carbon::parse($this->enddate)->format('Y-m-d') .' 23:59:59';
        $author = $this->authorOfActivity;
        $companyName = $this->companyname;
-
-
-        if (!empty($companyName) ){
-            return  ModelsHistoryOfAllActivities::whereBetween('created_at',[$start,$end])
-            ->where('company_id', $companyName)    
-            ->get();       
-        }else if(!empty($companyName)){
-
-            return  ModelsHistoryOfAllActivities::whereBetween('created_at',[$start,$end])
-            ->where('responsavel', $author)    
-            ->get();       
 
         }else{
             return  ModelsHistoryOfAllActivities::whereBetween('created_at',[$start,$end])

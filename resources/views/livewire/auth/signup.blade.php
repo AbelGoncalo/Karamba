@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div class="form-group pt-2">
-                        <button style="background-color: #cdb81a; color:#fff" class="btn btn-block text-light" type="submit">Registrar minha Conta</button>
+                        <button style="background-color: #cf597a; color:#fff" class="btn btn-block text-light" type="submit">Registrar minha Conta</button>
                     </div>
                     <div class="form-group col-md-12 d-flex justify-content-center flex-wrap align-items-center">
                         <label class="custom-control custom-checkbox" style="cursor: pointer">

@@ -9,14 +9,12 @@
                 <div class="row g-4 mt-5" id="main-container">
                     <div class="input-group mb-3">
                         <input type="search" id="searchcompany" class="form-control" placeholder="Buscar Restaurante" aria-label="company" aria-describedby="basic-addon1">
-                      </div>
-                            <h5 class=" ff-secondary text-sm-center  text-md-start text-primary fw-normal mt-5 mb-5" style="color: var(--primary) !important">Restaurantes Karamba</h5>
                     </div>
+                       <h5 class=" ff-secondary text-sm-center  text-md-start text-primary fw-normal mt-5 mb-5" style="color: var(--primary) !important">Restaurantes Kytutes</h5>
+                 <div class="row col-md-12 d-flex">
                     @if ($companies->count() > 0)
                     @foreach ($companies as $item)
-                    
-                    <a href="{{route('site.company',['id'=>$item->id])}}" id="card-company">
-                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+
                             <div class="team-item text-center rounded overflow-hidden p-5">
                                 <div class="rounded-circle overflow-hidden m-4">
                                     @if ($item->companylog != null)
@@ -32,6 +30,7 @@
                     @endforeach
                     
                 @endif
+            </div>
                 </div>
             </div>
         </div>
@@ -73,15 +72,11 @@
                 showConfirmButton: false,
                 });
 
-
                 //$('#searchcompany').val('')
                 $(this).show(); 
-            
          }  
     });  
-   });
-  
-     
+   });   
 });
 </script>
 @endpush

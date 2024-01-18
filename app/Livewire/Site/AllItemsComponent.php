@@ -13,9 +13,19 @@ class AllItemsComponent extends Component
     public $category,$companyid,$comment,$stars = 1,$itemid;
     protected $listeners = ['close'=>'close'];
  
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div>
+           <p>Carregando...</p>
+        </div>
+        HTML;
+    }
 
     public function render()
     {
+
+         
       
         return view('livewire.site.all-items-component',[
             'items'=>$this->getItems($this->category),
@@ -26,15 +36,15 @@ class AllItemsComponent extends Component
 
 
        //Pegar todos os items {filtrando pela categoria}
-       public function getItems()
+       public function getItems($category = null)
        {
            try {
 
-         
-               if(isset($this->category) and $this->category != null)
+               if(isset($category) and $category != null)
                {
+                    
                
-                 return  Item::where('category_id','=',$this->category)
+                 return Item::where('category_id','=',$category)
                  ->where('company_id','=',$this->companyid)
                  ->where('quantity','>',0)
                  ->where('status','=','DISPONIVEL')
@@ -43,7 +53,7 @@ class AllItemsComponent extends Component
                 }else{
                     
                   
-                   return  Item::where('company_id','=',$this->companyid)
+                    return Item::where('company_id','=',$this->companyid)
                    ->where('quantity','>',0)
                    ->where('status','=','DISPONIVEL')
                    ->get();

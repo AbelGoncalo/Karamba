@@ -2,13 +2,12 @@
 
 <div>
   
-    <div class="p-3 col-md-12 col-sm-12 mt-5 mb-5 d-flex justify-content-center align-items-start flex-wrap">
-        
-        <div class="col-md-12 ">
+    <div class="p-3 mt-5 mb-5 col-md-12 d-flex justify-content-between align-items-start flex-wrap">
+        <div class="col-md-7">
             <div class="card shadow rounded mt-2">
                 <div class="card-header d-flex justify-content-between flex-wrap align-items-center" style="background-color: #222831 !important; color:#fff !important;">
                     <h4  style="font-size:14px; font-weight:600; color:#fff" class=" text-uppercase">Items do Carrinho : {{count(\Cart::getContent())}}</h4>
-                    <a href="{{route('site.companies')}}" class="btn btn-sm  text-uppercase" style="background-color: #ffbe33; color:#fff">Vêr Menu</a>
+                    <a href="{{route('site.companies')}}" class="btn btn-sm  text-uppercase" style="background-color: #cf597a; color:#fff">Vêr Menu</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -62,12 +61,12 @@
                          <input type="text" wire:model='cuponValue' name="cuponValue" id="cuponValue" class="form-control" placeholder="Aplicar Cupom">
                     </div>
                     <div class="col-md-4 ">
-                        <button wire:click='applyDiscount' class="mx-3 btn btn-md btn-outline" style="background-color: #ffbe33;color:#fff">APLICAR</button>
+                        <button wire:click='applyDiscount' class="mx-3 btn btn-md btn-outline" style="background-color: #cf597a;color:#fff">APLICAR</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-12  mx-2">
+        <div class="col-md-4  mx-2">
             <div class="card shadow rounded mt-2" style="height:auto;">
                 <div class="card-header "style="background: #222831;color:#fff;">
                     <h4  style="font-size:14px; font-weight:600; color:#fff" class=" text-uppercase">Total do Carrinho</h4>
@@ -102,7 +101,7 @@
                     </div>
                 </div>
                 <div class="card-footer card-cart">
-                    <button {{(count($cartContent) > 0 and session('locationvalue') != 0 and $locationCheced != null)? '':'disabled'}} style="background: #ffbe33;color:#fff;" class="w-100 btn btn-md btn-outline" data-bs-toggle="modal" data-bs-target="#finnaly">FINALIZAR ENCOMENDA</button>
+                    <button {{(count($cartContent) > 0 and session('locationvalue') != 0 and $locationCheced != null)? '':'disabled'}} style="background: #cf597a;color:#fff;" class="w-100 btn btn-md btn-outline" data-bs-toggle="modal" data-bs-target="#finnaly">FINALIZAR ENCOMENDA</button>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 <html lang="pt-ao">
 <head>
     <meta charset="utf-8">
-    <title>Espaço Karamba</title>
+    <title>Kytutes</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="karamba" name="keywords">
     <meta content="FortCode" name="description">
@@ -43,8 +43,8 @@
     <div class="container-fluid bg-white p-0">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border"  style="width: 3rem; height: 3rem; color:#cdb81a" role="status">
-                <span class="sr-only" style="color:#cdb81a;">Processando...</span>
+            <div class="spinner-border"  style="width: 3rem; height: 3rem; color:#cf597a" role="status">
+                <span class="sr-only" style="color:#cf597a;">Processando...</span>
             </div>
         </div>
         <!-- Spinner End -->
@@ -61,13 +61,13 @@
         <!-- Testimonial Start -->
       
         <!-- Testimonial End -->
-        <a href="#" class="btn btn-lg  btn-lg-square back-to-top text-light" style="background-color: #cdb81a;"><i class="bi bi-arrow-up"></i></a>
+        <a href="#" class="btn btn-lg  btn-lg-square back-to-top text-light" style="background-color: #cd5878;"><i class="bi bi-arrow-up"></i></a>
           <!-- Footer Start -->
-  <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+  <div class="container-fluid text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-lg-3 col-md-6">
-                <h4 class="section-title ff-secondary text-start  fw-normal mb-4" style="color: #cdb81a">Empresa</h4>
+                <h4 class="section-title ff-secondary text-start  fw-normal mb-4" style="color: #ffffff">Empresa</h4>
                 <a class="btn btn-link" href="{{route('site.about')}}">Sobre Nós</a>
                 {{-- <a class="btn btn-link" href="#">Contacte-nos</a> --}}
                 <a class="btn btn-link" href="/#book">Marcar Reservar</a>
@@ -75,7 +75,7 @@
                 <a class="btn btn-link" href="https://www.pachecobarroso.com/pb-terms-conditions">Termos e Condições</a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h4 class="section-title ff-secondary text-start  fw-normal mb-4" style="color: #cdb81a">Contactos</h4>
+                <h4 class="section-title ff-secondary text-start  fw-normal mb-4" style="color: #ffffff">Contactos</h4>
                 <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Ponte Molhada (Talatona)</p>
                 <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+244 928 121 231</p>
                 <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+244 924 102 499</p>
@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h4 class="section-title ff-secondary text-start  fw-normal mb-4" style="color: #cdb81a">Atendimento</h4>
+                <h4 class="section-title ff-secondary text-start  fw-normal mb-4" style="color: #ffffff">Atendimento</h4>
                 <h5 class="text-light fw-normal">24/7</h5>
                 <p>16:00 - 00:00</p>
                 {{-- <h5 class="text-light fw-normal">Domingo</h5>
@@ -142,9 +142,6 @@
     @stack('search-company')
     @stack('search-company-reserve')
     @stack('rating-show-comment')
-  
-
-
  
      @if(session('empt-cart')) 
     <script>

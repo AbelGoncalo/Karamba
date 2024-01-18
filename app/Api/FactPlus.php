@@ -17,6 +17,7 @@ class FactPlus {
  
     public static function create($orderid,$name,$nif,$address)
     {
+<<<<<<< HEAD
        
         // DB::beginTransaction();
         // //real
@@ -24,6 +25,14 @@ class FactPlus {
         // //teste
          $key = '65a676382d20f38a75ff2829c0b2a89a';
          try {
+=======
+        DB::beginTransaction();
+        //real
+        $key = '65847d93edbb6d77bea624101ff616ea';
+        //teste
+        //$key = '65995993b16b93cdac74e28f1cd69267';
+        try {
+>>>>>>> 8de6c7fd2f9ca3f3f327552ee25e520dd3de823f
 
             $details =  DetailOrder::where('order_id','=',$orderid)
             ->select('id','item','price','quantity')
@@ -109,9 +118,13 @@ class FactPlus {
     {
         DB::beginTransaction();
         //real
-        //$key = '65847d93edbb6d77bea624101ff616ea';
+        $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
+<<<<<<< HEAD
         $key = '65a676382d20f38a75ff2829c0b2a89a';
+=======
+       // $key = '65995993b16b93cdac74e28f1cd69267';
+>>>>>>> 8de6c7fd2f9ca3f3f327552ee25e520dd3de823f
         try {
             $response = Http::post('https://api.factplus.co.ao', [
                 'apicall' => 'SEND',
@@ -142,9 +155,13 @@ class FactPlus {
     {
         DB::beginTransaction();
          //real
-        //$key = '65847d93edbb6d77bea624101ff616ea';
+        $key = '65847d93edbb6d77bea624101ff616ea';
         //teste
+<<<<<<< HEAD
         $key = '65a676382d20f38a75ff2829c0b2a89a';
+=======
+        //$key = '65995993b16b93cdac74e28f1cd69267';
+>>>>>>> 8de6c7fd2f9ca3f3f327552ee25e520dd3de823f
         try {
             
             $response = Http::post('https://api.factplus.co.ao', [

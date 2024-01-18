@@ -61,7 +61,7 @@
         <!-- Testimonial Start -->
       
         <!-- Testimonial End -->
-        <a href="#" class="btn btn-lg  btn-lg-square back-to-top text-light" style="background-color: #cd5878;"><i class="bi bi-arrow-up"></i></a>
+        <a href="#" class="btn btn-lg  btn-lg-square back-to-top text-light" style="background-color: #9a2244;"><i class="bi bi-arrow-up"></i></a>
           <!-- Footer Start -->
   <div class="container-fluid text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">

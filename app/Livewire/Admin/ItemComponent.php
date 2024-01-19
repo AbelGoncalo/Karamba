@@ -44,7 +44,12 @@ class ItemComponent extends Component
         ->where("categories.description", "Bebidas")
         ->get(["items.description"]);
 
+        $coffes = Item::join("categories", "items.category_id" , "=", "categories.id")
+        ->where("categories.description", "Café")
+        ->get(["items.description"]);        
+
         $dessertInput = Item::join("categories", "items.category_id" , "=", "categories.id")
+        ->where("categories.description", "Sobremesa")
         ->get(["items.description"]);
 
         return view('livewire.admin.item-component',[
@@ -53,7 +58,8 @@ class ItemComponent extends Component
             'companies' => $companies,
             'drinks' => $drinks,
             'dishes' => $dishes,
-            'dessertInput' =>  $dessertInput,
+            'dessertInput' =>  $dessertInput,           
+            'coffes' =>  $coffes,           
 
         ])->layout('layouts.admin.app');
     }
@@ -312,12 +318,13 @@ class ItemComponent extends Component
      }
      //excluir Item
      public function delete()
-     {
-        
+     {        
         
          try {
             
              Item::destroy($this->edit);
+             DailyDish::where("item_id",$this->edit)->delete();
+
             
              $this->alert('success', 'SUCESSO', [
                  'toast'=>false,

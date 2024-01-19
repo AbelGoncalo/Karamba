@@ -159,10 +159,15 @@ class HomeComponent extends Component
                    
                       
                 if ($itemExist) {
-                   
+                    
+                    if ($item->category->description == "Prato do Dia"){
+                        $itemExist->quantity = 1;
+                        $itemExist->save();
+                    }else{
                         $itemExist->quantity += $this->qtd[$id];
                         $itemExist->save();
-
+                    }
+                    
 
                         //Registando Atividade na tabela de Log  para o acto de anotar pedidos
                         $log_registers = new HistoryOfAllActivities();
@@ -180,13 +185,52 @@ class HomeComponent extends Component
                             'showConfirmButton' => true,
                             'confirmButtonText' => 'OK',
                             'text'=>'Seu Pedido de '.$this->qtd[$id].' '.$item->description.', foi enviado.'
-                        ]);
-
-                   
+                        ]);                   
 
                 }else{
-                    
-                    
+
+                    if ($item->category->description == "Prato do Dia"){
+
+                        $dailyDishes = DailyDish::get();
+                        $itemsFound = Item::get();
+     
+                        foreach($dailyDishes as $daily){
+                             foreach($itemsFound as $foundedItem){
+                                 
+                                 if($daily->entrance == $foundedItem->description){
+                                    $foundedItem->quantity =  $foundedItem->quantity - 1;
+                                    $foundedItem->save();
+     
+                                 } if($daily->maindish == $foundedItem->description){
+                                     $foundedItem->quantity  =  $foundedItem->quantity - 1;
+                                     $foundedItem->save();
+                                    
+                                 }else if($daily->dessert == $foundedItem->description){
+                                     $foundedItem->quantity  =  $foundedItem->quantity - 1;
+                                     $foundedItem->save();
+     
+                                 }else if($daily->drink == $foundedItem->description){
+                                     $foundedItem->quantity  =  $foundedItem->quantity -1;
+                                     $foundedItem->save();
+     
+                                     }
+                                     
+                                         }
+                                 }
+
+                                 CartLocalDetail::create([
+                                    'name'=>$item->description,
+                                    'table'=>$this->tableNumber,
+                                    'price'=>$item->price,
+                                    'quantity'=> 1,
+                                    'category'=>$category->description,
+                                    'company_id'=>auth()->user()->company_id
+        
+                                ]);
+
+                    }else{
+                        $item->quantity -= $this->qtd[$id];
+                        $item->save();
 
                         CartLocalDetail::create([
                             'name'=>$item->description,
@@ -197,6 +241,7 @@ class HomeComponent extends Component
                             'company_id'=>auth()->user()->company_id
 
                         ]);
+                    }  
 
                         //Registando Atividade na tabela de Log  para o acto de anotar pedidos
                         $log_registers = new HistoryOfAllActivities();

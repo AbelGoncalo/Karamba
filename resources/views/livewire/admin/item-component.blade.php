@@ -133,7 +133,13 @@ $(document).ready(function() {
     $('#entrance').change(function (e) { 
     e.preventDefault();
     @this.set('entrance',$('#entrance').val());
-    }); 
+    });
+
+    $('#coffe').change(function (e) { 
+    e.preventDefault();
+    @this.set('coffe',$('#coffe').val());
+    });
+
 
     $('#maindish').change(function (e) { 
        e.preventDefault();
@@ -149,6 +155,8 @@ $(document).ready(function() {
        e.preventDefault();
          @this.set('drink',$('#drink').val());
      }); 
+
+    
 
     </script>
      
@@ -166,21 +174,35 @@ $(document).ready(function() {
     $('#entrance').select2({
       theme: "bootstrap",
       width:"100%",
-    // dropdownParent: $('#item')
+    //dropdownParent: $('#item')
     });
 
+    $('#coffe').select2({
+      theme: "bootstrap",
+      width:"100%",
+    //dropdownParent: $('#item')
+    });
+
+    
+    
+
      $('#entrance').change(function (e) { 
-        //alert();
        e.preventDefault();
          @this.set('entrance',$('#entrance').val());
      }); 
 
+    
      $('#maindish').change(function (e) { 
        e.preventDefault();
          @this.set('maindish',$('#maindish').val());
-     });  
+     });
 
+     $('#coffe').change(function (e) { 
+       e.preventDefault();
+         @this.set('coffe',$('#coffe').val());
+     }); 
 
+    
      $('#dessert').change(function (e) { 
        e.preventDefault();
          @this.set('dessert',$('#dessert').val());
@@ -189,11 +211,8 @@ $(document).ready(function() {
      $('#drink').change(function (e) { 
        e.preventDefault();
          @this.set('drink',$('#drink').val());
-     });  
+     });     
      
-     
-
-
 
     $('#maindish').select2({
       theme: "bootstrap",
@@ -204,13 +223,13 @@ $(document).ready(function() {
     $('#drink').select2({
       theme: "bootstrap",
       width:"100%",
-      //dropdownParent: $('#item')
+     // dropdownParent: $('#item')
     });
     
     $('#dessert').select2({
       theme: "bootstrap",
       width:"100%",
-     // dropdownParent: $('#item')
+     //dropdownParent: $('#item')
     });
   
     $('#category_id').change(function (e) { 

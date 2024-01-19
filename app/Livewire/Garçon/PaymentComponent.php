@@ -10,6 +10,7 @@ use App\Models\{
     BankAccount,
     CartLocal,
     CartLocalDetail,
+    Category,
     Table,
     ClientLocal,
     Company,
@@ -245,12 +246,7 @@ class PaymentComponent extends Component
              'company_id'=>auth()->user()->company_id
             ]);
 
-            
-           
-
-
-
-                   
+                               
 
              if($cartLocalDetail->count() > 0)
              {
@@ -263,41 +259,19 @@ class PaymentComponent extends Component
                          'subtotal'=>$item->price * $item->quantity,
                          'company_id'=>auth()->user()->company_id
                      ]);
-
+                     
                      $itemFinded = Item::where('description','=',$item->name)->first();
                      $itemFinded->quantity -=$item->quantity;
                      $itemFinded->save(); 
 
-                     
-                //Verificar se na mesa do garson possui o prato do Dia.
-                   $dailyDishes = DailyDish::get();
-                   $itemsFound = Item::get();
+                     //Redefinir valor padrão a quantidade do prato do dia                    
 
-                   foreach($dailyDishes as $daily){
-                        foreach($itemsFound as $foundedItem){
-                            
-                            if($daily->entrance == $foundedItem->description){
-                                $foundedItem->quantity -=  $foundedItem->quantity;
-                                $itemFinded->save();
-
-                            }else if($daily->entrance == $foundedItem->maindish){
-                                $foundedItem->quantity -=  $foundedItem->quantity;
-                                $itemFinded->save();
-                               
-                            }else if($daily->dessert == $foundedItem->maindish){
-                                $foundedItem->quantity -=  $foundedItem->quantity;
-                                $itemFinded->save();
-
-                            }else if($daily->drink == $foundedItem->maindish){
-                                $foundedItem->quantity -=  $foundedItem->quantity;
-                                $itemFinded->save();
-
-                            }
-                            
-                                }
-                            }
-
-
+                     $categories = Category::where("description","Prato do Dia")->get();
+                        foreach($categories as $category){
+                            Item::where("category_id",$category->id)->update([
+                                'quantity' => 1
+                            ]);
+                        }
 
                      
                      //Registar o log de pagamentos

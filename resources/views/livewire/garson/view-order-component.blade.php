@@ -65,7 +65,7 @@
                             @if ($item->status != 'ENTREGUE')
                             <td>
                                 @if ($item->status == 'PENDENTE')
-                                <button wire:click='getDailydish({{$item->id}})' data-bs-toggle="modal" data-bs-target="#dailydish" class="{{$item->name != 'Prato do Dia' ? 'd-none' : ''}} btn btn-sm btn-primary mt-1">
+                                <button wire:click='getDailydish({{$item->id}})' data-bs-toggle="modal" data-bs-target="#dailydish" class="{{$item->name != 'Menu Executivo' or 'Menu Karamba' ? 'd-none' : ''}} btn btn-sm btn-primary mt-1">
                                     <i class="fa  fa-circle-info"></i>
                                 </button>                            
 

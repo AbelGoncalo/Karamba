@@ -49,7 +49,7 @@
               <div id="detail-dishoftheday" class="d-none detail-dishoftheday" wire:ignore>
                 <div  class="form-froup">
                     <label for="">Entrada:</label>
-                      <select id="entrance" name="entrance"   class="form-control" wire:model="entrance">
+                      <select  name="entrance"   class="form-control" wire:model="entrance">
                         <option value="">--Selecionar--</option>
                         @foreach ($dishes as $dish)
                           <option value="{{$dish->description ?? ""}}">{{$dish->description ?? ""}}</option>                      
@@ -59,7 +59,7 @@
 
                 <div wire:ignore class="form-group">
                   <label for="">Prato principal:</label>
-                  <select wire:ignore  class="form-control"  id="maindish" wire:model="maindish">
+                  <select wire:ignore  class="form-control"  wire:model="maindish">
                     <option value="">--Selecionar--</option>
                       @if (isset($dishes) && count($dishes) > 0)
                         @foreach ($dishes as $dishe)
@@ -72,7 +72,7 @@
 
                 <div wire:ignore class="form-group">
                   <label for="">Sobremesa:</label>
-                  <select  wire:ignore id="dessert" wire:model="dessert" class="form-control">
+                  <select  wire:ignore  wire:model="dessert" class="form-control">
                     <option value="">--Selecionar--</option>
                       @if (isset($dessertInput) && count($dessertInput) > 0)
                         @foreach ($dessertInput as $dessert)
@@ -84,7 +84,7 @@
 
                 <div wire:ignore class="form-group">
                   <label for="">Bebida:</label>
-                  <select wire:ignore class="form-control"  id="drink" wire:model="drink">
+                  <select wire:ignore class="form-control"   wire:model="drink">
                     <option selected value="">-- Selecionar --</option>
                     @foreach ($drinks as $drink)
                       <option value="{{$drink->description ?? ""}}">{{$drink->description ?? ""}}</option>
@@ -93,9 +93,17 @@
                 </div>
 
                 <div wire:ignore class="form-group">
-                  <label for="">Café:</label>
-                  <input class="form-control" type="text"  id="coffe" wire:model="coffe">
+                  <label for="">Café:</label> 
+                  
+                  <select wire:ignore class="form-control"  wire:model="coffe">
+                    <option selected value="">-- Selecionar --</option>
+                    @foreach ($coffes as $drink)
+                      <option value="{{$drink->description ?? ""}}">{{$drink->description ?? ""}}</option>
+                    @endforeach
+                  </select>
+                  {{-- <input class="form-control" type="text"  id="coffe" wire:model="coffe"> --}}
                 </div>
+
 
               </div>
 

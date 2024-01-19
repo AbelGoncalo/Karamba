@@ -56,8 +56,6 @@ class ViewOrderComponent extends Component
             ->where('table','=',$this->tableNumber)
             ->where('company_id','=',auth()->user()->company_id)
             ->get();
-
-
          
             $this->drinksOrder =  CartLocalDetail::where('category','=','Bebidas')
             ->where('table','=',$this->tableNumber)
@@ -131,14 +129,53 @@ class ViewOrderComponent extends Component
    }
    public function cancel()
    {
+   
+
        try {
            $cart = CartLocalDetail::find($this->edit);
           
            if($cart)
            {
 
+            $item = Item::where('description','=',$cart->name)->first();
+            $item->quantity += $cart->quantity;
+            $item->save();
+            
                if($cart->status == 'PENDENTE')
                {
+                    //Retomando os valores padrão dos itens do prato que outrora estavam na tabela de Items
+                  
+                    if ($cart->category == "Prato do Dia"){
+
+                        $dailyDishes = DailyDish::get();
+                        $itemsFound = Item::get();
+     
+                        foreach($dailyDishes as $daily){
+                             foreach($itemsFound as $foundedItem){
+                                 
+                                 if($daily->entrance == $foundedItem->description){
+                                    $foundedItem->quantity =  $foundedItem->quantity + 1;
+                                    $foundedItem->save();
+     
+                                 } if($daily->maindish == $foundedItem->description){
+                                     $foundedItem->quantity  =  $foundedItem->quantity + 1;
+                                     $foundedItem->save();
+                                    
+                                 }else if($daily->dessert == $foundedItem->description){
+                                     $foundedItem->quantity  =  $foundedItem->quantity + 1;
+                                     $foundedItem->save();
+     
+                                 }else if($daily->drink == $foundedItem->description){
+                                     $foundedItem->quantity  =  $foundedItem->quantity + 1;
+                                     $foundedItem->save();
+     
+                                     }
+                                     
+                                         }
+                                 }
+    
+                    }
+                    
                    CartLocalDetail::destroy($this->edit);
                    $this->alert('success', 'SUCESSO', [
                        'toast'=>false,
@@ -147,7 +184,8 @@ class ViewOrderComponent extends Component
                        'confirmButtonText' => 'OK',
                        'text'=>'Operação Realizada Com Sucesso.'
                    ]);
-                   
+
+                                  
               $this->getOrders();
 
              //Cancelando a  atividade na tabela de Log 

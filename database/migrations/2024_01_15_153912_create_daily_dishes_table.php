@@ -14,6 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('daily_dishes', function (Blueprint $table) {
+            $table->id();
             $table->string("entrance")->nullable();
             $table->string("maindish")->nullable();
             $table->string("dessert")->nullable();

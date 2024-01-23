@@ -14,6 +14,7 @@ use App\Livewire\Admin\{
     ReviewComponent,
     DishOfTheDayComponent
 };
+use App\Http\Controllers\Dailydish\DailyDishController;
 use App\Livewire\Auth\MyAccount;
 
 Route::get('/painel/admin',HomeComponent::class)->name('panel.admin.home')->middleware(['auth','admin']);
@@ -29,4 +30,5 @@ Route::get('/painel/admin/minha-conta',MyAccount::class)->name('panel.admin.acco
 Route::get('/painel/admin/avaliacoes',ReviewComponent::class)->name('panel.admin.review')->middleware(['auth','admin']);
 Route::get("painel/admin/consultar/log/actividades/geral", HistoryOfAllActivities::class)->name('panel.admin.history.of.all.activities');
 Route::get('/painell/admin/prato/do/dia', DishOfTheDayComponent::class)->name('panel.admin.dish.of.the.day');
+Route::post("/painel/admin/adicionar/prato/dia/" , [DailyDishController::class, "save"])->name("panel.admin.daily.dish.store")->middleware(['auth','admin']);
 

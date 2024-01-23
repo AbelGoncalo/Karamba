@@ -14,7 +14,7 @@
                     @foreach ($allCategories as $item)
                         
                     <div class="col-md-3 mt-3">
-                        <div wire:click='getItems({{$item->id}})' class="card shadow rounded category-items" data-bs-toggle="modal" data-bs-target="#make-order-garçon">
+                        <div wire:click='getItems({{$item->id}})' class="card shadow rounded category-items" data-bs-toggle="modal" data-bs-target="{{$item->description == 'Prato do Dia' ? '#items-dailydish' :'#make-order-garçon' }}">
                             @if ($item->description == 'Pratos')
                             <img  src="{{asset('/default-food.png')}}" style="height: 10rem; width:100%; border-top-left-radius: 1%;border-top-right-radius: 1%"  alt="{{$item->description}}" class="img-fluid">
                             @elseif($item->description == 'Bebidas')  
@@ -39,6 +39,7 @@
         </div>
     </div>
     @include('livewire.garson.modals.make-order')
+    @include('livewire.garson.modals.modal-items-dailydish')
 </div>
 
 @push('search-table-g')

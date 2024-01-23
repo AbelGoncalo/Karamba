@@ -11,6 +11,7 @@ use App\Models\{
     CartLocal,
     ClientLocal,
     CartLocalDetail,
+    CartLocalDetailDailydish,
     DailyDish,
     GarsonTable,
     HistoryOfAllActivities
@@ -21,7 +22,8 @@ class HomeComponent extends Component
 {
     use LivewireAlert;
     public $searchItems;
-    public $searchCategories,$search,$category_id,$qtd = [],$allItems = [],$tableNumber;
+    public $searchCategories,$search,$category_id,$qtd = [],$allItems = [],$tableNumber, $client_entrance = null
+    ,$client_dessert = null,$client_drink = null, $client_maindish = null, $client_coffe = null;
    
     protected $listeners = ['modal'=>'modal'];
 
@@ -29,9 +31,25 @@ class HomeComponent extends Component
     {
         return view('livewire.garson.home-component',[
             'allCategories'=>$this->allCategories($this->searchCategories),
-            'allTables'=>$this->getTables()
+            'allTables'=>$this->getTables(),
+            'typesMenuDailydishes' =>  $this->getAllTypesOfMenuOfDailydish(),
+            'itemsDailydishes' => $this->getAllDetailsAboutDailyDishes(),
         ])->layout('layouts.garson.app');
 
+    }
+
+    public function getAllDetailsAboutDailyDishes(){
+       return DailyDish::where("company_id" , auth()->user()->company_id)->get();
+    }
+
+    public function getAllTypesOfMenuOfDailydish(){
+        return Item::Join("categories", "items.category_id" , "=" , "categories.id")
+        ->where("categories.description" , '=' , "Prato do Dia")
+        ->get(["items.description"]);
+    }
+
+    public function getDeatailsAboutDailyDish(){
+        return DailyDish::where("company_id" , auth()->user()->company_id)->get();
     }
 
     public function allCategories($search = null)
@@ -100,6 +118,7 @@ class HomeComponent extends Component
 
     //Armazenar Pedidos
     public function makeOrder($id){
+
         $item = Item::find($id);
         try {
             if(!array_key_exists($id,$this->qtd)){
@@ -218,7 +237,7 @@ class HomeComponent extends Component
                                          }
                                  }
 
-                                 CartLocalDetail::create([
+                                 $cartDetails = CartLocalDetail::create([
                                     'name'=>$item->description,
                                     'table'=>$this->tableNumber,
                                     'price'=>$item->price,
@@ -226,6 +245,20 @@ class HomeComponent extends Component
                                     'category'=>$category->description,
                                     'company_id'=>auth()->user()->company_id
         
+                                ]);
+
+
+                                //Armazenando as informações referentes a escolha do cliente sobre o prato
+                                
+                                $cartDailyDishOfClient = CartLocalDetailDailydish::create([
+                                    "cart_local_detail_id" => $cartDetails['id'],
+                                    "entrance" => $this->client_entrance,
+                                    "maindish" => $this->client_maindish,
+                                    "dessert" => $this->client_dessert,
+                                    "drink" => $this->client_drink,
+                                    "coffe" => $this->client_coffe,
+                                    "company_id" => auth()->user()->company_id
+                                    
                                 ]);
 
                     }else{

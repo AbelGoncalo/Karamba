@@ -25,7 +25,7 @@
             <table class="table table-striped table-hover table-sm text-center">
                 <thead class="card-header-custom card-header">
                     <tr>
-                        
+                       
                         <th>TEMPO</th>
                         <th>ESTADO</th>
                         <th>ITEM</th>

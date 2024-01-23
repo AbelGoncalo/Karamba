@@ -8,7 +8,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form wire:submit='{{($edit != '')? 'update':'save'}}' id="basicform">
+       <form wire:submit='{{($edit != '')? 'update':'save'}}' id="basicform"> 
+        {{-- <form method="POST" action="{{route('panel.admin.daily.dish.store')}}"> --}}
+          {{-- @csrf --}}
 
           <div  class="form-group" wire:ignore>
             <label for="category_id">Categoria</label>
@@ -17,39 +19,35 @@
               @if ($categories != null)
                   @foreach ($categories as $item)
                   <option value="{{$item->id}}">{{$item->description}}</option>
-                      
                   @endforeach
               @endif
-            </select>
+            </select>                      
             @error('category_id') <span class="text-danger">{{$message}}</span> @enderror
         </div>
 
          
           <div class="form-group">
               <label for="description">Descrição</label>
-              <input id="description" type="text" wire:model='description'  placeholder="Descreve o item" autocomplete="on" class="form-control">
+              <input name="description" id="description" type="text" wire:model='description'  placeholder="Descreve o item" autocomplete="on" class="form-control">
               @error('description') <span class="text-danger">{{$message}}</span> @enderror
           </div>
           <div class="form-group">
               <label for="price">Preço</label>
-              <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="price" type="number" wire:model='price' description="price" class="form-control">
+              <input  name="price" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="price" type="number" wire:model='price' description="price" class="form-control">
               @error('price') <span class="text-danger">{{$message}}</span> @enderror
           </div>
          <div id="quantity-div" class="form-group"  wire:ignore>
               <label for="quantity">Quantidade</label>
-              <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="quantity" type="number" wire:model='quantity' description="quantity" class="form-control">
+              <input name="quantity" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"   id="quantity" type="number" wire:model='quantity' description="quantity" class="form-control">
               @error('quantity') <span class="text-danger">{{$message}}</span> @enderror
-          </div>
-          
+          </div>        
           
           <!-- Detalhes sobre o prato do dia  -->  
           
-          
-
               <div id="detail-dishoftheday" class="d-none detail-dishoftheday" wire:ignore>
                 <div  class="form-froup">
                     <label for="">Entrada:</label>
-                      <select  name="entrance"   class="form-control" wire:model="entrance">
+                      <select multiple  name="entrance[]" id="entrance"  class="form-control" wire:model="entrance">
                         <option value="">--Selecionar--</option>
                         @foreach ($dishes as $dish)
                           <option value="{{$dish->description ?? ""}}">{{$dish->description ?? ""}}</option>                      
@@ -59,7 +57,7 @@
 
                 <div wire:ignore class="form-group">
                   <label for="">Prato principal:</label>
-                  <select wire:ignore  class="form-control"  wire:model="maindish">
+                  <select name="maindish[]" id="maindish" multiple wire:ignore  class="form-control"  wire:model="maindish">
                     <option value="">--Selecionar--</option>
                       @if (isset($dishes) && count($dishes) > 0)
                         @foreach ($dishes as $dishe)
@@ -72,7 +70,7 @@
 
                 <div wire:ignore class="form-group">
                   <label for="">Sobremesa:</label>
-                  <select  wire:ignore  wire:model="dessert" class="form-control">
+                  <select name="dessert[]" multiple id="dessert" wire:ignore  wire:model="dessert" class="form-control">
                     <option value="">--Selecionar--</option>
                       @if (isset($dessertInput) && count($dessertInput) > 0)
                         @foreach ($dessertInput as $dessert)
@@ -84,7 +82,7 @@
 
                 <div wire:ignore class="form-group">
                   <label for="">Bebida:</label>
-                  <select wire:ignore class="form-control"   wire:model="drink">
+                  <select name="drink[]" multiple id="drink" wire:ignore class="form-control"   wire:model="drink">
                     <option selected value="">-- Selecionar --</option>
                     @foreach ($drinks as $drink)
                       <option value="{{$drink->description ?? ""}}">{{$drink->description ?? ""}}</option>
@@ -95,7 +93,7 @@
                 <div wire:ignore class="form-group">
                   <label for="">Café:</label> 
                   
-                  <select wire:ignore class="form-control"  wire:model="coffe">
+                  <select name="coffe[]" id="coffe" multiple wire:ignore class="form-control"  wire:model="coffe">
                     <option selected value="">-- Selecionar --</option>
                     @foreach ($coffes as $drink)
                       <option value="{{$drink->description ?? ""}}">{{$drink->description ?? ""}}</option>

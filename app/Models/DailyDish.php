@@ -12,15 +12,23 @@ class DailyDish extends Model
     protected $primaryKey = "id";
     protected $fillable = [       
         "entrance",
-        "dessert", 
         "maindish",
+        "dessert", 
         "drink", 
         "coffe", 
         "company_id",
         "item_id",
     ];
 
-    public $timestamps = false;
+   // public $timestamps = false;
+
+   protected $casts = [
+    'entrance' => 'array',
+    'maindish' => 'array',
+    'dessert' => 'array',
+    'drink' => 'array',
+    'coffe' => 'array',
+];
 
     public function itemsRelationship(){
         return $this->belongsTo(Item::class);

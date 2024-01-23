@@ -25,9 +25,7 @@
                       <h3 class="fw-bold" style="color:#F5A92B" >{{$details->descriptionItem ?? ""}}</h3>
                     </div>
 
-                    <div>
-                      <h4 >Prato: {{$details->name ?? ""}}</h4>
-                    </div>
+                    
 
                     <div>
                       <h4>Entrada: {{$details->entrance ?? ""}}</h4>
@@ -43,6 +41,9 @@
 
                     <div>
                       <h4>Bebida: {{$details->drink ?? ""}}</h4>
+                    </div>
+                    <div>
+                      <h4>Café: {{$details->coffe ?? ""}}</h4>
                     </div>
                     
                     @endforeach

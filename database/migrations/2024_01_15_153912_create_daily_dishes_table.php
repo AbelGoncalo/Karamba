@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('daily_dishes', function (Blueprint $table) {
             $table->id();
-            $table->string("entrance")->nullable();
-            $table->string("maindish")->nullable();
-            $table->string("dessert")->nullable();
-            $table->string("drink")->nullable();
-            $table->string("coffe")->nullable();
+            $table->json("entrance")->nullable();
+            $table->json("maindish")->nullable();
+            $table->json("dessert")->nullable();
+            $table->json("drink")->nullable();
+            $table->json("coffe")->nullable();
             $table->ForeignIdFor(Company::class)->nullable();
             $table->ForeignIdFor(Item::class)->nullable();
-            //$table->timestamps();
+            $table->timestamps();
         });
     }
 

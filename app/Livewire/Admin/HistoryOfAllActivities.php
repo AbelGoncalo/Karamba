@@ -22,6 +22,7 @@ class HistoryOfAllActivities extends Component
         ->whereYear('created_at',date('Y'))
         ->groupBy('month')
         ->orderBy('month')
+        ->where("company_id" , auth()->user()->company_id)
         ->get();
 
         $labels = [];

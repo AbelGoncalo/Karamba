@@ -3,7 +3,7 @@
 namespace App\Livewire\Garçon;
 
 use Livewire\Component;
-use App\Models\{Table,CartLocal,CartLocalDetail, DailyDish, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};
+use App\Models\{Table,CartLocal,CartLocalDetail, CartLocalDetailDailydish, DailyDish, DetailOrder, GarsonTable, HistoryOfAllActivities, Item, ServiceControl};
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -16,21 +16,30 @@ class ViewOrderComponent extends Component
     protected $listeners = ['cancel'=>'cancel','change'=>'change','close'=>'close'];
     public function render()
     {
-       $dailyDishes = DailyDish::join("items", "daily_dishes.item_id", "=", "items.id")
-       ->join("categories", "items.category_id", "=","categories.id")
-       ->where("categories.description","Prato do Dia")
-       ->where("items.company_id",auth()->user()->company_id)
-       ->get(["categories.description","items.description", "daily_dishes.*", "items.description AS descriptionItem"]);
-        return view('livewire.garson.view-order-component',[
+
+       return view('livewire.garson.view-order-component',[
             'allTables'=>$this->getTables(),
-            "dailyDishes" => $dailyDishes
+            "dailyDishes" => $this->detailsOfDailyDishClient()
         ])->layout('layouts.garson.app');
     }
 
+    public function detailsOfDailyDishClient(){
+        $cartLocal =  CartLocalDetail::where('category','=','Prato do Dia')
+        ->where('table','=',$this->tableNumber)
+        ->where('company_id','=',auth()->user()->company_id)
+        ->first();        
+       
+       $dailyDishes = CartLocalDetailDailydish::where("cart_local_detail_id" , $cartLocal->id ?? '')->get() ?? '';
+
+        return $dailyDishes;
+    }
+
+
     public function getDailydish($id)
     {
-        try{           
-            $cartdetail = CartLocalDetail::find($id);
+        try{  
+            $data = CartLocalDetailDailydish::where('cart_local_detail_id', $id)->get();
+            return $data;
             //$item = Item::select('description')->where('description',$cartdetail->name)->get();
           
         }catch(Exception $th){
@@ -60,8 +69,7 @@ class ViewOrderComponent extends Component
             $this->drinksOrder =  CartLocalDetail::where('category','=','Bebidas')
             ->where('table','=',$this->tableNumber)
             ->where('company_id','=',auth()->user()->company_id)
-            ->get();
-            
+            ->get();            
             
             }
         } catch (\Throwable $th) {
@@ -77,8 +85,7 @@ class ViewOrderComponent extends Component
 
     public function getTables()
     {
-        try {
-            
+        try {            
         
             return GarsonTable::where('user_id','=',auth()->user()->id)
             ->where('company_id','=',auth()->user()->company_id)
@@ -284,14 +291,8 @@ class ViewOrderComponent extends Component
              $this->itemId = '';
              $this->dispatch('close');
 
-                      
+            }
             
-
-             }
-            
-             
-
-
         } catch (\Throwable $th) {
             dd($th->getMessage());
              $this->alert('error', 'ERRO', [

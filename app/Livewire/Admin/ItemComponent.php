@@ -22,7 +22,7 @@ class ItemComponent extends Component
 {
     use LivewireAlert,WithFileUploads,WithPagination;
     public $description, $price,$edit,$search,$category_id,$cost = 0,$iva = 0,$barcode,$image,$quantity,$searchCategory,
-    $entrance,$maindish,$dessert,$drink ,$coffe; 
+    $entrance = [],$maindish = [],$dessert = [],$drink = [] ,$coffe = []; 
     protected $rules = ['description'=>'required|unique:items,description','price'=>'required','category_id'=>'required','quantity'=>'required'];
     protected $messages = ['description.required'=>'Obrigatório','description.unique'=>'Já Existe','price.required'=>'Obrigatório','category_id.required'=>'Obrigatório','quantity.required'=>'Obrigatório'];
     protected $listeners = ['close'=>'close','delete'=>'delete','changeStatus'=>'changeStatus'];
@@ -59,13 +59,15 @@ class ItemComponent extends Component
             'drinks' => $drinks,
             'dishes' => $dishes,
             'dessertInput' =>  $dessertInput,           
-            'coffes' =>  $coffes,           
+            'coffes' =>  $coffes,
+            "dailyDishCategories" => $this->getCategoryForDailyDish(),           
 
         ])->layout('layouts.admin.app');
     }
 
-
- 
+    public function getCategoryForDailyDish(){
+        return Category::where("description", "Prato do Dia")->first();
+    }
 
     public function getCategories()
     {
@@ -85,10 +87,11 @@ class ItemComponent extends Component
      public function save()
      {
          
-       //  $this->validate($this->rules,$this->messages);
+        // $this->validate($this->rules,$this->messages);
 
          try {
             //Verificar se o price é nulo
+
             if($this->price <= 0)
             {
                 $this->alert('warning', 'AVISO', [
@@ -143,6 +146,7 @@ class ItemComponent extends Component
             
 
             //Salvando as informações do Prato do dia
+            
                 $dishOfToday =  DailyDish::create([
                 "entrance" => $this->entrance,
                 "maindish" => $this->maindish,

@@ -16,6 +16,7 @@ class CartLocalDetailDailydish extends Model
         'dessert',
         'drink',
         'coffe',
+        'status',
         'company_id',
         'cart_local_detail_id',
     ];

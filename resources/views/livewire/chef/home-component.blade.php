@@ -65,8 +65,8 @@
                                                     <button wire:click='confirmChangeStatus({{$item->id}},"PRONTO")' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-custom">
                                                         <i class="fas fa-rotate"></i>
                                                         PRONTO
-
                                                     </button>
+
                                                     {{-- @elseif($item->status == 'A CAMINHO')
                                                     <button wire:click='confirmChangeStatus({{$item->id}},"ENTREGUE")' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm btn-success">
                                                         <i class="fa fa-handshake"></i>
@@ -84,14 +84,96 @@
                                 
                             @else
                             <div class="rounded d-flex justify-content-center align-items-center flex-column mt-2" style="height: 20rem;border:1px dashed #000">
-                                <h5 class="text-muted text-size text-center text-uppercase text-muted">A consulta não retorno nenhum resultado</h5>
+                                <h5 class="text-muted text-size text-center text-uppercase text-muted">A consulta não retornou nenhum resultado</h5>
                             </div>
                             @endif
                         </div>
                     
                 
             </div>
+
+            <div class="col-md-12 mt-5">
+                <div class="container">
+                    <h4 class="text-uppercase">Itens do prato do dia </h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-sm text-center">
+                            <thead class="card-header-custom card-header">
+                                <tr>
+                                    <th>TEMPO</th>
+                                    <th>MESA</th>
+                                    <th>ENTRADA</th>
+                                    <th>PRATO PRINCIPAL</th>                                    
+                                    <th>SOBREMESA</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody >
+                                 @foreach($itemsOfDailydish as $item)
+                                    <tr>
+                                        <td>{{$item->created_at != null ? $item->created_at->diffForHumans(): ''}}</td>
+                                        <td>{{$item->table ?? ""}}</td>
+                                        <td>
+                                           <div class="d-flex align-items-center justify-content-center ">
+                                               <div class="me-5">
+                                                   {{$item->entrance ?? ""}}
+                                               </div>
+
+                                               <div>
+                                                <button wire:click='confirmChangeStatus({{$item->id}},"PRONTO")' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-custom">
+                                                    <i class="fas fa-rotate"></i>
+                                                    PRONTO
+                                                </button>
+                                               </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="mx-5">
+                                                    {{$item->maindish ?? ""}}
+                                                </div>
+
+                                                <div>
+                                                    <button wire:click='confirmChangeStatus({{$item->id}},"PRONTO")' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-custom">
+                                                        <i class="fas fa-rotate"></i>
+                                                        PRONTO
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>  
+                                        
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="mx-5">
+                                                    {{$item->dessert ?? ""}}
+                                                </div>
+
+                                                <div>
+                                                    <button wire:click='confirmChangeStatus({{$item->id}},"PRONTO")' data-bs-toggle="modal" data-bs-target="#changequantity" class="btn btn-sm button-custom">
+                                                        <i class="fas fa-rotate"></i>
+                                                        PRONTO
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        
+                                        
+                                    </tr>
+                                    
+                                @endforeach 
+                                
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+          
+
         </div>
+
+           
     </div>
 </div>
 @push('select-chef')

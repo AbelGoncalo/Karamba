@@ -178,13 +178,34 @@
             <h5 class="text-muted text-size text-center text-uppercase text-muted">A consulta não retorno nenhum resultado</h5>
         </div>
         @endif
+
+        <div class="col-md-12 my-5">
+            <div class="containe">
+                <h4 class="text-uppercase">Itens do prato do dia </h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm text-center">
+                        <thead class="card-header-custom card-header">
+                            <tr>
+                                <th>TEMPO</th>
+                                <th>ESTADO</th>
+                                <th>ITEM</th>                               
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
             
       
     </div>
     @include('livewire.client.modals.change-quantity')
-
-
 </div>
+
+
+
+
 
 
 

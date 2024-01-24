@@ -16,16 +16,16 @@ use App\Models\{
     GarsonTable,
     HistoryOfAllActivities
 };
-
+use GuzzleHttp\Psr7\Request;
 
 class HomeComponent extends Component
 {
     use LivewireAlert;
     public $searchItems;
     public $searchCategories,$search,$category_id,$qtd = [],$allItems = [],$tableNumber, $client_entrance = null
-    ,$client_dessert = null,$client_drink = null, $client_maindish = null, $client_coffe = null;
-   
+    ,$client_dessert = null,$client_drink = null, $client_maindish = null, $client_coffe = null , $type_dailydishMenu = null, $descriptionItem = null;
     protected $listeners = ['modal'=>'modal'];
+    public  $show = false;   
 
     public function render()
     {
@@ -34,18 +34,33 @@ class HomeComponent extends Component
             'allTables'=>$this->getTables(),
             'typesMenuDailydishes' =>  $this->getAllTypesOfMenuOfDailydish(),
             'itemsDailydishes' => $this->getAllDetailsAboutDailyDishes(),
+            'filteredMenuDailydish' => $this->getItemsOfDailydishMenu()
         ])->layout('layouts.garson.app');
 
     }
 
+    public function getItemsOfDailydishMenu(){
+        $filteredMenuByGarson = $this->type_dailydishMenu;
+        if($filteredMenuByGarson != null){
+            return DailyDish::where("item_id",$filteredMenuByGarson)
+            ->where("company_id",auth()->user()->company_id)
+            ->get(); 
+            
+            $this->show = true;
+        }
+
+    }
+       
+
     public function getAllDetailsAboutDailyDishes(){
-       return DailyDish::where("company_id" , auth()->user()->company_id)->get();
+       return DailyDish::where("company_id" , auth()->user()->company_id)
+       ->get();
     }
 
     public function getAllTypesOfMenuOfDailydish(){
         return Item::Join("categories", "items.category_id" , "=" , "categories.id")
         ->where("categories.description" , '=' , "Prato do Dia")
-        ->get(["items.description"]);
+        ->get(["items.description", "items.id"]);
     }
 
     public function getDeatailsAboutDailyDish(){

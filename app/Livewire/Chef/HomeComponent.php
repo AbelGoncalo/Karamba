@@ -5,7 +5,7 @@ namespace App\Livewire\Chef;
 use App\Events\NotificationEvent;
 use App\Jobs\NotificatioJob;
 use Livewire\Component;
-use App\Models\{CartLocal, CartLocalDetail, GarsonTable, GarsonTableManagement, HistoryOfAllActivities, NotificationGarson, Table, User};
+use App\Models\{CartLocal, CartLocalDetail, CartLocalDetailDailydish, GarsonTable, GarsonTableManagement, HistoryOfAllActivities, NotificationGarson, Table, User};
 use App\Notifications\GarsonNotification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 class HomeComponent extends Component
@@ -16,10 +16,18 @@ class HomeComponent extends Component
     public $tableNumber = null;
     public function render()
     {
+        
         return view('livewire.chef.home-component',[
             'allOrders'=>$this->getOrders($this->tableNumber),
-            'allTables'=>$this->getTable()
+            'allTables'=>$this->getTable(),
+            'itemsOfDailydish' => $this->getItemsOfDailyDishOfClient()
         ])->layout('layouts.chef.app');
+    }
+
+    public function getItemsOfDailyDishOfClient(){
+        return CartLocalDetailDailydish::Join("cart_local_details" , "cart_local_detail_dailydishes.cart_local_detail_id", "=", "cart_local_details.id")
+        //->where("cart_local_details.table" ,"=" , $this->tableNumber)
+        ->get();
     }
     
     

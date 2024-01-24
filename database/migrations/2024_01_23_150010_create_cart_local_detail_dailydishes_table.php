@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string("dessert")->nullable();
             $table->string("drink")->nullable();
             $table->string("coffe")->nullable();
+            $table->enum('status',['PENDENTE','ACEITE','EM PREPARAÇÃO','PRONTO','A CAMINHO','ENTREGUE'])->default('PENDENTE');
             $table->foreignIdFor(Company::class)->nullable();
             $table->foreignIdFor(CartLocalDetail::class)->nullable();
             $table->timestamps();

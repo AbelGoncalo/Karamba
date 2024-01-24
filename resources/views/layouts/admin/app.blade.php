@@ -173,6 +173,8 @@
     @stack('select2-categories-modal')
     @stack('chart-log')
     @stack('show-type-report')
+    @stack('modal-dailydish-items')
+
 
   
   

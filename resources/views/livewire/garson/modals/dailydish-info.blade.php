@@ -11,14 +11,14 @@
           <div class="modal-body border-0 ">
             <div class="row">
               <div class="col-md-12 d-flex flex-wrap justify-content-center align-items-start">
-                <div class="col-md-6 d-flex flex-column">
+                <div class=" col-md-6 d-flex flex-column">
                   <img  src="{{asset('/default-food.png')}}" style="height: 14rem; width:100%; border-top-left-radius: 1%;border-top-right-radius: 1%"  alt="{{$item->description}}" class="img-fluid">
                   <div class="card-footer" style="background-color:#0e0c28; color:#fff">
                     <p class="text-center fw-bold text-uppercase" >{{$item->name ?? ""}}</p>
                 </div>
 
                 </div>
-                <div class="col-md-6 px-3 d-flex flex-column text-uppercase my-2">
+                <div class=" col-md-6 px-3 d-flex flex-column text-uppercase ">
                   @if (isset($dailyDishes) && count($dailyDishes) > 0)
                     @foreach ($dailyDishes as $details)
                     <div>
@@ -27,7 +27,7 @@
 
                     
 
-                    <div>
+                    <div class="d-flex align-items-center">
                       <h4>Entrada: {{$details->entrance ?? ""}}</h4>
                     </div>
 
